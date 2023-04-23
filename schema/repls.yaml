@@ -1,0 +1,23 @@
+# repls.yaml is a simple list of {regex match} -> {regex replace} statements run in order
+
+# fix common suffixs
+"^(.*)type$": "${1}Type"
+"^(.*)key(s?)$": "${1}Key${2}"
+"^(.*)[oO]s$": "${1}OS"
+"^(.*)channel$": "${1}Channel"
+"^(.*)[uU]rl$": "${1}URL"
+
+# fix common prefixes
+"^Userenrollment(.*)$": "UserEnrollment${1}"
+"^Statusitem(.*)$": "StatusItem${1}"
+ 
+# fix *OS casing
+"^(.*)[iI][pP]ad(.*)$": "${1}iPad${2}"
+"^[tT][vV]OS$": "TVOS"
+
+# some manual fixes
+"^Accessrights$": "AccessRights"
+"^Requiresdep$": "RequiresDEP"
+"^Userapprovedmdm$": "UserApprovedMDM"
+"^Allowmanualinstall$": "AllowManualInstall"
+"^Alwaysskippable$": "AlwaysSkippable"
