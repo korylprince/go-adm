@@ -3,11 +3,9 @@
 
 package schema
 
+import yamlschema "github.com/korylprince/go-adm/yamlschema"
+
 const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
-
-type IntegerNumberString any
-
-type IntegerNumber any
 
 // Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
 type PayloadApply string
@@ -214,11 +212,11 @@ type PayloadKey struct {
 	// Whether the key is required or optional.
 	Presence PayloadKeyPresence `yaml:"presence,omitempty"`
 	// List of allowed values for this key.
-	Rangelist []IntegerNumberString `yaml:"rangelist,omitempty"`
+	Rangelist []yamlschema.IntegerNumberString `yaml:"rangelist,omitempty"`
 	// Bounds for the value of this key.
 	Range *Range `yaml:"range,omitempty"`
 	// The default value (if any) for the key.
-	Default IntegerNumberString `yaml:"default,omitempty"`
+	Default yamlschema.IntegerNumberString `yaml:"default,omitempty"`
 	// The format for the value expressed as a regular expression.
 	Format string `yaml:"format,omitempty"`
 	// Cardinality for this value.
@@ -246,9 +244,9 @@ type PayloadKey struct {
 // Bounds for the value of this key.
 type Range struct {
 	// Lower bound.
-	Min IntegerNumber `yaml:"min,omitempty"`
+	Min yamlschema.IntegerNumber `yaml:"min,omitempty"`
 	// Upper bound.
-	Max IntegerNumber `yaml:"max,omitempty"`
+	Max yamlschema.IntegerNumber `yaml:"max,omitempty"`
 }
 
 // Cardinality for this value.

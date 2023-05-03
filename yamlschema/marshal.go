@@ -144,7 +144,8 @@ func multiType(s *Schema) string {
 	for idx, t := range typs {
 		typstrs[idx] = cases.Title(language.AmericanEnglish).String(string(t))
 	}
-	return strings.Join(typstrs, "")
+	// TODO: resolve this import
+	return "yamlschema." + strings.Join(typstrs, "")
 }
 
 func schemaType(s *Schema) string {
@@ -213,9 +214,6 @@ func (e *Encoder) Encode(s *Schema) error {
 			}
 			multitypes[mtype] = struct{}{}
 
-			if _, err := e.w.Write([]byte(fmt.Sprintf("type %s any\n\n", mtype))); err != nil {
-				return fmt.Errorf("could not write multitype %s: %w", mtype, err)
-			}
 			return nil
 		})
 	}); err != nil {
@@ -346,6 +344,9 @@ func GenerateFromGit(repoURL, commit, path, pkgName string, reps replace.Replace
 	buf := new(bytes.Buffer)
 	buf.WriteString(fmt.Sprintf("// DO NOT EDIT\n// generated from %s:%s/%s\n\npackage %s\n\n",
 		repoURL, hash, path, pkgName))
+
+	// TODO: resolve this correctly
+	buf.WriteString("import yamlschema \"github.com/korylprince/go-adm/yamlschema\"\n")
 
 	buf.WriteString(fmt.Sprintf("const DeviceManagementGenerateHash = \"%s\"\n\n", hash))
 
