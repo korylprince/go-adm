@@ -191,7 +191,7 @@ func testConsts(t *testing.T, repo billy.Filesystem, path string) {
 			if e.IsDir() || strings.HasSuffix(e.Name(), ".yaml") {
 				name := strings.TrimSuffix(e.Name(), filepath.Ext(e.Name()))
 				t.Run(cases.Title(language.AmericanEnglish).String(name), func(t *testing.T) {
-					testSchema(t, repo, filepath.Join(path, e.Name()))
+					testConsts(t, repo, filepath.Join(path, e.Name()))
 				})
 			}
 		}
