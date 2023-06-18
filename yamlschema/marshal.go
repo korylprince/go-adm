@@ -38,9 +38,13 @@ func NewEncoder(w io.Writer, opts ...EncodeOption) *Encoder {
 }
 
 func (e *Encoder) normalizeName(s string) string {
-	stripped := regexp.MustCompile("[^a-zA-Z0-9]").ReplaceAllLiteralString(s, "")
-	titled := cases.Title(language.AmericanEnglish).String(stripped)
-	return e.reps.Replace(titled)
+	stripped := regexp.MustCompile("[^a-zA-Z0-9\\-]").ReplaceAllLiteralString(s, "")
+	split := strings.Split(stripped, "-")
+	name := ""
+	for _, n := range split {
+		name += cases.Title(language.AmericanEnglish).String(n)
+	}
+	return e.reps.Replace(name)
 }
 
 // findCommonName finds a common suffix between strings, e.g. [JohnSmith, JaneSmith, JoeAmith] -> mith
@@ -169,6 +173,16 @@ func schemaType(s *Schema) string {
 	return "any"
 }
 
+func docComment(doc string) string {
+	comment := ""
+	for _, line := range strings.Split(strings.TrimSpace(doc), "\n") {
+		if c := strings.TrimSpace(line); c != "" {
+			comment += fmt.Sprintf("// %s\n", c)
+		}
+	}
+	return comment
+}
+
 func (e *Encoder) Encode(s *Schema) error {
 	for _, opt := range e.opts {
 		if err := opt(e); err != nil {
@@ -219,7 +233,7 @@ func (e *Encoder) Encode(s *Schema) error {
 			enumMap[enum] = enumName
 
 			if enum.Description != "" {
-				buf.WriteString(fmt.Sprintf("// %s\n", enum.Description))
+				buf.WriteString(docComment(enum.Description))
 			}
 			buf.WriteString(fmt.Sprintf("type %s string\nconst (\n", enumName))
 
@@ -240,13 +254,13 @@ func (e *Encoder) Encode(s *Schema) error {
 	// marshal structs
 	if err := structs.Iter(func(structName string, strct *Schema) error {
 		if strct.Description != "" {
-			buf.WriteString(fmt.Sprintf("// %s\n", strct.Description))
+			buf.WriteString(docComment(strct.Description))
 		}
 		buf.WriteString(fmt.Sprintf("type %s struct {\n", e.normalizeName(structName)))
 
 		strct.Properties.Iter(func(propName string, prop *Schema) error {
 			if prop.Description != "" {
-				buf.WriteString(fmt.Sprintf("\t// %s\n", prop.Description))
+				buf.WriteString(docComment(prop.Description))
 			}
 
 			typ := schemaType(prop)

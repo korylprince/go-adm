@@ -1,13 +1,22 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:5a8fb0deb23799aa77ff15f284c9b31208d39ad1/docs/schema.yaml
+// generated from https://github.com/apple/device-management.git:b838baacf2e790db729b6ca3f52724adc8bfb96d/docs/schema.yaml
 
 package schema
 
-const DeviceManagementGenerateHash = "5a8fb0deb23799aa77ff15f284c9b31208d39ad1"
+const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
 
 type IntegerNumberString any
 
 type IntegerNumber any
+
+// Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
+type PayloadApply string
+
+const (
+	PayloadApplySingle   PayloadApply = "single"
+	PayloadApplyMultiple PayloadApply = "multiple"
+	PayloadApplyCombined PayloadApply = "combined"
+)
 
 // Indicates whether a payload or payload key can used with or without shared iPad in effect. If set to 'allowed', then the payload or payload key can be used both with or without shared iPad in effect. If set to 'required', then the payload or payload key can only be used if shared iPad is in effect. If set to 'forbidden', then the payload or payload key cannot be used if shared iPad is in effect. If set to 'ignored', then the payload or payload key can be used, but is ignored if shared iPad is in effect.
 type SharediPadMode string
@@ -61,6 +70,32 @@ const (
 	PayloadKeyPresenceOptional PayloadKeyPresence = "optional"
 )
 
+// For a configuration that will be combined, indicates how this key is combined with ones from other configurations.
+// * boolean-or - multiple <boolean> values are combined using a logical OR operation
+// * boolean-and - multiple <boolean> values are combined using a logical AND operation
+// * number-min - multiple <integer> or <real> values are combined by using the smallest value
+// * number-max - multiple <integer> or <real> values are combined by using the largest value
+// * enum-lowest - multiple <string> values with a rangelist are combined by using the value whose position is lowest in the range list
+// * enum-highest - multiple <string> values with a rangelist are combined by using the value whose position is highest in the range list
+// * first - multiple values are combined by using the first value that is processed
+// * array-append - multiple <array> values are combined by concatenating the values in each array into a new array
+// * set-union - multiple <array> values are combined by returning the unique union of all values in each array
+// * set-intersection - multiple <array> values are combined by returning the unique intersection of all values in each array
+type PayloadKeyCombineType string
+
+const (
+	PayloadKeyCombineTypeBooleanOr       PayloadKeyCombineType = "boolean-or"
+	PayloadKeyCombineTypeBooleanAnd      PayloadKeyCombineType = "boolean-and"
+	PayloadKeyCombineTypeNumberMin       PayloadKeyCombineType = "number-min"
+	PayloadKeyCombineTypeNumberMax       PayloadKeyCombineType = "number-max"
+	PayloadKeyCombineTypeEnumLowest      PayloadKeyCombineType = "enum-lowest"
+	PayloadKeyCombineTypeEnumHighest     PayloadKeyCombineType = "enum-highest"
+	PayloadKeyCombineTypeFirst           PayloadKeyCombineType = "first"
+	PayloadKeyCombineTypeArrayAppend     PayloadKeyCombineType = "array-append"
+	PayloadKeyCombineTypeSetUnion        PayloadKeyCombineType = "set-union"
+	PayloadKeyCombineTypeSetIntersection PayloadKeyCombineType = "set-intersection"
+)
+
 type Schema struct {
 	// Title for this schema object.
 	Title string `yaml:"title"`
@@ -88,6 +123,8 @@ type Payload struct {
 	CredentialType string `yaml:"credentialtype,omitempty"`
 	// Identifies the range of supported OS versions that support the entire payload.
 	SupportedOS *SupportedOS `yaml:"supportedOS,omitempty"`
+	// Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
+	Apply PayloadApply `yaml:"apply,omitempty"`
 	// Description of the payload.
 	Content string `yaml:"content,omitempty"`
 }
@@ -114,11 +151,13 @@ type OS struct {
 	Removed string `yaml:"removed,omitempty"`
 	// The MDM protocol access rights required on the device to execute the command.
 	AccessRights string `yaml:"accessrights,omitempty"`
-	// Indicates whether the command is supported on the device channel. If this key is present it overrides the the `devicechannel` key in the top-level payload !!(payload) key.
+	// Indicates whether multiple copies of the payload can be installed
+	Multiple bool `yaml:"multiple,omitempty"`
+	// Indicates whether the command or profile is supported on the device channel. If this key is present it overrides the the `devicechannel` key in the top-level payload !!(payload) key.
 	DeviceChannel bool `yaml:"devicechannel,omitempty"`
-	// indicates whether the command is supported on the user channel. If this key is present it overrides the the `userchannel` key in the top-level payload !!(payload) key.
+	// indicates whether the command or profile is supported on the user channel. If this key is present it overrides the the `userchannel` key in the top-level payload !!(payload) key.
 	UserChannel bool `yaml:"userchannel,omitempty"`
-	// Indicates whether the command can only be executed on supervised devices. If this key is present it overrides the the `supervised` key in the top-level payload !!(payload) key.
+	// Indicates whether the command or profile can only be executed on supervised devices. If this key is present it overrides the the `supervised` key in the top-level payload !!(payload) key.
 	Supervised bool `yaml:"supervised,omitempty"`
 	// If True, the command can only be executed on devices provisioned in DEP.
 	RequiresDEP bool `yaml:"requiresdep,omitempty"`
@@ -126,6 +165,10 @@ type OS struct {
 	UserApprovedMDM bool `yaml:"userapprovedmdm,omitempty"`
 	// If True, the profile can be installed manually by a user on the device.
 	AllowManualInstall bool `yaml:"allowmanualinstall,omitempty"`
+	// Array of allowed enrollment types.
+	AllowedEnrollments []string `yaml:"allowed-enrollments,omitempty"`
+	// Array of allowed scopes.
+	AllowedScopes []string `yaml:"allowed-scopes,omitempty"`
 	// Additional behavior specific to shared iPad devices.
 	SharediPad *SharediPad `yaml:"sharedipad,omitempty"`
 	// Additional behavior when user enrollment is in effect. If this key is not present, then the corresponding payload or payload key can be used both with or without user enrollment in effect, without any changes to normal behavior.
@@ -142,6 +185,8 @@ type SharediPad struct {
 	DeviceChannel bool `yaml:"devicechannel,omitempty"`
 	// Defines if the payload can be installed on the user MDM channel.
 	UserChannel bool `yaml:"userchannel,omitempty"`
+	// Array of allowed scopes.
+	AllowedScopes []string `yaml:"allowed-scopes,omitempty"`
 }
 
 // Additional behavior when user enrollment is in effect. If this key is not present, then the corresponding payload or payload key can be used both with or without user enrollment in effect, without any changes to normal behavior.
@@ -164,6 +209,8 @@ type PayloadKey struct {
 	Type PayloadKeyType `yaml:"type"`
 	// Indicates the expected format of the string value of the key, supporting additional validation of the value.
 	SubType PayloadKeySubType `yaml:"subtype,omitempty"`
+	// Indicates the set of allowed asset types.
+	AssetTypes []string `yaml:"assettypes,omitempty"`
 	// Whether the key is required or optional.
 	Presence PayloadKeyPresence `yaml:"presence,omitempty"`
 	// List of allowed values for this key.
@@ -176,6 +223,18 @@ type PayloadKey struct {
 	Format string `yaml:"format,omitempty"`
 	// Cardinality for this value.
 	Repetition *Repetition `yaml:"repetition,omitempty"`
+	// For a configuration that will be combined, indicates how this key is combined with ones from other configurations.
+	// * boolean-or - multiple <boolean> values are combined using a logical OR operation
+	// * boolean-and - multiple <boolean> values are combined using a logical AND operation
+	// * number-min - multiple <integer> or <real> values are combined by using the smallest value
+	// * number-max - multiple <integer> or <real> values are combined by using the largest value
+	// * enum-lowest - multiple <string> values with a rangelist are combined by using the value whose position is lowest in the range list
+	// * enum-highest - multiple <string> values with a rangelist are combined by using the value whose position is highest in the range list
+	// * first - multiple values are combined by using the first value that is processed
+	// * array-append - multiple <array> values are combined by concatenating the values in each array into a new array
+	// * set-union - multiple <array> values are combined by returning the unique union of all values in each array
+	// * set-intersection - multiple <array> values are combined by returning the unique intersection of all values in each array
+	CombineType PayloadKeyCombineType `yaml:"combinetype,omitempty"`
 	// Description of the payload key.
 	Content string `yaml:"content,omitempty"`
 	// A name that uniquely represents the structured subkey object. This is used when structured subkeys are referenced multiple times.

@@ -21,3 +21,4 @@
 "^Userapprovedmdm$": "UserApprovedMDM"
 "^Allowmanualinstall$": "AllowManualInstall"
 "^Alwaysskippable$": "AlwaysSkippable"
+"^Assettypes$": "AssetTypes"
