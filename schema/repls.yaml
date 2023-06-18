@@ -22,3 +22,4 @@
 "^Allowmanualinstall$": "AllowManualInstall"
 "^Alwaysskippable$": "AlwaysSkippable"
 "^Assettypes$": "AssetTypes"
+"^SubkeyType$": "SubKeyType"

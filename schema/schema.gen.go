@@ -236,7 +236,7 @@ type PayloadKey struct {
 	// Description of the payload key.
 	Content string `yaml:"content,omitempty"`
 	// A name that uniquely represents the structured subkey object. This is used when structured subkeys are referenced multiple times.
-	SubkeyType string `yaml:"subkeytype,omitempty"`
+	SubKeyType string `yaml:"subkeytype,omitempty"`
 	// An array of payload keys.
 	SubKeys []*PayloadKey `yaml:"subkeys,omitempty"`
 }
