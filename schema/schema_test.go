@@ -2,7 +2,9 @@ package schema_test
 
 import (
 	"bytes"
+	"fmt"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -14,6 +16,38 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
+
+// e2e is a helper function to "clean" a schema file for comparison. It passes the yaml buf through unmarshaling/marshaling to help diff two schemas
+// e2e is not used in any tests, but is helpful for exploring the schemas.
+func e2e(buf []byte) ([]byte, error) {
+	v := new(any)
+	if err := yaml.Unmarshal(buf, v); err != nil {
+		return nil, fmt.Errorf("could not unmarshal: %w", err)
+	}
+
+	buf, err := yaml.Marshal(v)
+	if err != nil {
+		return nil, fmt.Errorf("could not marshal: %w", err)
+	}
+
+	// manual fixes because of optional fields.
+	buf = regexp.MustCompile(`.*description: "".*\n`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*requiresdep: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*supervised: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*userapprovedmdm: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*allowmanualinstall: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*always-skippable: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*default: "?false"?.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*default: "?true"?.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*userchannel: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*devicechannel: false.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*sharedipad:.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*macOS:.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*tvOS:.*`).ReplaceAll(buf, nil)
+	buf = regexp.MustCompile(`\n.*subkeys: null.*`).ReplaceAll(buf, nil)
+
+	return buf, nil
+}
 
 func Test(t *testing.T) {
 	repo, err := git.New("https://github.com/apple/device-management.git", schema.DeviceManagementGenerateHash)
