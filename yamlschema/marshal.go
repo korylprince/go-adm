@@ -3,11 +3,10 @@ package schema
 import (
 	"bytes"
 	"fmt"
-	"go/format"
-	"io"
 	"regexp"
 	"strings"
 
+	"github.com/dave/jennifer/jen"
 	"github.com/korylprince/go-adm/git"
 	"github.com/korylprince/go-adm/replace"
 	"golang.org/x/exp/maps"
@@ -17,34 +16,26 @@ import (
 )
 
 // EncodeOption allows configuring an Encoder
-type EncodeOption func(*Encoder) error
+type EncodeOption func(*Encoder)
 
 func WithReplacements(reps replace.Replacements) EncodeOption {
-	return func(e *Encoder) error {
+	return func(e *Encoder) {
 		e.reps = reps
-		return nil
 	}
 }
 
 // Encoder encodes Schemas to Go types
 type Encoder struct {
-	w    io.Writer
-	opts []EncodeOption
+	f    *jen.File
 	reps replace.Replacements
 }
 
-func NewEncoder(w io.Writer, opts ...EncodeOption) *Encoder {
-	return &Encoder{w: w, opts: opts}
-}
-
-func (e *Encoder) normalizeName(s string) string {
-	stripped := regexp.MustCompile("[^a-zA-Z0-9\\-]").ReplaceAllLiteralString(s, "")
-	split := strings.Split(stripped, "-")
-	name := ""
-	for _, n := range split {
-		name += cases.Title(language.AmericanEnglish).String(n)
+func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
+	e := &Encoder{f: f}
+	for _, opt := range opts {
+		opt(e)
 	}
-	return e.reps.Replace(name)
+	return e
 }
 
 // findCommonName finds a common suffix between strings, e.g. [JohnSmith, JaneSmith, JoeAmith] -> mith
@@ -81,7 +72,7 @@ func findStructs(root *Schema) *OrderedMap {
 			order = append(order, s)
 		}
 
-		s.Properties.Iter(func(k string, v *Schema) error {
+		s.Properties.Iter(func(k string, v *Schema) {
 			if len(v.Type) == 1 && v.Type[0] == TypeObject {
 				key := v.Title
 				if key == "" {
@@ -105,7 +96,6 @@ func findStructs(root *Schema) *OrderedMap {
 				}
 			}
 			dfs(v)
-			return nil
 		})
 		if s.Items != nil {
 			dfs(s.Items)
@@ -137,162 +127,130 @@ func findStructs(root *Schema) *OrderedMap {
 	return structs
 }
 
-func multiType(s *Schema) string {
-	typs := slices.Clone(s.Type)
-	slices.Sort(typs)
-	typstrs := make([]string, len(typs))
-	for idx, t := range typs {
-		typstrs[idx] = cases.Title(language.AmericanEnglish).String(string(t))
+func (e *Encoder) normalizeName(s string) string {
+	stripped := regexp.MustCompile("[^a-zA-Z0-9\\-]").ReplaceAllLiteralString(s, "")
+	split := strings.Split(stripped, "-")
+	name := ""
+	for _, n := range split {
+		name += cases.Title(language.AmericanEnglish).String(n)
 	}
-	// TODO: resolve this import
-	return "yamlschema." + strings.Join(typstrs, "")
+	return e.reps.Replace(name)
 }
 
-func schemaType(s *Schema) string {
+func schemaType(s *Schema) jen.Code {
 	if len(s.Type) == 0 {
-		return "any"
+		return jen.Any()
 	} else if len(s.Type) > 1 {
-		return multiType(s)
+		// multi-type
+		typs := slices.Clone(s.Type)
+		slices.Sort(typs)
+		typstrs := make([]string, len(typs))
+		for idx, t := range typs {
+			typstrs[idx] = cases.Title(language.AmericanEnglish).String(string(t))
+		}
+		return jen.Qual("github.com/korylprince/go-adm/yamlschema", strings.Join(typstrs, ""))
 	}
 	switch s.Type[0] {
 	case TypeBool:
-		return "bool"
+		return jen.Bool()
 	case TypeInteger:
-		return "int64"
+		return jen.Int64()
 	case TypeNumber:
-		return "float64"
+		return jen.Float64()
 	case TypeObject:
-		return "any"
+		return jen.Any()
 	case TypeString:
-		return "string"
+		return jen.String()
 	case TypeArray:
 		if s.Items == nil {
-			return "[]any"
+			return jen.Index().Any()
 		}
-		return "[]" + schemaType(s.Items)
+		return jen.Index().Add(schemaType(s.Items))
 	}
-	return "any"
+	return jen.Any()
 }
 
+// docComment formats a doc string with "//" before each line, since jen only does /* */ multiline comments
 func docComment(doc string) string {
-	comment := ""
+	var comment []string
 	for _, line := range strings.Split(strings.TrimSpace(doc), "\n") {
 		if c := strings.TrimSpace(line); c != "" {
-			comment += fmt.Sprintf("// %s\n", c)
+			comment = append(comment, "// "+c)
 		}
 	}
-	return comment
+	return strings.Join(comment, "\n")
 }
 
-func (e *Encoder) Encode(s *Schema) error {
-	for _, opt := range e.opts {
-		if err := opt(e); err != nil {
-			return fmt.Errorf("option failed: %w", err)
-		}
-	}
-
+func (e *Encoder) Encode(s *Schema) {
 	// find structs
 	structs := findStructs(s)
 	structMap := map[*Schema]string{}
-	structs.Iter(func(name string, schm *Schema) error {
+	structs.Iter(func(name string, schm *Schema) {
 		structMap[schm] = name
-		return nil
 	})
-
-	buf := new(bytes.Buffer)
-
-	// marshal multitypes
-	multitypes := map[string]struct{}{}
-	if err := structs.Iter(func(_ string, strct *Schema) error {
-		return strct.Properties.Iter(func(name string, prop *Schema) error {
-			if len(prop.Type) < 2 {
-				return nil
-			}
-			mtype := multiType(prop)
-			if _, ok := multitypes[mtype]; ok {
-				return nil
-			}
-			multitypes[mtype] = struct{}{}
-
-			return nil
-		})
-	}); err != nil {
-		return err
-	}
 
 	// marshal enums
 	enumMap := map[*Schema]string{}
-	if err := structs.Iter(func(parentName string, strct *Schema) error {
-		return strct.Properties.Iter(func(name string, enum *Schema) error {
+	structs.Iter(func(parentName string, strct *Schema) {
+		strct.Properties.Iter(func(name string, enum *Schema) {
 			if len(enum.Enum) == 0 {
-				return nil
+				return
 			}
 			enumName := e.normalizeName(parentName) + e.normalizeName(name)
 			enumMap[enum] = enumName
 
+			// render type definition
 			if enum.Description != "" {
-				buf.WriteString(docComment(enum.Description))
+				e.f.Comment(docComment(enum.Description))
 			}
-			buf.WriteString(fmt.Sprintf("type %s string\nconst (\n", enumName))
+			e.f.Type().Id(enumName).String()
 
-			for _, v := range enum.Enum {
-				buf.WriteString(fmt.Sprintf("\t%s%s %s = \"%s\"\n", enumName, e.normalizeName(v), enumName, v))
+			// render enum values
+			consts := make([]jen.Code, len(enum.Enum))
+			for idx, v := range enum.Enum {
+				consts[idx] = jen.Id(enumName + e.normalizeName(v)).Id(enumName).Op("=").Lit(v)
 			}
-			buf.WriteString(")\n\n")
-
-			if _, err := buf.WriteTo(e.w); err != nil {
-				return fmt.Errorf("could not write enum %s: %w", enumName, err)
-			}
-			return nil
+			e.f.Const().Defs(consts...)
 		})
-	}); err != nil {
-		return err
-	}
+	})
 
 	// marshal structs
-	if err := structs.Iter(func(structName string, strct *Schema) error {
+	structs.Iter(func(structName string, strct *Schema) {
 		if strct.Description != "" {
-			buf.WriteString(docComment(strct.Description))
+			e.f.Comment(docComment(strct.Description))
 		}
-		buf.WriteString(fmt.Sprintf("type %s struct {\n", e.normalizeName(structName)))
+		var fields []jen.Code
 
-		strct.Properties.Iter(func(propName string, prop *Schema) error {
+		strct.Properties.Iter(func(propName string, prop *Schema) {
 			if prop.Description != "" {
-				buf.WriteString(docComment(prop.Description))
+				fields = append(fields, jen.Comment(docComment(prop.Description)))
 			}
 
+			// render field tag
+			tag := map[string]string{"yaml": propName}
+			if !slices.Contains(strct.Required, propName) {
+				tag["yaml"] = propName + ",omitempty"
+			}
+
+			// select field type
 			typ := schemaType(prop)
 			if prop.Items != nil {
 				if t, ok := structMap[prop.Items]; ok {
-					typ = "[]*" + e.normalizeName(t)
+					typ = jen.Index().Op("*").Id(e.normalizeName(t))
 				}
 			}
 			if t, ok := structMap[prop]; ok {
-				typ = "*" + e.normalizeName(t)
+				typ = jen.Op("*").Id(e.normalizeName(t))
 			}
 			if t, ok := enumMap[prop]; ok {
-				typ = t
+				typ = jen.Id(t)
 			}
 
-			buf.WriteString(fmt.Sprintf("\t%s %s `yaml:\"%s", e.normalizeName(propName), typ, propName))
-			if !slices.Contains(strct.Required, propName) {
-				buf.WriteString(",omitempty")
-			}
-			buf.WriteString("\"`\n")
-
-			return nil
+			fields = append(fields, jen.Id(e.normalizeName(propName)).Add(typ).Tag(tag))
 		})
-		buf.WriteString("}\n\n")
 
-		if _, err := buf.WriteTo(e.w); err != nil {
-			return fmt.Errorf("could not write struct %s: %w", structName, err)
-		}
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
+		e.f.Type().Id(e.normalizeName(structName)).Struct(fields...)
+	})
 }
 
 // GenerateFromFile generates Go types from the schema at path using the given pkgName and optional replacements
@@ -302,20 +260,18 @@ func GenerateFromFile(path, pkgName string, reps replace.Replacements) ([]byte, 
 		return nil, fmt.Errorf("could not parse file: %w", err)
 	}
 
+	f := jen.NewFile(pkgName)
+	f.HeaderComment("DO NOT EDIT")
+	f.HeaderComment(fmt.Sprintf("generated from %s", path))
+
+	NewEncoder(f, WithReplacements(reps)).Encode(schema)
+
 	buf := new(bytes.Buffer)
-	buf.WriteString(fmt.Sprintf("// package %s is generated from %s\n// DO NOT EDIT\npackage %s\n\n",
-		pkgName, path, pkgName))
-
-	if err := NewEncoder(buf, WithReplacements(reps)).Encode(schema); err != nil {
-		return nil, fmt.Errorf("could not write schema: %w", err)
+	if err := f.Render(buf); err != nil {
+		return nil, fmt.Errorf("could not render code: %w", err)
 	}
 
-	fmtd, err := format.Source(buf.Bytes())
-	if err != nil {
-		return nil, fmt.Errorf("could not format generated code: %w", err)
-	}
-
-	return bytes.TrimSpace(fmtd), nil
+	return buf.Bytes(), nil
 }
 
 // GenerateFromGit generates Go types from the schema at the git repo/commit/path using the given pkgName and optional replacements
@@ -341,23 +297,18 @@ func GenerateFromGit(repoURL, commit, path, pkgName string, reps replace.Replace
 		return nil, fmt.Errorf("could not get hash: %w", err)
 	}
 
+	f := jen.NewFile(pkgName)
+	f.HeaderComment("DO NOT EDIT")
+	f.HeaderComment(fmt.Sprintf("generated from %s:%s/%s", repoURL, hash, path))
+
+	f.Const().Id("DeviceManagementGenerateHash").Op("=").Lit(hash)
+
+	NewEncoder(f, WithReplacements(reps)).Encode(schema)
+
 	buf := new(bytes.Buffer)
-	buf.WriteString(fmt.Sprintf("// DO NOT EDIT\n// generated from %s:%s/%s\n\npackage %s\n\n",
-		repoURL, hash, path, pkgName))
-
-	// TODO: resolve this correctly
-	buf.WriteString("import yamlschema \"github.com/korylprince/go-adm/yamlschema\"\n")
-
-	buf.WriteString(fmt.Sprintf("const DeviceManagementGenerateHash = \"%s\"\n\n", hash))
-
-	if err := NewEncoder(buf, WithReplacements(reps)).Encode(schema); err != nil {
-		return nil, fmt.Errorf("could not write schema: %w", err)
+	if err := f.Render(buf); err != nil {
+		return nil, fmt.Errorf("could not render code: %w", err)
 	}
 
-	fmtd, err := format.Source(buf.Bytes())
-	if err != nil {
-		return nil, fmt.Errorf("could not format generated code: %w", err)
-	}
-
-	return bytes.TrimSpace(fmtd), nil
+	return buf.Bytes(), nil
 }

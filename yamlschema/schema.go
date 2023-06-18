@@ -46,16 +46,13 @@ type OrderedMap struct {
 }
 
 // Iter iterates through keys and values in order
-func (m *OrderedMap) Iter(f func(key string, schm *Schema) error) error {
+func (m *OrderedMap) Iter(f func(key string, schm *Schema)) {
 	if m == nil {
-		return nil
+		return
 	}
 	for _, k := range m.Order {
-		if err := f(k, m.Map[k]); err != nil {
-			return err
-		}
+		f(k, m.Map[k])
 	}
-	return nil
 }
 
 func (m *OrderedMap) UnmarshalYAML(f func(interface{}) error) error {
