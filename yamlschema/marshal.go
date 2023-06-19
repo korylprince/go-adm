@@ -3,12 +3,12 @@ package schema
 import (
 	"bytes"
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/dave/jennifer/jen"
 	"github.com/korylprince/go-adm/git"
 	"github.com/korylprince/go-adm/replace"
+	"github.com/korylprince/go-adm/text"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 	"golang.org/x/text/cases"
@@ -127,14 +127,8 @@ func findStructs(root *Schema) *OrderedMap {
 	return structs
 }
 
-func (e *Encoder) normalizeName(s string) string {
-	stripped := regexp.MustCompile("[^a-zA-Z0-9\\-]").ReplaceAllLiteralString(s, "")
-	split := strings.Split(stripped, "-")
-	name := ""
-	for _, n := range split {
-		name += cases.Title(language.AmericanEnglish).String(n)
-	}
-	return e.reps.Replace(name)
+func (e *Encoder) normalizeName(name string) string {
+	return e.reps.Replace(text.NormalizeName(name))
 }
 
 func schemaType(s *Schema) jen.Code {
@@ -170,17 +164,6 @@ func schemaType(s *Schema) jen.Code {
 	return jen.Any()
 }
 
-// docComment formats a doc string with "//" before each line, since jen only does /* */ multiline comments
-func docComment(doc string) string {
-	var comment []string
-	for _, line := range strings.Split(strings.TrimSpace(doc), "\n") {
-		if c := strings.TrimSpace(line); c != "" {
-			comment = append(comment, "// "+c)
-		}
-	}
-	return strings.Join(comment, "\n")
-}
-
 func (e *Encoder) Encode(s *Schema) {
 	// find structs
 	structs := findStructs(s)
@@ -201,7 +184,7 @@ func (e *Encoder) Encode(s *Schema) {
 
 			// render type definition
 			if enum.Description != "" {
-				e.f.Comment(docComment(enum.Description))
+				e.f.Comment(text.DocComment(enum.Description))
 			}
 			e.f.Type().Id(enumName).String()
 
@@ -217,13 +200,13 @@ func (e *Encoder) Encode(s *Schema) {
 	// marshal structs
 	structs.Iter(func(structName string, strct *Schema) {
 		if strct.Description != "" {
-			e.f.Comment(docComment(strct.Description))
+			e.f.Comment(text.DocComment(strct.Description))
 		}
 		var fields []jen.Code
 
 		strct.Properties.Iter(func(propName string, prop *Schema) {
 			if prop.Description != "" {
-				fields = append(fields, jen.Comment(docComment(prop.Description)))
+				fields = append(fields, jen.Comment(text.DocComment(prop.Description)))
 			}
 
 			// render field tag
