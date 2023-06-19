@@ -32,3 +32,17 @@ func NewFromFile(path string) (*Schema, error) {
 
 	return cmd, nil
 }
+
+func (s *Schema) Iter(f func(parent, key *PayloadKey)) {
+	var dfs func(child *PayloadKey)
+	dfs = func(child *PayloadKey) {
+		for _, key := range child.SubKeys {
+			f(child, key)
+			dfs(key)
+		}
+	}
+	for _, key := range s.PayloadKeys {
+		f(nil, key)
+		dfs(key)
+	}
+}
