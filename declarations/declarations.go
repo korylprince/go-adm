@@ -4,13 +4,17 @@ package declarations
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"reflect"
 
 	"github.com/korylprince/go-adm/declarations/activations"
 	"github.com/korylprince/go-adm/declarations/assets"
 	"github.com/korylprince/go-adm/declarations/configurations"
 	"github.com/korylprince/go-adm/declarations/management"
 )
+
+var ErrUnknownDeclarationType = errors.New("unknown declaration type")
 
 func mergeMap[K comparable, V any](maps ...map[K]V) map[K]V {
 	merged := make(map[K]V)
@@ -65,4 +69,17 @@ func (d *Declaration) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(decl)
+}
+
+func NewFromType(typ, id, token string) (*Declaration, error) {
+	payload, ok := DeclarationMap[typ]
+	if !ok {
+		return nil, ErrUnknownDeclarationType
+	}
+
+	return &Declaration{
+		Identifier:  id,
+		ServerToken: token,
+		Payload:     reflect.New(reflect.TypeOf(payload)).Interface().(DeclarationPayload),
+	}, nil
 }
