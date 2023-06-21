@@ -32,10 +32,12 @@ type Encoder struct {
 
 	enums   []jen.Code
 	structs []jen.Code
+
+	structMap map[string]string
 }
 
 func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
-	e := &Encoder{f: f, gn: schema.NewGlobalNamer()}
+	e := &Encoder{f: f, gn: schema.NewGlobalNamer(), structMap: make(map[string]string)}
 	for _, opt := range opts {
 		opt(e)
 	}
@@ -202,6 +204,7 @@ func (e *Encoder) renderSchema(s *schema.Schema) {
 		e.structs = append(e.structs, jen.Func().Parens(jen.Id("p").Op("*").Id(schemaName)).Id("DeclarationType").Parens(nil).String().Block(
 			jen.Return().Lit(s.Payload.DeclarationType),
 		))
+		e.structMap[schemaName] = s.Payload.DeclarationType
 	}
 }
 
@@ -238,6 +241,12 @@ func (e *Encoder) Encode(schemas ...*schema.Schema) []byte {
 	for _, s := range schemas {
 		e.renderSchema(s)
 	}
+
+	e.f.Var().Id("DeclarationMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
+		for typ, id := range e.structMap {
+			d[jen.Lit(id)] = jen.Id(typ).Values()
+		}
+	}))
 
 	for _, stmt := range append(e.enums, e.structs...) {
 		e.f.Add(stmt)

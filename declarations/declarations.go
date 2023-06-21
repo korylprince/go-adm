@@ -2,7 +2,32 @@
 
 package declarations
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/korylprince/go-adm/declarations/activations"
+	"github.com/korylprince/go-adm/declarations/assets"
+	"github.com/korylprince/go-adm/declarations/configurations"
+	"github.com/korylprince/go-adm/declarations/management"
+)
+
+func mergeMap[K comparable, V any](maps ...map[K]V) map[K]V {
+	merged := make(map[K]V)
+	for _, m := range maps {
+		for k, v := range m {
+			merged[k] = v
+		}
+	}
+	return merged
+}
+
+// DeclarationMap is a mapping of Declaration Type to the Go type
+var DeclarationMap = mergeMap(
+	activations.DeclarationMap,
+	assets.DeclarationMap,
+	configurations.DeclarationMap,
+	management.DeclarationMap,
+)
 
 type DeclarationPayload interface {
 	DeclarationType() string

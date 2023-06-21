@@ -5,6 +5,12 @@ package management
 
 const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
 
+var DeclarationMap = map[string]any{
+	"com.apple.management.organization-info":   ManagementOrganizationInformation{},
+	"com.apple.management.properties":          ManagementProperties{},
+	"com.apple.management.server-capabilities": ManagementServerCapabilities{},
+}
+
 // The additional properties that verify the identity and authenticity of the organization.
 type Proof struct {
 	// A token that verifies the identity of the organization when using this service.

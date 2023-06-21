@@ -5,6 +5,8 @@ package activations
 
 const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
 
+var DeclarationMap = map[string]any{"com.apple.activation.simple": ActivationSimple{}}
+
 // An activation used to install a set of configurations.
 type ActivationSimple struct {
 	// An array of strings that specify the identifiers of configurations to install. A failure to install one of the configurations doesn't prevent other configurations from installing.

@@ -5,6 +5,30 @@ package configurations
 
 const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
 
+var DeclarationMap = map[string]any{
+	"com.apple.configuration.account.caldav":                      AccountCalDAV{},
+	"com.apple.configuration.account.carddav":                     AccountCardDAV{},
+	"com.apple.configuration.account.exchange":                    AccountExchange{},
+	"com.apple.configuration.account.google":                      AccountGoogle{},
+	"com.apple.configuration.account.ldap":                        AccountLDAP{},
+	"com.apple.configuration.account.mail":                        AccountMail{},
+	"com.apple.configuration.account.subscribed-calendar":         AccountSubscribedCalendar{},
+	"com.apple.configuration.legacy":                              LegacyProfile{},
+	"com.apple.configuration.legacy.interactive":                  LegacyInteractiveProfile{},
+	"com.apple.configuration.management.status-subscriptions":     ManagementStatusSubscriptions{},
+	"com.apple.configuration.management.test":                     ManagementTest{},
+	"com.apple.configuration.passcode.settings":                   PasscodeSettings{},
+	"com.apple.configuration.screensharing.connection":            ScreenSharingConnection{},
+	"com.apple.configuration.screensharing.connection.group":      ScreenSharingConnectionGroup{},
+	"com.apple.configuration.screensharing.host.settings":         ScreenSharingHostSettings{},
+	"com.apple.configuration.security.certificate":                SecurityCertificate{},
+	"com.apple.configuration.security.identity":                   SecurityIdentity{},
+	"com.apple.configuration.security.passkey.attestation":        SecurityPasskeyAttestation{},
+	"com.apple.configuration.services.configuration-files":        ServicesConfigurationFiles{},
+	"com.apple.configuration.softwareupdate.enforcement.specific": SoftwareUpdateEnforcementSpecific{},
+	"com.apple.configuration.watch.enrollment":                    WatchEnrollment{},
+}
+
 // The set of protocol types to enable on the Exchange server, in order of preference. This is an array of unique strings with possible values:
 // * 'EAS:' Exchange ActiveSync
 // * 'EWS:' Exchange Web Services (EWS)

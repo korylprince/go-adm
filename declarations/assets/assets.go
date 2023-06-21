@@ -5,6 +5,16 @@ package assets
 
 const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
 
+var DeclarationMap = map[string]any{
+	"com.apple.asset.credential.acme":         AssetCredentialACME{},
+	"com.apple.asset.credential.certificate":  AssetCredentialCertificate{},
+	"com.apple.asset.credential.identity":     AssetCredentialIdentity{},
+	"com.apple.asset.credential.scep":         AssetCredentialSCEP{},
+	"com.apple.asset.credential.userpassword": AssetCredentialUserNameandPassword{},
+	"com.apple.asset.data":                    AssetData{},
+	"com.apple.asset.useridentity":            AssetUserIdentity{},
+}
+
 // Type of authentication:
 // * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 // * None - a standard GET request is carried out.
