@@ -115,16 +115,16 @@ func (e *Encoder) renderEnum(parentName string, key *schema.PayloadKey) {
 	}
 
 	// render consts
-	defs := make([]jen.Code, len(key.Rangelist))
-	for idx, v := range key.Rangelist {
-		switch key.Type {
-		case schema.PayloadKeyTypeString:
-			defs[idx] = jen.Id(e.normalizeName(enumName + text.NormalizeName(v.String()))).Id(enumName).Op("=").Lit(v.String())
-		case schema.PayloadKeyTypeInteger:
-			defs[idx] = jen.Id(e.normalizeName(enumName + strconv.Itoa(int(v.Int64())))).Id(enumName).Op("=").Lit(int(v.Int64()))
+	e.enums = append(e.enums, jen.Const().DefsFunc(func(g *jen.Group) {
+		for _, v := range key.Rangelist {
+			switch key.Type {
+			case schema.PayloadKeyTypeString:
+				g.Id(e.normalizeName(enumName + text.NormalizeName(v.String()))).Id(enumName).Op("=").Lit(v.String())
+			case schema.PayloadKeyTypeInteger:
+				g.Id(e.normalizeName(enumName + strconv.Itoa(int(v.Int64())))).Id(enumName).Op("=").Lit(int(v.Int64()))
+			}
 		}
-	}
-	e.enums = append(e.enums, jen.Const().Defs(defs...))
+	}))
 }
 
 func (e *Encoder) renderSchema(s *schema.Schema) {
@@ -204,6 +204,8 @@ func (e *Encoder) renderSchema(s *schema.Schema) {
 		e.structs = append(e.structs, jen.Func().Parens(jen.Id("p").Op("*").Id(schemaName)).Id("DeclarationType").Parens(nil).String().Block(
 			jen.Return().Lit(s.Payload.DeclarationType),
 		))
+
+		// add struct to id -> type map
 		e.structMap[schemaName] = s.Payload.DeclarationType
 	}
 }

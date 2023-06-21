@@ -18,7 +18,7 @@ func StructDefaults(v any) error {
 	}
 
 	if val.Type().Kind() != reflect.Struct {
-		return ErrNotStruct
+		return fmt.Errorf("could not parse %s: %w", val.Type().Name(), ErrNotStruct)
 	}
 
 	strct := val.Type()
@@ -28,7 +28,9 @@ func StructDefaults(v any) error {
 		// nested struct
 		if fld.Type.Kind() == reflect.Struct || (fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Struct) {
 			if !val.Field(i).IsNil() {
-				StructDefaults(val.Field(i).Interface())
+				if err := StructDefaults(val.Field(i).Interface()); err != nil {
+					return err
+				}
 			}
 			continue
 		}
@@ -43,7 +45,9 @@ func StructDefaults(v any) error {
 			}
 			if typ.Elem().Kind() == reflect.Struct || (typ.Elem().Kind() == reflect.Pointer && typ.Elem().Elem().Kind() == reflect.Struct) {
 				for j := 0; j < val.Len(); j++ {
-					StructDefaults(val.Index(j).Interface())
+					if err := StructDefaults(val.Index(j).Interface()); err != nil {
+						return err
+					}
 				}
 				continue
 			}
@@ -77,24 +81,24 @@ func StructDefaults(v any) error {
 			case "false":
 				def = reflect.ValueOf(false)
 			default:
-				return fmt.Errorf("could not parse %s default %s as bool", fld.Name, tag)
+				return fmt.Errorf("could not parse %s.%s default %s as bool", strct.Name(), fld.Name, tag)
 			}
 		case reflect.Int, reflect.Int32, reflect.Int64:
 			i, err := strconv.ParseInt(tag, 10, 64)
 			if err != nil {
-				return fmt.Errorf("could not parse %s default %s as int64: %w", fld.Name, tag, err)
+				return fmt.Errorf("could not parse %s.%s default %s as int64: %w", strct.Name(), fld.Name, tag, err)
 			}
 			def = reflect.ValueOf(i)
 		case reflect.Float32, reflect.Float64:
 			f, err := strconv.ParseFloat(tag, 64)
 			if err != nil {
-				return fmt.Errorf("could not parse %s default %s as float: %w", fld.Name, tag, err)
+				return fmt.Errorf("could not parse %s.%s default %s as float: %w", strct.Name(), fld.Name, tag, err)
 			}
 			def = reflect.ValueOf(f)
 		case reflect.String:
 			def = reflect.ValueOf(tag)
 		default:
-			return fmt.Errorf("could not parse %s default %s: unsupported field type %s", fld.Name, tag, typ.String())
+			return fmt.Errorf("could not parse %s.%s default %s: unsupported field type %s", strct.Name(), fld.Name, tag, typ.String())
 		}
 
 		// set default value

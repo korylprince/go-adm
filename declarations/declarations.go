@@ -4,6 +4,7 @@ package declarations
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/korylprince/go-adm/declarations/activations"
 	"github.com/korylprince/go-adm/declarations/assets"
@@ -52,7 +53,9 @@ func (d *Declaration) Type() string {
 }
 
 func (d *Declaration) MarshalJSON() ([]byte, error) {
-	StructDefaults(d.Payload)
+	if err := StructDefaults(d.Payload); err != nil {
+		return nil, fmt.Errorf("could not set struct defaults: %w", err)
+	}
 
 	decl := map[string]any{
 		"Type":        d.Type(),

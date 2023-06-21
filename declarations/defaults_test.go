@@ -48,8 +48,7 @@ func TestStructDefaults(t *testing.T) {
 		t.Fatalf("could not set struct defaults: %v", err)
 	}
 
-	var check func(test *T)
-	check = func(test *T) {
+	check := func(test *T) {
 		if !*test.B {
 			t.Errorf("T.B is not default: have: %v, want: true", *test.B)
 		}
