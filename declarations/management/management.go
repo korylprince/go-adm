@@ -56,7 +56,7 @@ type ManagementServerCapabilities struct {
 	Version string `json:"Version"`
 	// A dictionary that contains the server's optional protocol features.
 	// Each dictionary item uses the key name to represent a feature, and the value to hold the feature's associated parameters. This protocol reserves keys with a prefix of “'com.apple.'”, which appear as subkeys in this dictionary.
-	SupportedFeatures *SupportedFeatures `json:"SupportedFeatures"`
+	SupportedFeatures SupportedFeatures `json:"SupportedFeatures"`
 }
 
 func (p *ManagementServerCapabilities) DeclarationType() string {

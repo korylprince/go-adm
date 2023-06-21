@@ -74,7 +74,7 @@ func (e *Encoder) schemaType(key *schema.PayloadKey) jen.Code {
 			key.SubKeys[0].Presence = orig
 		}
 	case schema.PayloadKeyTypeDictionary:
-		return jen.Op("*").Id(e.normalizeName(e.gn.KeyName(key)))
+		typ = jen.Id(e.normalizeName(e.gn.KeyName(key)))
 	case schema.PayloadKeyTypeAny:
 		typ = jen.Any()
 	}

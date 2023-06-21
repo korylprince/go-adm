@@ -359,9 +359,9 @@ type AccountMail struct {
 	// The identifier of an asset declaration that contains the user identity for this account. The corresponding asset must be of type 'UserIdentity'.
 	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty"`
 	// The settings for the incoming mail server for this account.
-	IncomingServer *IncomingServer `json:"IncomingServer"`
+	IncomingServer IncomingServer `json:"IncomingServer"`
 	// The settings for the outgoing mail server for this account.
-	OutgoingServer *OutgoingServer `json:"OutgoingServer"`
+	OutgoingServer OutgoingServer `json:"OutgoingServer"`
 	// Settings for S/MIME.
 	SMIME *AccountMailSMIME `json:"SMIME,omitempty"`
 }
@@ -524,7 +524,7 @@ type ScreenSharingConnection struct {
 	// Specifies the TCP port number on the host used to initiate the connection.
 	Port *int64 `json:"Port,omitempty"`
 	// The display configuration to use for this connection.
-	DisplayConfiguration *DisplayConfiguration `json:"DisplayConfiguration"`
+	DisplayConfiguration DisplayConfiguration `json:"DisplayConfiguration"`
 	// Specifies the identifier of an asset declaration containing the credentials required for this connection to authenticate with the Screen Sharing server. The corresponding asset must be of type "com.apple.asset.credential.userpassword".
 	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }

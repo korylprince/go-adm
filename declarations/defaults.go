@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
-	"strings"
 )
 
 var ErrNotStruct = errors.New("not a struct or pointer to a struct")
@@ -27,15 +26,15 @@ func StructDefaults(v any) error {
 		fld := strct.Field(i)
 
 		// nested struct
-		if fld.Type.Kind() == reflect.Struct || (fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Struct) {
-			// if struct isn't optional initialize it
-			if !strings.Contains(fld.Tag.Get("json"), "omitempty") {
-				if fld.Type.Kind() == reflect.Struct {
-					val.Field(i).Set(reflect.New(fld.Type))
-				} else {
-					val.Field(i).Set(reflect.New(fld.Type.Elem()))
-				}
+		if fld.Type.Kind() == reflect.Struct {
+			if err := StructDefaults(val.Field(i).Interface()); err != nil {
+				return err
 			}
+			continue
+		}
+
+		// nested *struct
+		if fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Struct {
 			if !val.Field(i).IsNil() {
 				if err := StructDefaults(val.Field(i).Interface()); err != nil {
 					return err
@@ -44,11 +43,18 @@ func StructDefaults(v any) error {
 			continue
 		}
 
+		// make slices (i.e. end up with [] instead of null in the json)
+		if fld.Type.Kind() == reflect.Slice {
+			if val.Field(i).IsNil() {
+				val.Field(i).Set(reflect.MakeSlice(fld.Type, 0, 0))
+			}
+		}
+
 		// slice of structs
 		if fld.Type.Kind() == reflect.Slice || fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Slice {
 			// check if value is nil
-			val := val.Field(i)
-			if val.IsNil() {
+			fldval := val.Field(i)
+			if fldval.IsNil() {
 				continue
 			}
 
@@ -56,11 +62,13 @@ func StructDefaults(v any) error {
 			typ := fld.Type
 			if typ.Kind() == reflect.Pointer {
 				typ = typ.Elem()
-				val = val.Elem()
+				fldval = fldval.Elem()
 			}
+
+			// check that slice is made of struct or *struct
 			if typ.Elem().Kind() == reflect.Struct || (typ.Elem().Kind() == reflect.Pointer && typ.Elem().Elem().Kind() == reflect.Struct) {
-				for j := 0; j < val.Len(); j++ {
-					if err := StructDefaults(val.Index(j).Interface()); err != nil {
+				for j := 0; j < fldval.Len(); j++ {
+					if err := StructDefaults(fldval.Index(j).Interface()); err != nil {
 						return err
 					}
 				}

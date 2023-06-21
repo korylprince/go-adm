@@ -148,7 +148,7 @@ type AssetCredentialACMEAuthentication struct {
 // A reference to an ACME identity.
 type AssetCredentialACME struct {
 	// The external reference. The asset data must be a JSON document representing the "com.apple.credential.acme" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
-	Reference *AssetCredentialACMEReference `json:"Reference"`
+	Reference AssetCredentialACMEReference `json:"Reference"`
 	// The server authentication details.
 	Authentication *AssetCredentialACMEAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use.
@@ -185,7 +185,7 @@ type AssetCredentialCertificateAuthentication struct {
 // A reference to a PKCS #1 or PEM encoded certificate.
 type AssetCredentialCertificate struct {
 	// The external reference. The asset data must be returned using a media type of "application/pkcs1" or "application/pem" to correctly identify the type of encoded certificate. If a "ContentType" sub-key is included, it must be set to the corresponding media type.
-	Reference *AssetCredentialCertificateReference `json:"Reference"`
+	Reference AssetCredentialCertificateReference `json:"Reference"`
 	// The server authentication details.
 	Authentication *AssetCredentialCertificateAuthentication `json:"Authentication,omitempty"`
 }
@@ -218,7 +218,7 @@ type AssetCredentialIdentityAuthentication struct {
 // A reference to a PKCS #12 password-protected identity.
 type AssetCredentialIdentity struct {
 	// The external reference. The asset data must be a JSON document representing the "com.apple.credential.identity" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
-	Reference *AssetCredentialIdentityReference `json:"Reference"`
+	Reference AssetCredentialIdentityReference `json:"Reference"`
 	// The server authentication details.
 	Authentication *AssetCredentialIdentityAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use.
@@ -255,7 +255,7 @@ type AssetCredentialSCEPAuthentication struct {
 // A reference to a SCEP identity.
 type AssetCredentialSCEP struct {
 	// The external reference. The asset data must be a JSON document representing the "com.apple.credential.scep" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
-	Reference *AssetCredentialSCEPReference `json:"Reference"`
+	Reference AssetCredentialSCEPReference `json:"Reference"`
 	// The server authentication details.
 	Authentication *AssetCredentialSCEPAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use.
@@ -292,7 +292,7 @@ type AssetCredentialUserNameandPasswordAuthentication struct {
 // A reference to data describing a credential representing a user name and password.
 type AssetCredentialUserNameandPassword struct {
 	// The reference to the credential.
-	Reference *AssetCredentialUserNameandPasswordReference `json:"Reference"`
+	Reference AssetCredentialUserNameandPasswordReference `json:"Reference"`
 	// The server authentication details.
 	Authentication *AssetCredentialUserNameandPasswordAuthentication `json:"Authentication,omitempty"`
 }
@@ -426,7 +426,7 @@ type AssetDataAuthentication struct {
 // A reference to arbitrary data with a specific media type.
 type AssetData struct {
 	// The reference to the data.
-	Reference *AssetDataReference `json:"Reference"`
+	Reference AssetDataReference `json:"Reference"`
 	// The server authentication details.
 	Authentication *AssetDataAuthentication `json:"Authentication,omitempty"`
 }

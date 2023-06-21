@@ -33,8 +33,8 @@ type T struct {
 	EI *EnumInt   `default:"2"`
 	EF *EnumFloat `default:"1.618"`
 	ES *EnumStr   `default:"enum"`
-	T  *T         `json:"-,omitempty"`
-	TA []*T       `json:"-,omitempty"`
+	T  *T
+	TA []*T
 }
 
 func TestStructDefaults(t *testing.T) {
