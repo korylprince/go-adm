@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 var ErrNotStruct = errors.New("not a struct or pointer to a struct")
@@ -27,6 +28,14 @@ func StructDefaults(v any) error {
 
 		// nested struct
 		if fld.Type.Kind() == reflect.Struct || (fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Struct) {
+			// if struct isn't optional initialize it
+			if !strings.Contains(fld.Tag.Get("json"), "omitempty") {
+				if fld.Type.Kind() == reflect.Struct {
+					val.Field(i).Set(reflect.New(fld.Type))
+				} else {
+					val.Field(i).Set(reflect.New(fld.Type.Elem()))
+				}
+			}
 			if !val.Field(i).IsNil() {
 				if err := StructDefaults(val.Field(i).Interface()); err != nil {
 					return err
@@ -35,10 +44,16 @@ func StructDefaults(v any) error {
 			continue
 		}
 
-		// array of structs
+		// slice of structs
 		if fld.Type.Kind() == reflect.Slice || fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Slice {
-			typ := fld.Type
+			// check if value is nil
 			val := val.Field(i)
+			if val.IsNil() {
+				continue
+			}
+
+			// deference pointer
+			typ := fld.Type
 			if typ.Kind() == reflect.Pointer {
 				typ = typ.Elem()
 				val = val.Elem()
