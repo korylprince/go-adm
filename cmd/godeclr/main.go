@@ -41,12 +41,6 @@ func main() {
 		*flIdentifier = uuid.New().String()
 	}
 
-	if *flServerToken == "" {
-		flag.Usage()
-		fmt.Println("-token must be set")
-		os.Exit(1)
-	}
-
 	if *flType == "" {
 		flag.Usage()
 		fmt.Println("-type must be set")
