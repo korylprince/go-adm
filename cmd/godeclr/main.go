@@ -9,12 +9,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/korylprince/go-adm/declarations"
+	"github.com/korylprince/go-adm/jsonutil"
 )
 
 func main() {
 	flIdentifier := flag.String("id", "", "declaration identifier (auto-generated UUID if not specified)")
 	flServerToken := flag.String("token", "", "declaration ServerToken")
 	flType := flag.String("type", "", "declaration type. Use -types to list all supported types")
+	flFull := flag.Bool("full", false, "output all fields in the declaration")
 	flTypes := flag.Bool("types", false, "list all supported declaration types")
 
 	flag.Usage = func() {
@@ -57,7 +59,27 @@ func main() {
 		os.Exit(1)
 	}
 
-	buf, err := json.MarshalIndent(decl, "", "\t")
+	var declobj any = decl
+	if *flFull {
+		payload := jsonutil.FullFields(decl.Payload)
+		if err = jsonutil.SetDefaults(payload); err != nil {
+			fmt.Println("could not fill out declaration:", err)
+			os.Exit(1)
+		}
+
+		m := map[string]any{
+
+			"Type":       decl.Type(),
+			"Identifier": decl.Identifier,
+			"Payload":    payload,
+		}
+		if decl.ServerToken != "" {
+			m["ServerToken"] = decl.ServerToken
+		}
+		declobj = m
+	}
+
+	buf, err := json.MarshalIndent(declobj, "", "\t")
 	if err != nil {
 		fmt.Println("could not json marshal declaration:", err)
 		os.Exit(1)

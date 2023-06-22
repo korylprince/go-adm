@@ -1,4 +1,4 @@
-package declarations
+package jsonutil
 
 import (
 	"errors"
@@ -9,9 +9,8 @@ import (
 
 var ErrNotStruct = errors.New("not a struct or pointer to a struct")
 
-// StructDefaults sets the default values of a struct (and any nested structs) using the default tag.
-// StructDefaults only sets defaults on pointer fields that are unset
-func StructDefaults(v any) error {
+// SetDefaults sets the default values of a struct (and any nested structs) using the default tag.
+func SetDefaults(v any) error {
 	val := reflect.ValueOf(v)
 	if val.Type().Kind() == reflect.Pointer {
 		val = val.Elem()
@@ -27,7 +26,7 @@ func StructDefaults(v any) error {
 
 		// nested struct
 		if fld.Type.Kind() == reflect.Struct {
-			if err := StructDefaults(val.Field(i).Interface()); err != nil {
+			if err := SetDefaults(val.Field(i).Interface()); err != nil {
 				return err
 			}
 			continue
@@ -36,7 +35,7 @@ func StructDefaults(v any) error {
 		// nested *struct
 		if fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Struct {
 			if !val.Field(i).IsNil() {
-				if err := StructDefaults(val.Field(i).Interface()); err != nil {
+				if err := SetDefaults(val.Field(i).Interface()); err != nil {
 					return err
 				}
 			}
@@ -75,7 +74,7 @@ func StructDefaults(v any) error {
 			// check that slice is made of struct or *struct
 			if typ.Elem().Kind() == reflect.Struct || (typ.Elem().Kind() == reflect.Pointer && typ.Elem().Elem().Kind() == reflect.Struct) {
 				for j := 0; j < fldval.Len(); j++ {
-					if err := StructDefaults(fldval.Index(j).Interface()); err != nil {
+					if err := SetDefaults(fldval.Index(j).Interface()); err != nil {
 						return err
 					}
 				}

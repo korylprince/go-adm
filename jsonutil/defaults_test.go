@@ -1,9 +1,10 @@
-package declarations_test
+package jsonutil_test
 
 import (
 	"testing"
 
 	"github.com/korylprince/go-adm/declarations"
+	"github.com/korylprince/go-adm/jsonutil"
 )
 
 type EnumInt int64
@@ -44,7 +45,7 @@ func TestStructDefaults(t *testing.T) {
 	test.T = test2
 	test.TA = []*T{test3}
 
-	if err := declarations.StructDefaults(test); err != nil {
+	if err := jsonutil.SetDefaults(test); err != nil {
 		t.Fatalf("could not set struct defaults: %v", err)
 	}
 
@@ -77,4 +78,17 @@ func TestStructDefaults(t *testing.T) {
 	check(test)
 	check(test2)
 	check(test3)
+
+	for typ := range declarations.DeclarationMap {
+		decl, err := declarations.NewFromType(typ, "id", "tok")
+		if err != nil {
+			t.Errorf("could not generate declaration %s: %v", typ, err)
+			continue
+		}
+
+		err = jsonutil.SetDefaults(decl)
+		if err != nil {
+			t.Errorf("could not set defaults for declaration %s: %v", typ, err)
+		}
+	}
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/korylprince/go-adm/declarations/assets"
 	"github.com/korylprince/go-adm/declarations/configurations"
 	"github.com/korylprince/go-adm/declarations/management"
+	"github.com/korylprince/go-adm/jsonutil"
 )
 
 var ErrUnknownDeclarationType = errors.New("unknown declaration type")
@@ -60,7 +61,7 @@ func (d *Declaration) MarshalJSON() ([]byte, error) {
 	// fill struct defaults
 	typ := reflect.TypeOf(d.Payload)
 	if d.Payload != nil && (typ.Kind() == reflect.Struct || (typ.Kind() == reflect.Pointer && typ.Elem().Kind() == reflect.Struct)) {
-		if err := StructDefaults(d.Payload); err != nil {
+		if err := jsonutil.SetDefaults(d.Payload); err != nil {
 			return nil, fmt.Errorf("could not set struct defaults: %w", err)
 		}
 	}
