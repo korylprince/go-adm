@@ -6,6 +6,7 @@ require (
 	github.com/dave/jennifer v1.6.1
 	github.com/go-git/go-billy/v5 v5.4.1
 	github.com/go-git/go-git/v5 v5.6.0
+	github.com/google/uuid v1.3.0
 	github.com/korylprince/go-yaml v1.12.1
 	golang.org/x/exp v0.0.0-20230310171629-522b1b587ee0
 	golang.org/x/text v0.8.0
