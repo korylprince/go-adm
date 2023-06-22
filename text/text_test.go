@@ -12,8 +12,8 @@ var nameTests = map[string]string{
 	"test-test":           "TestTest",
 	"test:test":           "TestTest",
 	"test_test-test:test": "TestTestTestTest",
-	"testTest":            "Testtest",
-	"test-testTest":       "TestTesttest",
+	"testTest":            "TestTest",
+	"test-testTest":       "TestTestTest",
 }
 
 func TestNormalizeName(t *testing.T) {

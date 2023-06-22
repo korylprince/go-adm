@@ -50,6 +50,13 @@ func StructDefaults(v any) error {
 			}
 		}
 
+		// make maps (i.e. end up with {} instead of null in the json)
+		if fld.Type.Kind() == reflect.Map {
+			if val.Field(i).IsNil() {
+				val.Field(i).Set(reflect.MakeMap(fld.Type))
+			}
+		}
+
 		// slice of structs
 		if fld.Type.Kind() == reflect.Slice || fld.Type.Kind() == reflect.Pointer && fld.Type.Elem().Kind() == reflect.Slice {
 			// check if value is nil

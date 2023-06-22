@@ -48,6 +48,17 @@ func (e *Encoder) normalizeName(name string) string {
 	return e.reps.Replace(name)
 }
 
+func anyDictionaryType(key *schema.PayloadKey) jen.Code {
+	switch key.Type {
+	case schema.PayloadKeyTypeAny:
+		return jen.Any()
+	case schema.PayloadKeyTypeString:
+		return jen.String()
+	default:
+		panic(fmt.Errorf("ANY <dictionary>: unknown value type: %s", key.Type))
+	}
+}
+
 func (e *Encoder) schemaType(key *schema.PayloadKey) jen.Code {
 	var typ jen.Code = jen.Any()
 	switch key.Type {
@@ -74,7 +85,11 @@ func (e *Encoder) schemaType(key *schema.PayloadKey) jen.Code {
 			key.SubKeys[0].Presence = orig
 		}
 	case schema.PayloadKeyTypeDictionary:
-		typ = jen.Id(e.normalizeName(e.gn.KeyName(key)))
+		if len(key.SubKeys) > 0 && key.SubKeys[0].Key == schema.KeyANY {
+			typ = jen.Map(jen.String()).Add(anyDictionaryType(key.SubKeys[0]))
+		} else {
+			typ = jen.Id(e.normalizeName(e.gn.KeyName(key)))
+		}
 	case schema.PayloadKeyTypeAny:
 		typ = jen.Any()
 	}
@@ -143,6 +158,11 @@ func (e *Encoder) renderSchema(s *schema.Schema) {
 				tags["json"] = key.Key + ",omitempty"
 			}
 
+			// render required tag
+			if key.Presence == schema.PayloadKeyPresenceRequired {
+				tags["required"] = "true"
+			}
+
 			// render default tag
 			if key.Default.Value() != nil {
 				switch {
@@ -163,6 +183,11 @@ func (e *Encoder) renderSchema(s *schema.Schema) {
 				return
 			}
 			seen[key] = struct{}{}
+
+			// don't create structs for ANY <dictionary>s
+			if key.Type == schema.PayloadKeyTypeDictionary && len(key.SubKeys) == 1 && key.SubKeys[0].Key == schema.KeyANY {
+				return fields
+			}
 
 			if key.Type == schema.PayloadKeyTypeDictionary || (key.Type == schema.PayloadKeyTypeArray && len(key.SubKeys) == 1 && key.SubKeys[0].Type == schema.PayloadKeyTypeDictionary) {
 				keyName := e.normalizeName(e.gn.KeyName(key))
@@ -187,21 +212,47 @@ func (e *Encoder) renderSchema(s *schema.Schema) {
 	}
 
 	schemaName := e.normalizeName(e.gn.SchemaName(s))
-	// recurse through payload keys, generating types along the way
-	fields := dfs(schemaName, s.PayloadKeys)
 
-	// generate code for schema struct itself
+	// check if struct or ANY <dictionary>
+	isStruct := !(len(s.PayloadKeys) > 0 && s.PayloadKeys[0].Key == schema.KeyANY)
+
+	// recurse through payload keys, generating types along the way
+	var fields []jen.Code
+	if isStruct {
+		fields = dfs(schemaName, s.PayloadKeys)
+	}
+
+	// render schema comments
 	if doc := strings.TrimSpace(s.Description); doc != "" {
 		e.structs = append(e.structs, jen.Comment(text.DocComment(doc)))
 	}
 	if doc := strings.TrimSpace(s.Payload.Content); doc != "" {
 		e.structs = append(e.structs, jen.Comment(text.DocComment(doc)))
 	}
-	e.structs = append(e.structs, jen.Type().Id(schemaName).Struct(fields...))
 
-	// generate code for DeclarativeType method
+	if isStruct {
+		// render code for schema struct itself
+		e.structs = append(e.structs, jen.Type().Id(schemaName).Struct(fields...))
+	} else {
+		// render comment for <dictionary> sub key
+		if doc := strings.TrimSpace(s.PayloadKeys[0].Content); doc != "" {
+			e.structs = append(e.structs, jen.Comment(text.DocComment(doc)))
+		}
+
+		// render map type
+		e.structs = append(e.structs, jen.Type().Id(schemaName).Map(jen.String()).Add(
+			anyDictionaryType(s.PayloadKeys[0]),
+		))
+	}
+
+	// render code for DeclarativeType method
 	if s.Payload.DeclarationType != "" {
-		e.structs = append(e.structs, jen.Func().Parens(jen.Id("p").Op("*").Id(schemaName)).Id("DeclarationType").Parens(nil).String().Block(
+		rcvr := jen.Id("p").Op("*").Id(schemaName)
+		// don't use pointer receiver for ANY <dictionary>s
+		if !isStruct {
+			rcvr = jen.Id("p").Id(schemaName)
+		}
+		e.structs = append(e.structs, jen.Func().Parens(rcvr).Id("DeclarationType").Parens(nil).String().Block(
 			jen.Return().Lit(s.Payload.DeclarationType),
 		))
 

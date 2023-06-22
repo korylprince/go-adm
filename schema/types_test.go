@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/korylprince/go-adm/schema"
+	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 )
 
@@ -32,6 +33,9 @@ func TestValues(t *testing.T) {
 	if !slices.Equal(schema.FromValue(schema.NewValue([]string{"test"})), []string{"test"}) {
 		t.Error("failed test: []string{\"test\"}")
 	}
+	if !maps.Equal(schema.FromValue(schema.NewValue(map[string]string{"test": "test"})), map[string]string{"test": "test"}) {
+		t.Error("failed test: map[string]string{\"test\": \"test\"}")
+	}
 
 	// testing for panics
 	schema.FromValue((*int)(nil))
@@ -40,4 +44,5 @@ func TestValues(t *testing.T) {
 	schema.FromValue((*string)(nil))
 	schema.FromValue((*bool)(nil))
 	schema.FromValue((*[]string)(nil))
+	schema.FromValue((*map[string]string)(nil))
 }

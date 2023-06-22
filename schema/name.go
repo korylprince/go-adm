@@ -7,6 +7,9 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+// KeyANY is a special *PayloadKey.Key to represent a generic map[string]any instead of a struct
+const KeyANY = "ANY"
+
 type nameVal struct {
 	key    *PayloadKey
 	parent *PayloadKey
@@ -42,6 +45,10 @@ func (n *GlobalNamer) Register(schemas ...*Schema) {
 		// add keys
 		s.Iter(func(parent, key *PayloadKey) {
 			if key.Type != PayloadKeyTypeDictionary {
+				return
+			}
+			// don't register ANY <dictionary>s
+			if len(key.SubKeys) > 0 && key.SubKeys[0].Type == KeyANY {
 				return
 			}
 			name := text.NormalizeName(key.Key)

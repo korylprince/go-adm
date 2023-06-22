@@ -20,7 +20,7 @@ type Proof struct {
 // Use this declaration to tell the client about the server's organization information.
 type ManagementOrganizationInformation struct {
 	// The name of the organization.
-	Name string `json:"Name"`
+	Name string `json:"Name" required:"true"`
 	// The email address of the contact person for the organization.
 	Email *string `json:"Email,omitempty"`
 	// The website of the organization to contact for support.
@@ -34,29 +34,20 @@ func (p *ManagementOrganizationInformation) DeclarationType() string {
 }
 
 // Use this declaration to set properties on the device.
-type ManagementProperties struct {
-	// Each entry represents a property key/value.
-	ANY *any `json:"ANY,omitempty"`
-}
+// Each entry represents a property key/value.
+type ManagementProperties map[string]any
 
-func (p *ManagementProperties) DeclarationType() string {
+func (p ManagementProperties) DeclarationType() string {
 	return "com.apple.management.properties"
-}
-
-// A dictionary that contains the server's optional protocol features.
-// Each dictionary item uses the key name to represent a feature, and the value to hold the feature's associated parameters. This protocol reserves keys with a prefix of “'com.apple.'”, which appear as subkeys in this dictionary.
-type SupportedFeatures struct {
-	// Additional keys may be present.
-	ANY *any `json:"ANY,omitempty"`
 }
 
 // Use this declaration to tell the client about the server's capabilities.
 type ManagementServerCapabilities struct {
 	// The server's protocol version.
-	Version string `json:"Version"`
+	Version string `json:"Version" required:"true"`
 	// A dictionary that contains the server's optional protocol features.
 	// Each dictionary item uses the key name to represent a feature, and the value to hold the feature's associated parameters. This protocol reserves keys with a prefix of “'com.apple.'”, which appear as subkeys in this dictionary.
-	SupportedFeatures SupportedFeatures `json:"SupportedFeatures"`
+	SupportedFeatures map[string]any `json:"SupportedFeatures" required:"true"`
 }
 
 func (p *ManagementServerCapabilities) DeclarationType() string {

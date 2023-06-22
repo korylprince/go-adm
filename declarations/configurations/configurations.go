@@ -108,7 +108,7 @@ type AccountCalDAV struct {
 	// The name that apps show to the user for this calendar account. If not present, the system generates a suitable default.
 	VisibleName *string `json:"VisibleName,omitempty"`
 	// The hostname of the CalDAV server (or IP address).
-	HostName string `json:"HostName"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the CalDAV server.
 	Port *int64 `json:"Port,omitempty"`
 	// The path for the CalDAV server.
@@ -127,7 +127,7 @@ type AccountCardDAV struct {
 	// The name that apps show to the user for this address book account. If not present, the system generates a suitable default.
 	VisibleName *string `json:"VisibleName,omitempty"`
 	// The hostname of the CardDAV server (or IP address).
-	HostName string `json:"HostName"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the CardDAV server.
 	Port *int64 `json:"Port,omitempty"`
 	// The path for the CardDAV server.
@@ -143,7 +143,7 @@ func (p *AccountCardDAV) DeclarationType() string {
 // The configuration settings for OAuth for this account.
 type OAuth struct {
 	// If 'true', enables OAuth for this account.
-	Enabled bool `json:"Enabled"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// The URL that this account uses for signing in with OAuth. The system ignores this value unless 'Enabled' is 'true'. The system doesn't use autodiscovery when a declaration contains this URL, so the declaration must also contain a 'HostName'.
 	SignInURL *string `json:"SignInURL,omitempty"`
 	// The URL that this account uses for token requests with OAuth. The system ignores this value unless 'Enabled' is 'true'.
@@ -153,7 +153,7 @@ type OAuth struct {
 // Settings for S/MIME signing.
 type AccountExchangeSMIMESigning struct {
 	// It true, S/MIME signing is enabled.
-	Enabled bool `json:"Enabled"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME signing of messages sent from this account.
 	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If true, the user can turn S/MIME signing on or off in Settings.
@@ -165,7 +165,7 @@ type AccountExchangeSMIMESigning struct {
 // Settings for S/MIME encryption.
 type AccountExchangeSMIMEEncryption struct {
 	// It true, S/MIME encryption by default is enabled. Cannot be overridden by the user if the "PerMessageSwitchEnabled" key is set to false.
-	Enabled bool `json:"Enabled"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME encryption. The public certificate is attached to outgoing mail to allow encrypted mail to be sent to this user. When the user sends encrypted mail, the public certificate is used to encrypt the copy of the mail in their Sent mailbox.
 	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If true, the user can turn S/MIME encryption by default on or off in Settings.
@@ -194,7 +194,7 @@ type AccountExchange struct {
 	// * 'EWS:' Exchange Web Services (EWS)
 	// If the device supports one or more of the listed protocol types, it sets up an account for the first supported type.
 	// If the device doesn't support any of the listed protocol types, it doesn't set up an account and the system reports an error.
-	EnabledProtocolTypes []string `json:"EnabledProtocolTypes"`
+	EnabledProtocolTypes []string `json:"EnabledProtocolTypes" required:"true"`
 	// The identifier of an asset declaration that contains the user identity for this account. The corresponding asset must be of type 'UserIdentity'.
 	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty"`
 	// The hostname of the EWS server (or IP address). This is a required field unless the declaration contains an 'OAuth' property, with a 'SignInURL' that has 'enabled' as 'true'.
@@ -249,7 +249,7 @@ type AccountGoogle struct {
 	// The name that apps show to the user for this Google account. If not present, the system generates a suitable default.
 	VisibleName *string `json:"VisibleName,omitempty"`
 	// The identifier of an asset declaration that contains the user identity for this Google account. The corresponding asset must be of type 'UserIdentity'. The asset must contain an 'EmailAddress' key that specifies the full Google email address for the account.
-	UserIdentityAssetReference string `json:"UserIdentityAssetReference"`
+	UserIdentityAssetReference string `json:"UserIdentityAssetReference" required:"true"`
 }
 
 func (p *AccountGoogle) DeclarationType() string {
@@ -260,7 +260,7 @@ type SearchSettingsItem struct {
 	// The description of this search setting in the Contacts and Settings apps. If not present, the apps display no name.
 	VisibleDescription *string `json:"VisibleDescription,omitempty"`
 	// The path to the node where a search starts. For example, 'ou=people,o=example corp'.
-	SearchBase string `json:"SearchBase"`
+	SearchBase string `json:"SearchBase" required:"true"`
 	// The type of recursion to use in the search.
 	// * 'Base': Only the 'SearchBase' node.
 	// * 'OneLevel': The 'SearchBase' node and its immediate children.
@@ -274,7 +274,7 @@ type AccountLDAP struct {
 	// The name that apps show to the user for this LDAP account. If not present, the system generates a suitable default.
 	VisibleName *string `json:"VisibleName,omitempty"`
 	// The hostname of the LDAP server (or IP address).
-	HostName string `json:"HostName"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number of the LDAP server (or IP address).
 	Port *int64 `json:"Port,omitempty"`
 	// The identifier of an asset declaration that contains the credentials for this account. The corresponding asset must be of type 'CredentialUserNameAndPassword'.
@@ -290,13 +290,13 @@ func (p *AccountLDAP) DeclarationType() string {
 // The settings for the incoming mail server for this account.
 type IncomingServer struct {
 	// The mail protocol this account uses.
-	ServerType string `json:"ServerType"`
+	ServerType string `json:"ServerType" required:"true"`
 	// The host name for the incoming mail server.
-	HostName string `json:"HostName"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the incoming mail server.
 	Port *int64 `json:"Port,omitempty"`
 	// The authentication method for the incoming mail server.
-	AuthenticationMethod string `json:"AuthenticationMethod"`
+	AuthenticationMethod string `json:"AuthenticationMethod" required:"true"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with an incoming mail server. The corresponding asset must be of type 'CredentialUserNameAndPassword'.
 	// If the 'AuthenticationMethod' is 'None', this field must be blank. Otherwise, the declaration must contain this field.
 	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
@@ -307,11 +307,11 @@ type IncomingServer struct {
 // The settings for the outgoing mail server for this account.
 type OutgoingServer struct {
 	// The host name for the outgoing mail server.
-	HostName string `json:"HostName"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the outgoing mail server.
 	Port *int64 `json:"Port,omitempty"`
 	// The authentication method for the outgoing mail server.
-	AuthenticationMethod string `json:"AuthenticationMethod"`
+	AuthenticationMethod string `json:"AuthenticationMethod" required:"true"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with an outgoing mail server. The corresponding asset must be of type 'CredentialUserNameAndPassword'.
 	// If the 'AuthenticationMethod' is 'None', this field must be blank. Otherwise, the declaration must contain this field.
 	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
@@ -320,7 +320,7 @@ type OutgoingServer struct {
 // Settings for S/MIME signing.
 type AccountMailSMIMESigning struct {
 	// It true, S/MIME signing is enabled.
-	Enabled bool `json:"Enabled"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME signing of messages sent from this account.
 	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If true, the user can turn S/MIME signing on or off in Settings.
@@ -332,7 +332,7 @@ type AccountMailSMIMESigning struct {
 // Settings for S/MIME encryption.
 type AccountMailSMIMEEncryption struct {
 	// It true, S/MIME encryption by default is enabled. Cannot be overridden by the user if the "PerMessageSwitchEnabled" key is set to false.
-	Enabled bool `json:"Enabled"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME encryption. The public certificate is attached to outgoing mail to allow encrypted mail to be sent to this user. When the user sends encrypted mail, the public certificate is used to encrypt the copy of the mail in their Sent mailbox.
 	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If true, the user can turn S/MIME encryption by default on or off in Settings.
@@ -359,9 +359,9 @@ type AccountMail struct {
 	// The identifier of an asset declaration that contains the user identity for this account. The corresponding asset must be of type 'UserIdentity'.
 	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty"`
 	// The settings for the incoming mail server for this account.
-	IncomingServer IncomingServer `json:"IncomingServer"`
+	IncomingServer IncomingServer `json:"IncomingServer" required:"true"`
 	// The settings for the outgoing mail server for this account.
-	OutgoingServer OutgoingServer `json:"OutgoingServer"`
+	OutgoingServer OutgoingServer `json:"OutgoingServer" required:"true"`
 	// Settings for S/MIME.
 	SMIME *AccountMailSMIME `json:"SMIME,omitempty"`
 }
@@ -376,7 +376,7 @@ type AccountSubscribedCalendar struct {
 	// The name that apps show to the user for this calendar account. If not present, the system generates a suitable default.
 	VisibleName *string `json:"VisibleName,omitempty"`
 	// The URL of the subscribed calendar. The URL must start with 'https://'.
-	CalendarURL string `json:"CalendarURL"`
+	CalendarURL string `json:"CalendarURL" required:"true"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with a calendar server. The corresponding asset must be of type 'CredentialUserNameAndPassword'.
 	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
@@ -389,9 +389,9 @@ func (p *AccountSubscribedCalendar) DeclarationType() string {
 type LegacyInteractiveProfile struct {
 	// The URL of the profile to download and install. This must be an 'https://' URL that is hosted by the MDM server. When fetching the profile data, the device will use standard MDM authentication for the HTTP request.
 	// If a user enrollment triggers this configuration, the system silently ignores any MDM 1 payloads in macOS where the User Enrollment Mode setting is 'forbidden'. In iOS and tvOS, the system rejects the entire profile.
-	ProfileURL string `json:"ProfileURL"`
+	ProfileURL string `json:"ProfileURL" required:"true"`
 	// The visible name of the configuration. This name needs to indicate the nature of the profile.
-	VisibleName string `json:"VisibleName"`
+	VisibleName string `json:"VisibleName" required:"true"`
 }
 
 func (p *LegacyInteractiveProfile) DeclarationType() string {
@@ -402,7 +402,7 @@ func (p *LegacyInteractiveProfile) DeclarationType() string {
 type LegacyProfile struct {
 	// The URL of the profile to download and install. This must be an 'https://' URL that is hosted by the MDM server.When fetching the profile data, the device will use standard MDM authentication for the HTTP request.
 	// If a user enrollment triggers this configuration, the system silently ignores any MDM 1 payloads in macOS where the User Enrollment Mode setting is 'forbidden'. In iOS and tvOS, the system rejects the entire profile.
-	ProfileURL string `json:"ProfileURL"`
+	ProfileURL string `json:"ProfileURL" required:"true"`
 }
 
 func (p *LegacyProfile) DeclarationType() string {
@@ -411,13 +411,13 @@ func (p *LegacyProfile) DeclarationType() string {
 
 type StatusItem struct {
 	// The name of the status item to send to subscribers.
-	Name string `json:"Name"`
+	Name string `json:"Name" required:"true"`
 }
 
 // Use this configuration to define the status subscriptions that cause status to be reported by the client.
 type ManagementStatusSubscriptions struct {
 	// An array of status items that the device notifies subscribers about.
-	StatusItems []*StatusItem `json:"StatusItems"`
+	StatusItems []*StatusItem `json:"StatusItems" required:"true"`
 }
 
 func (p *ManagementStatusSubscriptions) DeclarationType() string {
@@ -427,7 +427,7 @@ func (p *ManagementStatusSubscriptions) DeclarationType() string {
 // A configuration used for testing only
 type ManagementTest struct {
 	// The string to echo back in a status response reason.
-	Echo string `json:"Echo"`
+	Echo string `json:"Echo" required:"true"`
 	// String read from a data asset to echo back in status response reason description.
 	EchoDataAssetReference *string `json:"EchoDataAssetReference,omitempty"`
 	// The status the system reports back when the device implements the configuration. Use this to override the normal 'success' result.
@@ -438,18 +438,12 @@ func (p *ManagementTest) DeclarationType() string {
 	return "com.apple.configuration.management.test"
 }
 
-// Contains a dictionary whose keys are supported OS language IDs (e.g. "en-US"), and whose values represent a localized description of the policy the regular expression enforces. The special "default" key can be used for languages that are not contained in the dictionary.
-type Description struct {
-	// A localized description.
-	ANY *string `json:"ANY,omitempty"`
-}
-
 // Specifies a regular expression, and its description, to be used to enforce password compliance. Note that we strongly recommend using the simpler passcode settings whenever possible, and rely on regular expression matching only when necessary. Mistakes in regular expressions can lead to frustrating user experiences, such as unsatisfiable passcode policies, or policy descriptions that don't match the enforced policy.
 type CustomRegex struct {
 	// A regular expression string that is matched against the password to determine whether it complies with a policy. The regular expression uses the ICU syntax (https://unicode-org.github.io/icu/userguide/strings/regexp.html). The string must not exceed 2048 characters in length.
-	Regex string `json:"Regex"`
+	Regex string `json:"Regex" required:"true"`
 	// Contains a dictionary whose keys are supported OS language IDs (e.g. "en-US"), and whose values represent a localized description of the policy the regular expression enforces. The special "default" key can be used for languages that are not contained in the dictionary.
-	Description *Description `json:"Description,omitempty"`
+	Description *map[string]string `json:"Description,omitempty"`
 }
 
 // Use this configuration to define passcode policy settings
@@ -492,13 +486,13 @@ func (p *PasscodeSettings) DeclarationType() string {
 // Use this configuration to define a group of Screen Sharing connections.
 type ScreenSharingConnectionGroup struct {
 	// A string which uniquely identifies this connection group.
-	ConnectionGroupUUID string `json:"ConnectionGroupUUID"`
+	ConnectionGroupUUID string `json:"ConnectionGroupUUID" required:"true"`
 	// The name of the Connection Group.
-	GroupName string `json:"GroupName"`
+	GroupName string `json:"GroupName" required:"true"`
 	// Array of ConnectionUUIDs (matching a connection declared in a
 	// com.apple.configuration.screensharing.connection configuration) of the Connections
 	// that should be members of this group.
-	Members []string `json:"Members"`
+	Members []string `json:"Members" required:"true"`
 }
 
 func (p *ScreenSharingConnectionGroup) DeclarationType() string {
@@ -510,21 +504,21 @@ type DisplayConfiguration struct {
 	// The type of display type to use for the connection.
 	// * Virtual1 — create one virtual display.
 	// * Virtual2 — create two virtual displays.
-	DisplayType string `json:"DisplayType"`
+	DisplayType string `json:"DisplayType" required:"true"`
 }
 
 // Use this configuration to define a connection to a Screen Sharing host.
 type ScreenSharingConnection struct {
 	// A string which uniquely identifies this connection. This is used to include a connection in a connection group.
-	ConnectionUUID string `json:"ConnectionUUID"`
+	ConnectionUUID string `json:"ConnectionUUID" required:"true"`
 	// The name of the connection.
-	DisplayName string `json:"DisplayName"`
+	DisplayName string `json:"DisplayName" required:"true"`
 	// The host name or IP address of the Mac that will host the screen sharing connection.
-	HostName string `json:"HostName"`
+	HostName string `json:"HostName" required:"true"`
 	// Specifies the TCP port number on the host used to initiate the connection.
 	Port *int64 `json:"Port,omitempty"`
 	// The display configuration to use for this connection.
-	DisplayConfiguration DisplayConfiguration `json:"DisplayConfiguration"`
+	DisplayConfiguration DisplayConfiguration `json:"DisplayConfiguration" required:"true"`
 	// Specifies the identifier of an asset declaration containing the credentials required for this connection to authenticate with the Screen Sharing server. The corresponding asset must be of type "com.apple.asset.credential.userpassword".
 	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
@@ -556,7 +550,7 @@ func (p *ScreenSharingHostSettings) DeclarationType() string {
 // Use this configuration to add a certificate to the device.
 type SecurityCertificate struct {
 	// Specifies the identifier of an asset declaration containing the certificate to be installed.
-	CredentialAssetReference string `json:"CredentialAssetReference"`
+	CredentialAssetReference string `json:"CredentialAssetReference" required:"true"`
 }
 
 func (p *SecurityCertificate) DeclarationType() string {
@@ -566,7 +560,7 @@ func (p *SecurityCertificate) DeclarationType() string {
 // Use this configuration to install an identity on the device.
 type SecurityIdentity struct {
 	// Specifies the identifier of an asset declaration containing the identity to be installed.
-	CredentialAssetReference string `json:"CredentialAssetReference"`
+	CredentialAssetReference string `json:"CredentialAssetReference" required:"true"`
 	// If set to "true", apps have access to the private key.
 	AllowAllAppsAccess *bool `default:"false" json:"AllowAllAppsAccess,omitempty"`
 	// If set to "true", the private key will be marked as extractable in the keychain.
@@ -580,11 +574,11 @@ func (p *SecurityIdentity) DeclarationType() string {
 // Configures the device to allow WebAuthn enterprise attestation for certain passkeys.
 type SecurityPasskeyAttestation struct {
 	// Specifies the identifier of an asset declaration containing the identity to be installed and used for passkey attestation.
-	AttestationIdentityAssetReference string `json:"AttestationIdentityAssetReference"`
+	AttestationIdentityAssetReference string `json:"AttestationIdentityAssetReference" required:"true"`
 	// If set to "true", the private key for the attestation identity will be marked as extractable in the keychain.
 	AttestationIdentityKeyIsExtractable *bool `default:"true" json:"AttestationIdentityKeyIsExtractable,omitempty"`
 	// Relying parties to allow enterprise attestation.
-	RelyingParties []string `json:"RelyingParties"`
+	RelyingParties []string `json:"RelyingParties" required:"true"`
 }
 
 func (p *SecurityPasskeyAttestation) DeclarationType() string {
@@ -603,9 +597,9 @@ type ServicesConfigurationFiles struct {
 	// * com.apple.apache.httpd - configures Apache httpd
 	// * com.apple.bash - configures bash
 	// * com.apple.zsh - configures zsh
-	ServiceType string `json:"ServiceType"`
+	ServiceType string `json:"ServiceType" required:"true"`
 	// Specifies the identifier of an asset declaration containing a reference to the files to be used for the system service configuration. The corresponding asset must be of type "com.apple.asset.data". The referenced data must be a zip archive of an entire directory, that will be expanded and stored in a well known location for the system service. The asset's "ContentType" and "Hash-SHA-256" keys in the "Reference" key are required.
-	DataAssetReference string `json:"DataAssetReference"`
+	DataAssetReference string `json:"DataAssetReference" required:"true"`
 }
 
 func (p *ServicesConfigurationFiles) DeclarationType() string {
@@ -615,11 +609,11 @@ func (p *ServicesConfigurationFiles) DeclarationType() string {
 // A software update enforcement policy for a specific OS release
 type SoftwareUpdateEnforcementSpecific struct {
 	// The target OS version that the device is required to update to by the appropriate time. This is the OS version number (e.g., "16.1"). A supplemental version identifier can be included (e.g., "16.1 (a)").
-	TargetOSVersion string `json:"TargetOSVersion"`
+	TargetOSVersion string `json:"TargetOSVersion" required:"true"`
 	// The target build version that the device is required to update to by the appropriate time. This is the build version (e.g., "20A242). The build version is used for testing during seeding periods. A supplemental version identifier can be included (e.g., "20A242a"). If the build version is not consistent with the target OS version specified in the 'TargetOSVersion' key, the target OS version will take precedence.
 	TargetBuildVersion *string `json:"TargetBuildVersion,omitempty"`
 	// The local date time value when the software update will be force installed. This value must use the `yyyy-mm-ddThh:mm:ss` format derived from RFC3339 (https://www.rfc-editor.org/rfc/rfc3339.txt), but must not include a time zone offset. If the user does not trigger the software update before this time, the device will force install it.
-	TargetLocalDateTime string `json:"TargetLocalDateTime"`
+	TargetLocalDateTime string `json:"TargetLocalDateTime" required:"true"`
 	// The URL of a web page that shows details, provided by the organization, about the enforced update.
 	DetailsURL *string `json:"DetailsURL,omitempty"`
 }
@@ -631,7 +625,7 @@ func (p *SoftwareUpdateEnforcementSpecific) DeclarationType() string {
 // Specifies an MDMv1 Apple Watch enrollment profile
 type WatchEnrollment struct {
 	// The URL of the profile that the Apple Watch will download and install if the user opts in to management during the pairing process. This must be an "https" URL. The pairing iPhone must be supervised for this device enrollment to succeed. The profile must contain an MDM payload or it will be ignored and Apple Watch will not be enrolled. Apple Watch will attempt to install each payload contained in the profile.
-	EnrollmentProfileURL string `json:"EnrollmentProfileURL"`
+	EnrollmentProfileURL string `json:"EnrollmentProfileURL" required:"true"`
 	// Specifies an array of identifiers of asset declarations containing anchor certificates to be used when evaluating the trust of the enrollment profile server. The corresponding assets must be of type "com.apple.asset.credential.certificate".
 	AnchorCertificateAssetReferences *[]string `json:"AnchorCertificateAssetReferences,omitempty"`
 }

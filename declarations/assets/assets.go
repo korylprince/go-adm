@@ -127,7 +127,7 @@ const (
 // The external reference. The asset data must be a JSON document representing the "com.apple.credential.acme" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
 type AssetCredentialACMEReference struct {
 	// The URL that hosts the credential data. The URL must start with 'https://'.
-	DataURL string `json:"DataURL"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data.
 	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data at the 'DataURL'. Use this value to verify that the returned data is the expected data. Use this value to detect when the data changes.
@@ -142,13 +142,13 @@ type AssetCredentialACMEAuthentication struct {
 	// Type of authentication:
 	// * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 	// * None - a standard GET request is carried out.
-	Type string `json:"Type"`
+	Type string `json:"Type" required:"true"`
 }
 
 // A reference to an ACME identity.
 type AssetCredentialACME struct {
 	// The external reference. The asset data must be a JSON document representing the "com.apple.credential.acme" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
-	Reference AssetCredentialACMEReference `json:"Reference"`
+	Reference AssetCredentialACMEReference `json:"Reference" required:"true"`
 	// The server authentication details.
 	Authentication *AssetCredentialACMEAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use.
@@ -164,7 +164,7 @@ func (p *AssetCredentialACME) DeclarationType() string {
 // The external reference. The asset data must be returned using a media type of "application/pkcs1" or "application/pem" to correctly identify the type of encoded certificate. If a "ContentType" sub-key is included, it must be set to the corresponding media type.
 type AssetCredentialCertificateReference struct {
 	// The URL that hosts the credential data. The URL must start with 'https://'.
-	DataURL string `json:"DataURL"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data.
 	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data at the 'DataURL'. Use this value to verify that the returned data is the expected data. Use this value to detect when the data changes.
@@ -179,13 +179,13 @@ type AssetCredentialCertificateAuthentication struct {
 	// Type of authentication:
 	// * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 	// * None - a standard GET request is carried out.
-	Type string `json:"Type"`
+	Type string `json:"Type" required:"true"`
 }
 
 // A reference to a PKCS #1 or PEM encoded certificate.
 type AssetCredentialCertificate struct {
 	// The external reference. The asset data must be returned using a media type of "application/pkcs1" or "application/pem" to correctly identify the type of encoded certificate. If a "ContentType" sub-key is included, it must be set to the corresponding media type.
-	Reference AssetCredentialCertificateReference `json:"Reference"`
+	Reference AssetCredentialCertificateReference `json:"Reference" required:"true"`
 	// The server authentication details.
 	Authentication *AssetCredentialCertificateAuthentication `json:"Authentication,omitempty"`
 }
@@ -197,7 +197,7 @@ func (p *AssetCredentialCertificate) DeclarationType() string {
 // The external reference. The asset data must be a JSON document representing the "com.apple.credential.identity" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
 type AssetCredentialIdentityReference struct {
 	// The URL that hosts the credential data. The URL must start with 'https://'.
-	DataURL string `json:"DataURL"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data.
 	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data at the 'DataURL'. Use this value to verify that the returned data is the expected data. Use this value to detect when the data changes.
@@ -212,13 +212,13 @@ type AssetCredentialIdentityAuthentication struct {
 	// Type of authentication:
 	// * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 	// * None - a standard GET request is carried out.
-	Type string `json:"Type"`
+	Type string `json:"Type" required:"true"`
 }
 
 // A reference to a PKCS #12 password-protected identity.
 type AssetCredentialIdentity struct {
 	// The external reference. The asset data must be a JSON document representing the "com.apple.credential.identity" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
-	Reference AssetCredentialIdentityReference `json:"Reference"`
+	Reference AssetCredentialIdentityReference `json:"Reference" required:"true"`
 	// The server authentication details.
 	Authentication *AssetCredentialIdentityAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use.
@@ -234,7 +234,7 @@ func (p *AssetCredentialIdentity) DeclarationType() string {
 // The external reference. The asset data must be a JSON document representing the "com.apple.credential.scep" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
 type AssetCredentialSCEPReference struct {
 	// The URL that hosts the credential data. The URL must start with 'https://'.
-	DataURL string `json:"DataURL"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data.
 	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data at the 'DataURL'. Use this value to verify that the returned data is the expected data. Use this value to detect when the data changes.
@@ -249,13 +249,13 @@ type AssetCredentialSCEPAuthentication struct {
 	// Type of authentication:
 	// * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 	// * None - a standard GET request is carried out.
-	Type string `json:"Type"`
+	Type string `json:"Type" required:"true"`
 }
 
 // A reference to a SCEP identity.
 type AssetCredentialSCEP struct {
 	// The external reference. The asset data must be a JSON document representing the "com.apple.credential.scep" credential type. The asset data must be returned using a media type of "application/json". If a "ContentType" sub-key is included, it must be set to "application/json".
-	Reference AssetCredentialSCEPReference `json:"Reference"`
+	Reference AssetCredentialSCEPReference `json:"Reference" required:"true"`
 	// The server authentication details.
 	Authentication *AssetCredentialSCEPAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use.
@@ -271,7 +271,7 @@ func (p *AssetCredentialSCEP) DeclarationType() string {
 // The reference to the credential.
 type AssetCredentialUserNameandPasswordReference struct {
 	// The URL that hosts the credential data. The URL must start with 'https://'.
-	DataURL string `json:"DataURL"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data.
 	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data at the 'DataURL'. Use this value to verify that the returned data is the expected data. Use this value to detect when the data changes.
@@ -286,13 +286,13 @@ type AssetCredentialUserNameandPasswordAuthentication struct {
 	// Type of authentication:
 	// * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 	// * None - a standard GET request is carried out.
-	Type string `json:"Type"`
+	Type string `json:"Type" required:"true"`
 }
 
 // A reference to data describing a credential representing a user name and password.
 type AssetCredentialUserNameandPassword struct {
 	// The reference to the credential.
-	Reference AssetCredentialUserNameandPasswordReference `json:"Reference"`
+	Reference AssetCredentialUserNameandPasswordReference `json:"Reference" required:"true"`
 	// The server authentication details.
 	Authentication *AssetCredentialUserNameandPasswordAuthentication `json:"Authentication,omitempty"`
 }
@@ -316,25 +316,25 @@ type ACMECredentialSubjectAltName struct {
 // An ACME identity that should be generated by the device.
 type ACMECredential struct {
 	// Specifies the directory URL of the ACME server. The URL must use the https scheme.
-	DirectoryURL string `json:"DirectoryURL"`
+	DirectoryURL string `json:"DirectoryURL" required:"true"`
 	// The server may use this as a nonce to prevent issuing multiple certificates. It also indicates to the ACME server that the device has access to a valid client identifier that was issued by the enterprise infrastructure. This may help the ACME server determine whether to trust the device, however this is a relatively weak indication because of the risk that the client identifier may be intercepted and duplicated by an attacker.
-	ClientIdentifier string `json:"ClientIdentifier"`
+	ClientIdentifier string `json:"ClientIdentifier" required:"true"`
 	// The valid values for KeySize depend on the values of KeyType and HardwareBound. See those keys for specific requirements.
-	KeySize int64 `json:"KeySize"`
+	KeySize int64 `json:"KeySize" required:"true"`
 	// Specifies the type of key pair to generate.
 	// "RSA" specifies an RSA key pair. If this is specified, KeySize must be in the range [1024..4096] inclusive and a multiple of 8, and HardwareBound must be false.
 	// "ECSECPrimeRandom" indicates a key pair on the P-256, P-384 or P-521 curves as defined in FIPS Pub 186-4. The specific curve is selected by the KeySize, which must be 256, 384 or 521. Only 256 and 384 are supported for hardware bound keys. (Note that the key size is 521, not 512, even though the other key sizes are multiples of 64.)
-	KeyType string `json:"KeyType"`
+	KeyType string `json:"KeyType" required:"true"`
 	// If false, the private key is not bound to the device.
 	// If true, the private key is bound to the device. The Secure Enclave generates the key pair, and the private key is cryptographically entangled with a system key. This protects the private key from being exported.
 	// If true, KeyType must be ECSECPrimeRandom and KeySize must be 256 or 384.
 	// On macOS, this key is required but must have a value of false.
-	HardwareBound bool `json:"HardwareBound"`
+	HardwareBound bool `json:"HardwareBound" required:"true"`
 	// The device requests this subject for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 	// The representation of a X.500 name represented as an array of OID and value. For example, /C=US/O=Apple Inc./CN=foo/1.2.5.3=bar corresponds to:
 	// [ [ ["C", "US"] ], [ ["O", "Apple Inc."] ], ..., [ [ "1.2.5.3", "bar" ] ] ]
 	// OIDs can be represented as dotted numbers, with shortcuts for country (C), locality (L), state (ST), organization (O), organizational unit (OU), and common name (CN).
-	Subject [][][]string `json:"Subject"`
+	Subject [][][]string `json:"Subject" required:"true"`
 	// Specifies the Subject Alt Name that the device will request for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 	SubjectAltName *ACMECredentialSubjectAltName `json:"SubjectAltName,omitempty"`
 	// The device requests this key usage for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
@@ -350,9 +350,9 @@ type ACMECredential struct {
 // Data for a PKCS #12 password-protected identity.
 type IdentityCredential struct {
 	// The password required to decrypt the PKCS #12 identity data.
-	Password string `json:"Password"`
+	Password string `json:"Password" required:"true"`
 	// The PKCS #12 identity data.
-	Identity []byte `json:"Identity"`
+	Identity []byte `json:"Identity" required:"true"`
 }
 
 // Specifies the Subject Alt Name for the certificate
@@ -370,7 +370,7 @@ type SCEPCredentialSubjectAltName struct {
 // A SCEP identity that should be generated by the device.
 type SCEPCredential struct {
 	// The SCEP URL. See Over-the-Air Profile Delivery and Configuration for more information about SCEP.
-	URL string `json:"URL"`
+	URL string `json:"URL" required:"true"`
 	// Any string that is understood by the SCEP server. For example, it could be a domain name like example.org. If a certificate authority has multiple CA certificates this field can be used to distinguish which is required.
 	Name *string `json:"Name,omitempty"`
 	// The representation of a X.500 name represented as an array of OID and value. For example, /C=US/O=Apple Inc./CN=foo/1.2.5.3=bar, which would translate to:
@@ -397,7 +397,7 @@ type SCEPCredential struct {
 // Data describing a credential representing a user name and password.
 type UserNameandPasswordCredential struct {
 	// The user's user name for the credential.
-	UserName string `json:"UserName"`
+	UserName string `json:"UserName" required:"true"`
 	// The user's password for the credential.
 	Password *string `json:"Password,omitempty"`
 }
@@ -405,7 +405,7 @@ type UserNameandPasswordCredential struct {
 // The reference to the data.
 type AssetDataReference struct {
 	// The URL that hosts the credential data. The URL must start with 'https://'.
-	DataURL string `json:"DataURL"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data.
 	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data at the 'DataURL'. Use this value to verify that the returned data is the expected data. Use this value to detect when the data changes.
@@ -420,13 +420,13 @@ type AssetDataAuthentication struct {
 	// Type of authentication:
 	// * MDM - a request using MDM semantics (includes the device identity certificate, and any user authentication). Equivalent to an MDM request made to the CheckInURL or ServerURL. This option can only be used when using declarative device management.
 	// * None - a standard GET request is carried out.
-	Type string `json:"Type"`
+	Type string `json:"Type" required:"true"`
 }
 
 // A reference to arbitrary data with a specific media type.
 type AssetData struct {
 	// The reference to the data.
-	Reference AssetDataReference `json:"Reference"`
+	Reference AssetDataReference `json:"Reference" required:"true"`
 	// The server authentication details.
 	Authentication *AssetDataAuthentication `json:"Authentication,omitempty"`
 }
