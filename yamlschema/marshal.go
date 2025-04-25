@@ -73,6 +73,9 @@ func findStructs(root *Schema) *OrderedMap {
 		}
 
 		s.Properties.Iter(func(k string, v *Schema) {
+			if v.Title == "" {
+				v.Title = k
+			}
 			if len(v.Type) == 1 && v.Type[0] == TypeObject {
 				key := v.Title
 				if key == "" {
