@@ -1,11 +1,11 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:b838baacf2e790db729b6ca3f52724adc8bfb96d/docs/schema.yaml
+// generated from https://github.com/apple/device-management.git:7d4ba1a2bde50a4053fa5a5e0ed6c17388d82ab2/docs/schema.yaml
 
 package schema
 
 import yamlschema "github.com/korylprince/go-adm/yamlschema"
 
-const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
+const DeviceManagementGenerateHash = "7d4ba1a2bde50a4053fa5a5e0ed6c17388d82ab2"
 
 // Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
 type PayloadApply string
@@ -73,8 +73,8 @@ const (
 // * boolean-and - multiple <boolean> values are combined using a logical AND operation
 // * number-min - multiple <integer> or <real> values are combined by using the smallest value
 // * number-max - multiple <integer> or <real> values are combined by using the largest value
-// * enum-lowest - multiple <string> values with a rangelist are combined by using the value whose position is lowest in the range list
-// * enum-highest - multiple <string> values with a rangelist are combined by using the value whose position is highest in the range list
+// * enum-first - multiple <string> values with a rangelist are combined by using the value whose position is first in the range list
+// * enum-last - multiple <string> values with a rangelist are combined by using the value whose position is last in the range list
 // * first - multiple values are combined by using the first value that is processed
 // * array-append - multiple <array> values are combined by concatenating the values in each array into a new array
 // * set-union - multiple <array> values are combined by returning the unique union of all values in each array
@@ -86,12 +86,27 @@ const (
 	PayloadKeyCombineTypeBooleanAnd      PayloadKeyCombineType = "boolean-and"
 	PayloadKeyCombineTypeNumberMin       PayloadKeyCombineType = "number-min"
 	PayloadKeyCombineTypeNumberMax       PayloadKeyCombineType = "number-max"
-	PayloadKeyCombineTypeEnumLowest      PayloadKeyCombineType = "enum-lowest"
-	PayloadKeyCombineTypeEnumHighest     PayloadKeyCombineType = "enum-highest"
+	PayloadKeyCombineTypeEnumFirst       PayloadKeyCombineType = "enum-first"
+	PayloadKeyCombineTypeEnumLast        PayloadKeyCombineType = "enum-last"
 	PayloadKeyCombineTypeFirst           PayloadKeyCombineType = "first"
 	PayloadKeyCombineTypeArrayAppend     PayloadKeyCombineType = "array-append"
 	PayloadKeyCombineTypeSetUnion        PayloadKeyCombineType = "set-union"
 	PayloadKeyCombineTypeSetIntersection PayloadKeyCombineType = "set-intersection"
+)
+
+// The type of the dictionary value.
+type DetailsType string
+
+const (
+	DetailsTypeString     DetailsType = "<string>"
+	DetailsTypeInteger    DetailsType = "<integer>"
+	DetailsTypeReal       DetailsType = "<real>"
+	DetailsTypeBoolean    DetailsType = "<boolean>"
+	DetailsTypeDate       DetailsType = "<date>"
+	DetailsTypeData       DetailsType = "<data>"
+	DetailsTypeArray      DetailsType = "<array>"
+	DetailsTypeDictionary DetailsType = "<dictionary>"
+	DetailsTypeAny        DetailsType = "<any>"
 )
 
 type Schema struct {
@@ -105,6 +120,12 @@ type Schema struct {
 	PayloadKeys []*PayloadKey `yaml:"payloadkeys,omitempty"`
 	// An array of payload keys.
 	ResponseKeys []*PayloadKey `yaml:"responsekeys,omitempty"`
+	// An array of Remote Management status reason codes.
+	Reasons []*Reasons `yaml:"reasons,omitempty"`
+	// An array describing any status items that might be related to a configuration.
+	RelatedStatusItems []*RelatedStatusItems `yaml:"related-status-items,omitempty"`
+	// An array of additional notes about a payload. These are published to the open source repository.
+	Notes []*Notes `yaml:"notes,omitempty"`
 }
 
 // Overall properties of the payload.
@@ -123,6 +144,8 @@ type Payload struct {
 	SupportedOS *SupportedOS `yaml:"supportedOS,omitempty"`
 	// Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
 	Apply PayloadApply `yaml:"apply,omitempty"`
+	// Indicates that this entire payload should be considered a beta release. It may change in an incompatible way prior to final release.
+	Beta bool `yaml:"beta,omitempty"`
 	// Description of the payload.
 	Content string `yaml:"content,omitempty"`
 }
@@ -135,6 +158,8 @@ type SupportedOS struct {
 	MacOS *OS `yaml:"macOS,omitempty"`
 	// Supported range on this OS.
 	TVOS *OS `yaml:"tvOS,omitempty"`
+	// Supported range on this OS.
+	VisionOS *OS `yaml:"visionOS,omitempty"`
 	// Supported range on this OS.
 	WatchOS *OS `yaml:"watchOS,omitempty"`
 }
@@ -159,7 +184,7 @@ type OS struct {
 	Supervised bool `yaml:"supervised,omitempty"`
 	// If True, the command can only be executed on devices provisioned in DEP.
 	RequiresDEP bool `yaml:"requiresdep,omitempty"`
-	// If True, the command can only be executed on devices with user approved MDM enrollment.
+	// If True, the command can only be executed on devices with user-approved MDM enrollment.
 	UserApprovedMDM bool `yaml:"userapprovedmdm,omitempty"`
 	// If True, the profile can be installed manually by a user on the device.
 	AllowManualInstall bool `yaml:"allowmanualinstall,omitempty"`
@@ -173,6 +198,8 @@ type OS struct {
 	UserEnrollment *UserEnrollment `yaml:"userenrollment,omitempty"`
 	// If true, indicates that the skip key's corresponding Setup pane is always skipped. If false, indicates that the skip key's corresponding Setup pane may be shown, depending on exactly when during the setup flow it occurs.
 	AlwaysSkippable bool `yaml:"always-skippable,omitempty"`
+	// Indicates that this payload should be considered a beta release for this OS. It may change in an incompatible way prior to final release.
+	Beta bool `yaml:"beta,omitempty"`
 }
 
 // Additional behavior specific to shared iPad devices.
@@ -216,7 +243,7 @@ type PayloadKey struct {
 	// Bounds for the value of this key.
 	Range *Range `yaml:"range,omitempty"`
 	// The default value (if any) for the key.
-	Default yamlschema.IntegerNumberString `yaml:"default,omitempty"`
+	Default yamlschema.BooleanIntegerNumberString `yaml:"default,omitempty"`
 	// The format for the value expressed as a regular expression.
 	Format string `yaml:"format,omitempty"`
 	// Cardinality for this value.
@@ -226,8 +253,8 @@ type PayloadKey struct {
 	// * boolean-and - multiple <boolean> values are combined using a logical AND operation
 	// * number-min - multiple <integer> or <real> values are combined by using the smallest value
 	// * number-max - multiple <integer> or <real> values are combined by using the largest value
-	// * enum-lowest - multiple <string> values with a rangelist are combined by using the value whose position is lowest in the range list
-	// * enum-highest - multiple <string> values with a rangelist are combined by using the value whose position is highest in the range list
+	// * enum-first - multiple <string> values with a rangelist are combined by using the value whose position is first in the range list
+	// * enum-last - multiple <string> values with a rangelist are combined by using the value whose position is last in the range list
 	// * first - multiple values are combined by using the first value that is processed
 	// * array-append - multiple <array> values are combined by concatenating the values in each array into a new array
 	// * set-union - multiple <array> values are combined by returning the unique union of all values in each array
@@ -255,4 +282,40 @@ type Repetition struct {
 	Min int64 `yaml:"min"`
 	// Upper bound.
 	Max int64 `yaml:"max"`
+}
+
+// An Remote Management reason code.
+type Reasons struct {
+	// The Remote Management reason code.
+	Value string `yaml:"value,omitempty"`
+	// Description of the Remote Management reason code.
+	Description string `yaml:"description,omitempty"`
+	// Keys defined in the Details dictionary
+	Details []*Details `yaml:"details,omitempty"`
+}
+
+// Details dictionary keys
+type Details struct {
+	// The name of the dictionary key.
+	Key string `yaml:"key,omitempty"`
+	// Description of the dictionary item.
+	Description string `yaml:"description,omitempty"`
+	// The type of the dictionary value.
+	Type DetailsType `yaml:"type,omitempty"`
+}
+
+// An additional note about a payload. A note is written in "markdown" and can be transformed to HTML if needed.
+type RelatedStatusItems struct {
+	// List of status-item types.
+	StatusItems []string `yaml:"status-items"`
+	// A description of the relationship.
+	Note string `yaml:"note,omitempty"`
+}
+
+// An additional note about a payload. A note is written in "markdown" and can be transformed to HTML if needed.
+type Notes struct {
+	// Title for the note.
+	Title string `yaml:"title"`
+	// The note content in "markdown" format.
+	Content string `yaml:"content"`
 }
