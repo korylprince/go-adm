@@ -1,25 +1,91 @@
-# repls.yaml is a simple list of {regex match} -> {regex replace} statements run in order
+# repls.yaml is a simple list of regex match and replace operations
+# "<match>":
+#   repl: "<replace>"
+#   types:
+#     # available types
+#     - "field"
+#     - "struct"
+#     - "const"
 
 # fix common suffixs
-"^(.*)type$": "${1}Type"
-"^(.*)key(s?)$": "${1}Key${2}"
-"^(.*)[oO]s$": "${1}OS"
-"^(.*)channel$": "${1}Channel"
-"^(.*)[uU]rl$": "${1}URL"
+"^(.*)type$":
+  repl: "${1}Type"
+  types:
+    - "struct"
+    - "field"
+"^(.*)key(s?)$":
+  repl: "${1}Key${2}"
+  types:
+    - "struct"
+    - "field"
+"^(.*)[oO]s$":
+  repl: "${1}OS"
+  types:
+    - "field"
+"^(.*)channel$":
+  repl: "${1}Channel"
+  types:
+    - "field"
+"^(.*)[uU]rl$":
+  repl: "${1}URL"
+  types:
+    - "const"
+    - "field"
 
 # fix common prefixes
-"^Userenrollment(.*)$": "UserEnrollment${1}"
-"^Statusitem(.*)$": "StatusItem${1}"
+"^Userenrollment(.*)$":
+  repl: "UserEnrollment${1}"
+  types:
+    - "const"
+    - "field"
+    - "struct"
+"^Statusitem(.*)$":
+  repl: "StatusItem${1}"
+  types:
+    - "field"
  
 # fix *OS casing
-"^(.*)[iI][pP]ad(.*)$": "${1}iPad${2}"
-"^[tT][vV]OS$": "TVOS"
+"^(.*)[iI][pP]ad(.*)$":
+  repl: "${1}iPad${2}"
+  types:
+    - "const"
+    - "field"
+    - "struct"
+"^[tT][vV]OS$":
+  repl: "TVOS"
+  types:
+    - "field"
 
 # some manual fixes
-"^Accessrights$": "AccessRights"
-"^Requiresdep$": "RequiresDEP"
-"^Userapprovedmdm$": "UserApprovedMDM"
-"^Allowmanualinstall$": "AllowManualInstall"
-"^Alwaysskippable$": "AlwaysSkippable"
-"^Assettypes$": "AssetTypes"
-"^SubkeyType$": "SubKeyType"
+"^Accessrights$":
+  repl: "AccessRights"
+  types:
+    - "field"
+"^Requiresdep$":
+  repl: "RequiresDEP"
+  types:
+    - "field"
+"^Userapprovedmdm$":
+  repl: "UserApprovedMDM"
+  types:
+    - "field"
+"^Allowmanualinstall$":
+  repl: "AllowManualInstall"
+  types:
+    - "field"
+"^Alwaysskippable$":
+  repl: "AlwaysSkippable"
+  types:
+    - "field"
+"^Assettypes$":
+  repl: "AssetTypes"
+  types:
+    - "field"
+"^SubkeyType$":
+  repl: "SubKeyType"
+  types:
+    - "field"
+"^IOS$":
+  repl: "OS"
+  types:
+    - "struct"

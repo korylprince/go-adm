@@ -45,7 +45,8 @@ func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
 }
 
 func (e *Encoder) normalizeName(name string) string {
-	return e.reps.Replace(name)
+	// FIXME: tag normalizeName with replacement types
+	return e.reps.Replace(name, "TODO")
 }
 
 func anyDictionaryType(key *schema.PayloadKey) jen.Code {

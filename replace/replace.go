@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 
 	"github.com/korylprince/go-yaml"
 )
@@ -13,10 +14,14 @@ import (
 type Replacement struct {
 	Match       string
 	Replacement string
+	Types       []string
 }
 
 // Replace replaces s with r.Replacement if s matches r.Match
-func (r *Replacement) Replace(s string) string {
+func (r *Replacement) Replace(s, typ string) string {
+	if !slices.Contains(r.Types, typ) {
+		return s
+	}
 	reg := regexp.MustCompile(r.Match)
 	if reg.MatchString(s) {
 		return regexp.MustCompile(r.Match).ReplaceAllString(s, r.Replacement)
@@ -27,9 +32,9 @@ func (r *Replacement) Replace(s string) string {
 type Replacements []*Replacement
 
 // Replace processes all replacements on s in order
-func (r Replacements) Replace(s string) string {
+func (r Replacements) Replace(s, typ string) string {
 	for _, rep := range r {
-		s = rep.Replace(s)
+		s = rep.Replace(s, typ)
 	}
 	return s
 }
@@ -44,7 +49,12 @@ func NewReplacements(data []byte) (Replacements, error) {
 
 	reps := make(Replacements, len(ms))
 	for idx, item := range ms {
-		reps[idx] = &Replacement{Match: item.Key.(string), Replacement: item.Value.(string)}
+		vmap := item.Value.(map[string]any)
+		var types []string
+		for _, typ := range vmap["types"].([]any) {
+			types = append(types, typ.(string))
+		}
+		reps[idx] = &Replacement{Match: item.Key.(string), Replacement: vmap["repl"].(string), Types: types}
 	}
 
 	return reps, nil
@@ -66,7 +76,12 @@ func NewReplacementsFromFile(path string) (Replacements, error) {
 
 	reps := make(Replacements, len(ms))
 	for idx, item := range ms {
-		reps[idx] = &Replacement{Match: item.Key.(string), Replacement: item.Value.(string)}
+		vmap := item.Value.(map[string]any)
+		var types []string
+		for _, typ := range vmap["types"].([]any) {
+			types = append(types, typ.(string))
+		}
+		reps[idx] = &Replacement{Match: item.Key.(string), Replacement: vmap["repl"].(string), Types: types}
 	}
 
 	return reps, nil
