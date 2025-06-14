@@ -55,6 +55,8 @@ func anyDictionaryType(key *schema.PayloadKey) jen.Code {
 		return jen.Any()
 	case schema.PayloadKeyTypeString:
 		return jen.String()
+	case schema.PayloadKeyTypeDictionary:
+		return jen.Dict{}
 	default:
 		panic(fmt.Errorf("ANY <dictionary>: unknown value type: %s", key.Type))
 	}
