@@ -49,6 +49,9 @@ func (s *Schema) Iter(f func(parents []*PayloadKey, key *PayloadKey)) {
 	for _, key := range s.PayloadKeys {
 		dfs(nil, key)
 	}
+	for _, key := range s.ResponseKeys {
+		dfs(nil, key)
+	}
 }
 
 // IsStruct returns if the PayloadKey should be rendered as a struct
