@@ -24,7 +24,9 @@ var testSchemaB = &schema.Schema{Title: "SchemaB", PayloadKeys: []*schema.Payloa
 	{Key: "KeyD", Type: schema.PayloadKeyTypeDictionary},
 }}
 
-var testSchemaB2 = &schema.Schema{Title: "SchemaB"}
+var testSchemaB2 = &schema.Schema{Title: "SchemaB", PayloadKeys: []*schema.PayloadKey{
+	{Key: "KeyE", Type: schema.PayloadKeyTypeDictionary},
+}}
 
 var keyTests = map[*schema.PayloadKey]string{
 	testSchemaA.PayloadKeys[0]:            "SchemaAKeyA",
@@ -37,6 +39,7 @@ var keyTests = map[*schema.PayloadKey]string{
 	testSchemaB.PayloadKeys[1].SubKeys[0]: "SchemaBKeyBSubKeyA",
 	testSchemaB.PayloadKeys[1].SubKeys[1]: "SubKeyC",
 	testSchemaB.PayloadKeys[2]:            "KeyD",
+	testSchemaB2.PayloadKeys[0]:           "KeyE",
 }
 
 var schemaTests = map[*schema.Schema]string{
@@ -46,9 +49,8 @@ var schemaTests = map[*schema.Schema]string{
 }
 
 func TestGlobalNamer(t *testing.T) {
-	gn := schema.NewGlobalNamer()
-
-	gn.Register(testSchemaA, testSchemaB, testSchemaB2)
+	file := schema.NewFile(testSchemaA, testSchemaB, testSchemaB2)
+	gn := schema.NewGlobalNamer(file)
 
 	for test, want := range keyTests {
 		if have := gn.KeyName(test); have != want {
@@ -56,8 +58,16 @@ func TestGlobalNamer(t *testing.T) {
 		}
 	}
 
+	// build map of schemas to payload keys
+	schemaMap := make(map[*schema.Schema]*schema.PayloadKey)
+	for _, strct := range file.Structs {
+		if strct.Source == schema.PayloadKeys {
+			schemaMap[strct.Schema] = strct.Key
+		}
+	}
+
 	for test, want := range schemaTests {
-		if have := gn.SchemaName(test); have != want {
+		if have := gn.KeyName(schemaMap[test]); have != want {
 			t.Errorf("schema test failed: have: %s, want: %s", have, want)
 		}
 	}
