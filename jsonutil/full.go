@@ -1,9 +1,9 @@
 package jsonutil
 
 import (
-	"fmt"
 	"reflect"
-	"strings"
+
+	"github.com/fatih/structtag"
 )
 
 // FullFields uses reflection to fill out types and remove omitempty tags so that all fields will be marshaled to json
@@ -68,21 +68,22 @@ func FullFields(v any) any {
 	for idx := 0; idx < typ.NumField(); idx++ {
 		fld := typ.Field(idx)
 		// remove omitempty
-		if tag := fld.Tag.Get("json"); len(tag) > 0 {
-			split := strings.Split(tag, ",")
-			if len(split) > 0 {
-				tag = split[0]
-			}
-			if tag != "-" {
-				fld.Tag = reflect.StructTag(fmt.Sprintf(`json:"%s"`, tag))
-			} else {
-				fld.Tag = reflect.StructTag("")
-			}
+		tags, err := structtag.Parse(string(fld.Tag))
+		if err != nil {
+			continue
 		}
+		tags.DeleteOptions("json", "omitempty")
+		fld.Tag = reflect.StructTag(tags.String())
 		// recurse into fields
 		if fld.Type.Kind() == reflect.Pointer {
 			newv := reflect.ValueOf(FullFields(val.Field(idx).Interface()))
 			fld.Type = newv.Type()
+			if fld.Type.Kind() != reflect.Pointer {
+				ptrNewV := reflect.New(newv.Type())
+				ptrNewV.Elem().Set(newv)
+				newv = ptrNewV
+				fld.Type = newv.Type()
+			}
 			repl[idx] = newv
 		} else {
 			newv := reflect.ValueOf(FullFields(val.Field(idx).Interface()))

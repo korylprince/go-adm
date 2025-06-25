@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/dave/jennifer v1.6.1
+	github.com/fatih/structtag v1.2.0
 	github.com/go-git/go-billy/v5 v5.4.1
 	github.com/go-git/go-git/v5 v5.6.0
 	github.com/google/uuid v1.3.0

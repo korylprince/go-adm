@@ -93,8 +93,8 @@ func SetDefaults(v any) error {
 			continue
 		}
 
-		// only set defaults on fields that are unset (nil)
-		if !val.Field(i).IsNil() {
+		// only set defaults on fields that are unset (nil) or the zero value
+		if !val.Field(i).IsNil() && !val.Field(i).Elem().IsZero() {
 			continue
 		}
 
