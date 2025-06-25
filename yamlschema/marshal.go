@@ -130,7 +130,7 @@ func findStructs(root *Schema) *OrderedMap {
 	return structs
 }
 
-func (e *Encoder) normalizeName(name, typ string) string {
+func (e *Encoder) normalizeName(name string, typ replace.ReplacementType) string {
 	return e.reps.Replace(text.NormalizeName(name), typ)
 }
 
@@ -182,7 +182,7 @@ func (e *Encoder) Encode(s *Schema) {
 			if len(enum.Enum) == 0 {
 				return
 			}
-			enumName := e.normalizeName(parentName, "struct") + e.normalizeName(name, "field")
+			enumName := e.normalizeName(parentName, replace.Struct) + e.normalizeName(name, replace.Field)
 			enumMap[enum] = enumName
 
 			// render type definition
@@ -194,7 +194,7 @@ func (e *Encoder) Encode(s *Schema) {
 			// render enum values
 			consts := make([]jen.Code, len(enum.Enum))
 			for idx, v := range enum.Enum {
-				consts[idx] = jen.Id(enumName + e.normalizeName(v, "const")).Id(enumName).Op("=").Lit(v)
+				consts[idx] = jen.Id(enumName + e.normalizeName(v, replace.Const)).Id(enumName).Op("=").Lit(v)
 			}
 			e.f.Const().Defs(consts...)
 		})
@@ -222,20 +222,20 @@ func (e *Encoder) Encode(s *Schema) {
 			typ := schemaType(prop)
 			if prop.Items != nil {
 				if t, ok := structMap[prop.Items]; ok {
-					typ = jen.Index().Op("*").Id(e.normalizeName(t, "struct"))
+					typ = jen.Index().Op("*").Id(e.normalizeName(t, replace.Struct))
 				}
 			}
 			if t, ok := structMap[prop]; ok {
-				typ = jen.Op("*").Id(e.normalizeName(t, "struct"))
+				typ = jen.Op("*").Id(e.normalizeName(t, replace.Struct))
 			}
 			if t, ok := enumMap[prop]; ok {
 				typ = jen.Id(t)
 			}
 
-			fields = append(fields, jen.Id(e.normalizeName(propName, "field")).Add(typ).Tag(tag))
+			fields = append(fields, jen.Id(e.normalizeName(propName, replace.Field)).Add(typ).Tag(tag))
 		})
 
-		e.f.Type().Id(e.normalizeName(structName, "struct")).Struct(fields...)
+		e.f.Type().Id(e.normalizeName(structName, replace.Struct)).Struct(fields...)
 	})
 }
 

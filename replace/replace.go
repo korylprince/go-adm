@@ -10,6 +10,14 @@ import (
 	"github.com/korylprince/go-yaml"
 )
 
+type ReplacementType string
+
+const (
+	Const  ReplacementType = "const"
+	Struct ReplacementType = "struct"
+	Field  ReplacementType = "field"
+)
+
 // Replacement is regexp match and replacement strings
 type Replacement struct {
 	Match       string
@@ -18,8 +26,8 @@ type Replacement struct {
 }
 
 // Replace replaces s with r.Replacement if s matches r.Match
-func (r *Replacement) Replace(s, typ string) string {
-	if !slices.Contains(r.Types, typ) {
+func (r *Replacement) Replace(s string, typ ReplacementType) string {
+	if !slices.Contains(r.Types, string(typ)) {
 		return s
 	}
 	reg := regexp.MustCompile(r.Match)
@@ -32,7 +40,7 @@ func (r *Replacement) Replace(s, typ string) string {
 type Replacements []*Replacement
 
 // Replace processes all replacements on s in order
-func (r Replacements) Replace(s, typ string) string {
+func (r Replacements) Replace(s string, typ ReplacementType) string {
 	for _, rep := range r {
 		s = rep.Replace(s, typ)
 	}
