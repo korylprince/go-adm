@@ -5,9 +5,13 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/korylprince/go-yaml"
 )
+
+// KeyANY is a special *PayloadKey.Key to represent a generic map[string]any instead of a struct
+const KeyANY = "ANY"
 
 func New(data []byte) (*Schema, error) {
 	cmd := new(Schema)
@@ -33,16 +37,49 @@ func NewFromFile(path string) (*Schema, error) {
 	return cmd, nil
 }
 
-func (s *Schema) Iter(f func(parent, key *PayloadKey)) {
-	var dfs func(child *PayloadKey)
-	dfs = func(child *PayloadKey) {
+func (s *Schema) Iter(f func(parents []*PayloadKey, key *PayloadKey)) {
+	var dfs func(parents []*PayloadKey, child *PayloadKey)
+	dfs = func(parents []*PayloadKey, child *PayloadKey) {
+		f(parents, child)
+		newParents := append(slices.Clone(parents), child)
 		for _, key := range child.SubKeys {
-			f(child, key)
-			dfs(key)
+			dfs(newParents, key)
 		}
 	}
 	for _, key := range s.PayloadKeys {
-		f(nil, key)
-		dfs(key)
+		dfs(nil, key)
 	}
+}
+
+// IsStruct returns if the PayloadKey should be rendered as a struct
+func (key *PayloadKey) IsStruct() bool {
+	if key.Type != PayloadKeyTypeDictionary {
+		return false
+	}
+	if len(key.SubKeys) > 0 && key.SubKeys[0].Type == PayloadKeyTypeAny {
+		return false
+	}
+	return true
+}
+
+// IsMap returns if the PayloadKey should be rendered as a map
+func (key *PayloadKey) IsMap() bool {
+	if key.Type != PayloadKeyTypeDictionary {
+		return false
+	}
+	if len(key.SubKeys) > 0 && key.SubKeys[0].Type == PayloadKeyTypeAny {
+		return true
+	}
+	return false
+}
+
+// IsEnum returns if the PayloadKey should be rendered as an enum
+func (key *PayloadKey) IsEnum() bool {
+	if len(key.Rangelist) > 0 {
+		return true
+	}
+	if key.Type == PayloadKeyTypeArray && len(key.SubKeys) == 1 && len(key.SubKeys[0].Rangelist) > 0 {
+		return true
+	}
+	return false
 }

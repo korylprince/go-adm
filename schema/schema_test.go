@@ -3,6 +3,7 @@ package schema_test
 import (
 	"bytes"
 	"fmt"
+	"net"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -50,6 +51,9 @@ func e2e(buf []byte) ([]byte, error) {
 }
 
 func Test(t *testing.T) {
+	if _, err := net.LookupAddr("github.com"); err != nil {
+		t.Skip("could not resolve github.com, skipping")
+	}
 	repo, err := git.New("https://github.com/apple/device-management.git", schema.DeviceManagementGenerateHash)
 	if err != nil {
 		t.Fatalf("could not checkout repo: %v", err)
