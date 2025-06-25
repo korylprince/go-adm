@@ -1,4 +1,4 @@
-//go:generate declgen -repo "https://github.com/apple/device-management.git" -commit "b838baacf2e790db729b6ca3f52724adc8bfb96d"
+//go:generate declgen -repo "https://github.com/apple/device-management.git" -commit "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
 
 package declarations
 

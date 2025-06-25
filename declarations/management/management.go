@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:b838baacf2e790db729b6ca3f52724adc8bfb96d/declarative/declarations/management
+// generated from https://github.com/apple/device-management.git:0a4527c5ea21825fd23e08273ccdb9e2302458ce/declarative/declarations/management
 
 package management
 
-const DeviceManagementGenerateHash = "b838baacf2e790db729b6ca3f52724adc8bfb96d"
+const DeviceManagementGenerateHash = "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
 
 var DeclarationMap = map[string]any{
 	"com.apple.management.organization-info":   ManagementOrganizationInformation{},
@@ -11,43 +11,42 @@ var DeclarationMap = map[string]any{
 	"com.apple.management.server-capabilities": ManagementServerCapabilities{},
 }
 
-// The additional properties that verify the identity and authenticity of the organization.
-type Proof struct {
-	// A token that verifies the identity of the organization when using this service.
-	IdentityToken *string `json:"IdentityToken,omitempty"`
-}
-
-// Use this declaration to tell the client about the server's organization information.
+// The declaration to configure the managing organization's contact information.
 type ManagementOrganizationInformation struct {
 	// The name of the organization.
-	Name string `json:"Name" required:"true"`
+	Name string `json:"Name" plist:"Name" required:"true"`
 	// The email address of the contact person for the organization.
-	Email *string `json:"Email,omitempty"`
+	Email *string `json:"Email,omitempty" plist:"Email,omitempty"`
 	// The website of the organization to contact for support.
-	URL *string `json:"URL,omitempty"`
+	URL *string `json:"URL,omitempty" plist:"URL,omitempty"`
 	// The additional properties that verify the identity and authenticity of the organization.
-	Proof *Proof `json:"Proof,omitempty"`
+	Proof *Proof `json:"Proof,omitempty" plist:"Proof,omitempty"`
 }
 
 func (p *ManagementOrganizationInformation) DeclarationType() string {
 	return "com.apple.management.organization-info"
 }
 
-// Use this declaration to set properties on the device.
-// Each entry represents a property key/value.
+// The additional properties that verify the identity and authenticity of the organization.
+type Proof struct {
+	// A token that verifies the identity of the organization when using this service.
+	IdentityToken *string `json:"IdentityToken,omitempty" plist:"IdentityToken,omitempty"`
+}
+
+// The declaration to configure the properties on the device.
 type ManagementProperties map[string]any
 
 func (p ManagementProperties) DeclarationType() string {
 	return "com.apple.management.properties"
 }
 
-// Use this declaration to tell the client about the server's capabilities.
+// The declaration to configure the server's feature set.
 type ManagementServerCapabilities struct {
 	// The server's protocol version.
-	Version string `json:"Version" required:"true"`
+	Version string `json:"Version" plist:"Version" required:"true"`
 	// A dictionary that contains the server's optional protocol features.
-	// Each dictionary item uses the key name to represent a feature, and the value to hold the feature's associated parameters. This protocol reserves keys with a prefix of “'com.apple.'”, which appear as subkeys in this dictionary.
-	SupportedFeatures map[string]any `json:"SupportedFeatures" required:"true"`
+	// Each dictionary item uses the key name to represent a feature, and the value to hold the feature's associated parameters. This protocol reserves keys with a prefix of `com.apple.`, which appear as subkeys in this dictionary.
+	SupportedFeatures map[string]any `json:"SupportedFeatures" plist:"SupportedFeatures" required:"true"`
 }
 
 func (p *ManagementServerCapabilities) DeclarationType() string {
