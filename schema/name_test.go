@@ -60,9 +60,11 @@ func TestGlobalNamer(t *testing.T) {
 
 	// build map of schemas to payload keys
 	schemaMap := make(map[*schema.Schema]*schema.PayloadKey)
-	for _, strct := range file.Structs {
-		if strct.Source == schema.PayloadKeys {
-			schemaMap[strct.Schema] = strct.Key
+	for _, t := range file.Types {
+		if strct, ok := t.(*schema.Struct); ok {
+			if strct.Source == schema.SourcePayloadKeys {
+				schemaMap[strct.Schema] = strct.Key
+			}
 		}
 	}
 
