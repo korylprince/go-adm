@@ -201,7 +201,11 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 					Op("=").
 					Lit(v.String())
 			case PayloadKeyTypeInteger:
-				constName := e.normalizeName(enumName+strconv.Itoa(int(v.Int64())), replace.Const)
+				// replace negative sign with "Neg"
+				val := strconv.Itoa(int(v.Int64()))
+				val = strings.Replace(val, "-", "Neg", 1)
+				constName := e.normalizeName(enumName+val, replace.Const)
+				fmt.Println(constName)
 				g.Id(constName).
 					Id(enumName).
 					Op("=").
