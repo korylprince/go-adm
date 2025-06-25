@@ -2,7 +2,6 @@ package declarations
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -77,7 +76,7 @@ func (e *Encoder) Encode(file *schema.File) {
 				structName := e.enc.Name(t.Key, replace.Struct)
 				rcvr := jen.Id("p").Op("*").Id(structName)
 				e.f.Func().Parens(rcvr).Id("DeclarationType").Parens(nil).String().Block(
-					jen.Return().Lit(t.Schema.Payload.DeclarationType),
+					jen.Return().Lit(dt),
 				)
 			}
 		case *schema.Map:
@@ -87,7 +86,7 @@ func (e *Encoder) Encode(file *schema.File) {
 				mapName := e.enc.Name(t.Key, replace.Struct)
 				rcvr := jen.Id("p").Id(mapName)
 				e.f.Func().Parens(rcvr).Id("DeclarationType").Parens(nil).String().Block(
-					jen.Return().Lit(t.Schema.Payload.DeclarationType),
+					jen.Return().Lit(dt),
 				)
 			}
 		}
@@ -136,16 +135,6 @@ func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, ou
 			return nil
 		}); err != nil {
 			return err
-		}
-
-		jbuf := new(bytes.Buffer)
-		enc := json.NewEncoder(jbuf)
-		enc.SetIndent("", "    ")
-		if err := enc.Encode(schemas); err != nil {
-			return fmt.Errorf("could not encode schemas to json: %w", err)
-		}
-		if err := os.WriteFile("/tmp/schemas.json", jbuf.Bytes(), 0644); err != nil {
-			return fmt.Errorf("could not write schema json: %w", err)
 		}
 
 		f := jen.NewFile(dir.Name())
