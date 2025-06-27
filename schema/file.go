@@ -63,8 +63,33 @@ type File struct {
 	Types   []Type
 }
 
+type fileOptions struct {
+	includeEmptyPayloadKeys  bool
+	includeEmptyResponseKeys bool
+}
+
+type FileOption func(opts *fileOptions)
+
+func WithIncludeEmptyPayloadKeys(include bool) FileOption {
+	return func(opts *fileOptions) {
+		opts.includeEmptyPayloadKeys = include
+	}
+}
+
+func WithIncludeEmptyResponseKeys(include bool) FileOption {
+	return func(opts *fileOptions) {
+		opts.includeEmptyResponseKeys = include
+	}
+}
+
 // NewFile returns a File by traversing one or more Schemas
-func NewFile(schemas ...*Schema) *File {
+func NewFile(schemas []*Schema, opts ...FileOption) *File {
+	// configure options
+	fileOpts := new(fileOptions)
+	for _, opt := range opts {
+		opt(fileOpts)
+	}
+
 	var types []Type
 
 	// add enums, structs, and maps in order of appearance
@@ -72,7 +97,7 @@ func NewFile(schemas ...*Schema) *File {
 		var structs []*Struct
 
 		// build struct/map for top level schema payload keys
-		if len(s.PayloadKeys) > 0 {
+		if len(s.PayloadKeys) > 0 || fileOpts.includeEmptyPayloadKeys {
 			var content []string
 			if strings.TrimSpace(s.Description) != "" {
 				content = append(content, strings.TrimSpace(s.Description))
@@ -112,7 +137,7 @@ func NewFile(schemas ...*Schema) *File {
 		}
 
 		// build struct/map for top level schema response keys
-		if len(s.ResponseKeys) > 0 {
+		if len(s.ResponseKeys) > 0 || fileOpts.includeEmptyResponseKeys {
 			// TODO: set a description/content field for response?
 			key := &PayloadKey{
 				Title:   s.Title + "Response",

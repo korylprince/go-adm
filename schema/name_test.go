@@ -49,7 +49,7 @@ var schemaTests = map[*schema.Schema]string{
 }
 
 func TestGlobalNamer(t *testing.T) {
-	file := schema.NewFile(testSchemaA, testSchemaB, testSchemaB2)
+	file := schema.NewFile([]*schema.Schema{testSchemaA, testSchemaB, testSchemaB2})
 	gn := schema.NewGlobalNamer(file)
 
 	for test, want := range keyTests {

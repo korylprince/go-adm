@@ -143,7 +143,7 @@ func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, ou
 
 		f.Const().Id("DeviceManagementGenerateHash").Op("=").Lit(hash)
 
-		file := schema.NewFile(schemas...)
+		file := schema.NewFile(schemas)
 		NewEncoder(f, WithReplacements(reps)).Encode(file)
 
 		buf := new(bytes.Buffer)
