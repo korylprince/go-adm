@@ -1,11 +1,11 @@
-package jsonutil_test
+package tagutil_test
 
 import (
 	"encoding/json"
 	"testing"
 
 	"github.com/korylprince/go-adm/declarations"
-	"github.com/korylprince/go-adm/jsonutil"
+	"github.com/korylprince/go-adm/tagutil"
 )
 
 func TestFullFields(t *testing.T) {
@@ -16,7 +16,7 @@ func TestFullFields(t *testing.T) {
 			continue
 		}
 
-		_, err = json.Marshal(jsonutil.FullFields(decl))
+		_, err = json.Marshal(tagutil.FullFields(decl))
 		if err != nil {
 			t.Errorf("could not marshal declaration %s: %v", typ, err)
 		}

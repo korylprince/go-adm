@@ -9,7 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/korylprince/go-adm/declarations"
-	"github.com/korylprince/go-adm/jsonutil"
+	"github.com/korylprince/go-adm/tagutil"
 )
 
 func main() {
@@ -61,8 +61,8 @@ func main() {
 
 	var declobj any = decl
 	if *flFull {
-		payload := jsonutil.FullFields(decl.Payload)
-		if err = jsonutil.SetDefaults(payload); err != nil {
+		payload := tagutil.FullFields(decl.Payload)
+		if err = tagutil.SetDefaults(payload); err != nil {
 			fmt.Println("could not fill out declaration:", err)
 			os.Exit(1)
 		}

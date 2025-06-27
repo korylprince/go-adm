@@ -1,4 +1,4 @@
-package jsonutil
+package tagutil
 
 import (
 	"reflect"
@@ -6,7 +6,7 @@ import (
 	"github.com/fatih/structtag"
 )
 
-// FullFields uses reflection to fill out types and remove omitempty tags so that all fields will be marshaled to json
+// FullFields uses reflection to fill out types and remove omitempty tags so that all fields will be marshaled to json/plist
 func FullFields(v any) any {
 	val := reflect.ValueOf(v)
 	typ := val.Type()
@@ -73,6 +73,7 @@ func FullFields(v any) any {
 			continue
 		}
 		tags.DeleteOptions("json", "omitempty")
+		tags.DeleteOptions("plist", "omitempty")
 		fld.Tag = reflect.StructTag(tags.String())
 		// recurse into fields
 		if fld.Type.Kind() == reflect.Pointer {

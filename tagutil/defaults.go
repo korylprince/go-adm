@@ -1,4 +1,4 @@
-package jsonutil
+package tagutil
 
 import (
 	"errors"
@@ -42,14 +42,14 @@ func SetDefaults(v any) error {
 			continue
 		}
 
-		// make slices (i.e. end up with [] instead of null in the json)
+		// make slices (i.e. end up with [] instead of null in the json/plist)
 		if fld.Type.Kind() == reflect.Slice {
 			if val.Field(i).IsNil() {
 				val.Field(i).Set(reflect.MakeSlice(fld.Type, 0, 0))
 			}
 		}
 
-		// make maps (i.e. end up with {} instead of null in the json)
+		// make maps (i.e. end up with {} instead of null in the json/plist)
 		if fld.Type.Kind() == reflect.Map {
 			if val.Field(i).IsNil() {
 				val.Field(i).Set(reflect.MakeMap(fld.Type))

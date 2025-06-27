@@ -1,10 +1,10 @@
-package jsonutil_test
+package tagutil_test
 
 import (
 	"testing"
 
 	"github.com/korylprince/go-adm/declarations"
-	"github.com/korylprince/go-adm/jsonutil"
+	"github.com/korylprince/go-adm/tagutil"
 )
 
 type EnumInt int64
@@ -45,7 +45,7 @@ func TestStructDefaults(t *testing.T) {
 	test.T = test2
 	test.TA = []*T{test3}
 
-	if err := jsonutil.SetDefaults(test); err != nil {
+	if err := tagutil.SetDefaults(test); err != nil {
 		t.Fatalf("could not set struct defaults: %v", err)
 	}
 
@@ -86,7 +86,7 @@ func TestStructDefaults(t *testing.T) {
 			continue
 		}
 
-		err = jsonutil.SetDefaults(decl)
+		err = tagutil.SetDefaults(decl)
 		if err != nil {
 			t.Errorf("could not set defaults for declaration %s: %v", typ, err)
 		}
