@@ -9,6 +9,7 @@ require (
 	github.com/go-git/go-git/v5 v5.6.0
 	github.com/google/uuid v1.3.0
 	github.com/korylprince/go-yaml v1.12.1
+	github.com/micromdm/plist v0.2.1
 	golang.org/x/exp v0.0.0-20230310171629-522b1b587ee0
 	golang.org/x/text v0.8.0
 )
