@@ -54,12 +54,37 @@ func requestType(typ schema.Type) string {
 	return ""
 }
 
+func responseType(typ schema.Type) string {
+	switch t := typ.(type) {
+	case *schema.Struct:
+		if t.Source != schema.SourceResponseKeys || t.Schema.Payload == nil || t.Schema.Payload.RequestType == "" {
+			return ""
+		}
+		return t.Schema.Payload.RequestType
+	case *schema.Map:
+		if t.Source != schema.SourceResponseKeys || t.Schema.Payload == nil || t.Schema.Payload.RequestType == "" {
+			return ""
+		}
+		return t.Schema.Payload.RequestType
+	}
+	return ""
+}
+
 func (e *Encoder) Encode(file *schema.File) {
 	e.enc.RegisterFile(file)
-	// render RequestType -> struct map
+	// render RequestType -> request struct map
 	e.f.Var().Id("CommandMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
 		for _, typ := range file.Types {
 			if dt := requestType(typ); dt != "" {
+				d[jen.Lit(dt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
+			}
+		}
+	}))
+
+	// render RequestType -> response struct map
+	e.f.Var().Id("ResponseMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
+		for _, typ := range file.Types {
+			if dt := responseType(typ); dt != "" {
 				d[jen.Lit(dt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
 			}
 		}
@@ -79,13 +104,10 @@ func (e *Encoder) Encode(file *schema.File) {
 					jen.Return().Lit(rt),
 				)
 			}
-		case *schema.Map:
-			e.enc.EncodeMap(t)
-
-			if rt := requestType(typ); rt != "" {
-				mapName := e.enc.Name(t.Key, replace.Struct)
-				rcvr := jen.Id("p").Id(mapName)
-				e.f.Func().Parens(rcvr).Id("RequestType").Parens(nil).String().Block(
+			if rt := responseType(typ); rt != "" {
+				structName := e.enc.Name(t.Key, replace.Struct)
+				rcvr := jen.Id("p").Op("*").Id(structName)
+				e.f.Func().Parens(rcvr).Id("ResponseRequestType").Parens(nil).String().Block(
 					jen.Return().Lit(rt),
 				)
 			}

@@ -75,6 +75,74 @@ var CommandMap = map[string]any{
 	"VerifyFirmwarePassword":          VerifyFirmwarePasswordCommand{},
 	"VerifyRecoveryLock":              VerifyRecoveryLockCommand{},
 }
+var ResponseMap = map[string]any{
+	"AccountConfiguration":            AccountConfigurationCommandResponse{},
+	"ActivationLockBypassCode":        ActivationLockBypassCodeCommandResponse{},
+	"ActiveNSExtensions":              ActiveNSExtensionsCommandResponse{},
+	"ApplyRedemptionCode":             ApplyRedemptionCodeCommandResponse{},
+	"AvailableOSUpdates":              AvailableOSUpdatesCommandResponse{},
+	"CertificateList":                 CertificateListCommandResponse{},
+	"ClearActivationLockBypassCode":   ClearActivationLockBypassCodeCommandResponse{},
+	"ClearPasscode":                   ClearPasscodeCommandResponse{},
+	"ClearRestrictionsPassword":       ClearRestrictionsPasswordCommandResponse{},
+	"ContentCachingInformation":       ContentCachingInformationCommandResponse{},
+	"DeclarativeManagement":           DeclarativeManagementCommandResponse{},
+	"DeleteUser":                      DeleteUserCommandResponse{},
+	"DeviceConfigured":                DeviceConfiguredCommandResponse{},
+	"DeviceInformation":               DeviceInformationCommandResponse{},
+	"DeviceLocation":                  DeviceLocationCommandResponse{},
+	"DeviceLock":                      DeviceLockCommandResponse{},
+	"DisableLostMode":                 DisableLostModeCommandResponse{},
+	"DisableRemoteDesktop":            DisableRemoteDesktopCommandResponse{},
+	"EnableLostMode":                  EnableLostModeCommandResponse{},
+	"EnableRemoteDesktop":             EnableRemoteDesktopCommandResponse{},
+	"EraseDevice":                     EraseDeviceCommandResponse{},
+	"InstallApplication":              InstallApplicationCommandResponse{},
+	"InstallEnterpriseApplication":    InstallEnterpriseApplicationCommandResponse{},
+	"InstallMedia":                    InstallMediaCommandResponse{},
+	"InstallProfile":                  InstallProfileCommandResponse{},
+	"InstallProvisioningProfile":      InstallProvisioningProfileCommandResponse{},
+	"InstalledApplicationList":        InstalledApplicationListCommandResponse{},
+	"InviteToProgram":                 InviteToProgramCommandResponse{},
+	"LOMDeviceRequest":                LOMDeviceRequestCommandResponse{},
+	"LOMSetupRequest":                 LOMSetupRequestCommandResponse{},
+	"LogOutUser":                      LogOutUserCommandResponse{},
+	"ManagedApplicationAttributes":    ManagedApplicationAttributesCommandResponse{},
+	"ManagedApplicationConfiguration": ManagedApplicationConfigurationCommandResponse{},
+	"ManagedApplicationFeedback":      ManagedApplicationFeedbackCommandResponse{},
+	"ManagedApplicationList":          ManagedApplicationListCommandResponse{},
+	"ManagedMediaList":                ManagedMediaListCommandResponse{},
+	"NSExtensionMappings":             NSExtensionMappingsCommandResponse{},
+	"OSUpdateStatus":                  OSUpdateStatusCommandResponse{},
+	"PlayLostModeSound":               PlayLostModeSoundCommandResponse{},
+	"ProfileList":                     ProfileListCommandResponse{},
+	"ProvisioningProfileList":         ProvisioningProfileListCommandResponse{},
+	"RefreshCellularPlans":            RefreshCellularPlansCommandResponse{},
+	"RemoveApplication":               RemoveApplicationCommandResponse{},
+	"RemoveMedia":                     RemoveMediaCommandResponse{},
+	"RemoveProfile":                   RemoveProfileCommandResponse{},
+	"RemoveProvisioningProfile":       RemoveProvisioningProfileCommandResponse{},
+	"RequestMirroring":                RequestMirroringCommandResponse{},
+	"RequestUnlockToken":              RequestUnlockTokenCommandResponse{},
+	"RestartDevice":                   RestartDeviceCommandResponse{},
+	"Restrictions":                    RestrictionsCommandResponse{},
+	"RotateFileVaultKey":              RotateFileVaultKeyCommandResponse{},
+	"ScheduleOSUpdate":                ScheduleOSUpdateCommandResponse{},
+	"ScheduleOSUpdateScan":            ScheduleOSUpdateScanCommandResponse{},
+	"SecurityInfo":                    SecurityInfoCommandResponse{},
+	"SetAutoAdminPassword":            SetAutoAdminPasswordCommandResponse{},
+	"SetFirmwarePassword":             SetFirmwarePasswordCommandResponse{},
+	"SetRecoveryLock":                 SetRecoveryLockCommandResponse{},
+	"Settings":                        SettingsCommandResponse{},
+	"ShutDownDevice":                  ShutDownDeviceCommandResponse{},
+	"StopMirroring":                   StopMirroringCommandResponse{},
+	"UnlockUserAccount":               UnlockUserAccountCommandResponse{},
+	"UserConfigured":                  UserConfiguredCommandResponse{},
+	"UserList":                        UserListCommandResponse{},
+	"ValidateApplications":            ValidateApplicationsCommandResponse{},
+	"VerifyFirmwarePassword":          VerifyFirmwarePasswordCommandResponse{},
+	"VerifyRecoveryLock":              VerifyRecoveryLockCommandResponse{},
+}
 
 // Create and configure a local administrator account on a device.
 // When a macOS (v10.11 and later) device is configured via DEP to enroll in an MDM server and the DEP profile has the await_device_configuration flag set to true, the AccountConfiguration command can be sent to the device to have it create the local administrator account (thereby skipping the page to create this account in Setup Assistant). This command can only be sent to a macOS device that is in the AwaitingConfiguration state.
@@ -105,6 +173,10 @@ func (p *AccountConfigurationCommand) RequestType() string {
 
 type AccountConfigurationCommandResponse struct{}
 
+func (p *AccountConfigurationCommandResponse) ResponseRequestType() string {
+	return "AccountConfiguration"
+}
+
 // A dictionary that describes the administrator account to create with Setup Assistant, which uses the first element and ignores additional elements.
 type AutoSetupAdminAccountItem struct {
 	// The short name of the user.
@@ -133,6 +205,10 @@ func (p *ActiveNSExtensionsCommand) RequestType() string {
 type ActiveNSExtensionsCommandResponse struct {
 	// An array of dictionaries that contains information about active extensions on the device.
 	Extensions []*ActiveNSExtensionsCommandExtensionsExtensionsItem `json:"Extensions" plist:"Extensions" required:"true"`
+}
+
+func (p *ActiveNSExtensionsCommandResponse) ResponseRequestType() string {
+	return "ActiveNSExtensions"
 }
 
 // A dictionary that contains information about an extension.
@@ -181,6 +257,10 @@ type NSExtensionMappingsCommandResponse struct {
 	Extensions []*NSExtensionMappingsCommandExtensionsExtensionsItem `json:"Extensions" plist:"Extensions" required:"true"`
 }
 
+func (p *NSExtensionMappingsCommandResponse) ResponseRequestType() string {
+	return "NSExtensionMappings"
+}
+
 // A dictionary that contains information about an extension.
 type NSExtensionMappingsCommandExtensionsExtensionsItem struct {
 	// The identifier of the extension.
@@ -225,6 +305,10 @@ func (p *InstallEnterpriseApplicationCommand) RequestType() string {
 }
 
 type InstallEnterpriseApplicationCommandResponse struct{}
+
+func (p *InstallEnterpriseApplicationCommandResponse) ResponseRequestType() string {
+	return "InstallEnterpriseApplication"
+}
 
 // The management flags. The possible values are:
 // - `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
@@ -291,6 +375,10 @@ type InstallApplicationCommandResponse struct {
 	State *InstallApplicationCommandState `json:"State,omitempty" plist:"State,omitempty"`
 	// The reason, if installation fails. macOS always returns "Other".
 	RejectionReason *InstallApplicationCommandRejectionReason `json:"RejectionReason,omitempty" plist:"RejectionReason,omitempty"`
+}
+
+func (p *InstallApplicationCommandResponse) ResponseRequestType() string {
+	return "InstallApplication"
 }
 
 // A dictionary that contains the app installation options.
@@ -428,6 +516,10 @@ type InstalledApplicationListCommandResponse struct {
 	InstalledApplicationList []*InstalledApplicationListItem `json:"InstalledApplicationList" plist:"InstalledApplicationList" required:"true"`
 }
 
+func (p *InstalledApplicationListCommandResponse) ResponseRequestType() string {
+	return "InstalledApplicationList"
+}
+
 // An array of strings that represent keys in `InstalledApplicationListItem`. If present, the response only contains the keys listed here, except `Identifier` is always included. If not present, the response contains all keys.
 // > Tip:
 // > Only request the keys that you need, because some key values can take significant time and power to calculate on the device.
@@ -520,6 +612,10 @@ type InviteToProgramCommandResponse struct {
 	InvitationResult InvitationResult `json:"InvitationResult" plist:"InvitationResult" required:"true"`
 }
 
+func (p *InviteToProgramCommandResponse) ResponseRequestType() string {
+	return "InviteToProgram"
+}
+
 // The program's identifier, which can only be `com.apple.cloudvpp`.
 type ProgramID string
 
@@ -552,6 +648,10 @@ func (p *ManagedApplicationListCommand) RequestType() string {
 type ManagedApplicationListCommandResponse struct {
 	// A dictionary that contains status information about each managed app. The response doesn't include apps that Declarative Device Management manages.
 	ManagedApplicationList ManagedApplicationList `json:"ManagedApplicationList" plist:"ManagedApplicationList" required:"true"`
+}
+
+func (p *ManagedApplicationListCommandResponse) ResponseRequestType() string {
+	return "ManagedApplicationList"
 }
 
 // A dictionary that contains status information about each managed app. The response doesn't include apps that Declarative Device Management manages.
@@ -664,6 +764,10 @@ func (p *ApplyRedemptionCodeCommand) RequestType() string {
 
 type ApplyRedemptionCodeCommandResponse struct{}
 
+func (p *ApplyRedemptionCodeCommandResponse) ResponseRequestType() string {
+	return "ApplyRedemptionCode"
+}
+
 // Remove an installed managed app.
 // This command allows a server to remove managed apps. Starting in iOS 26 on supervised devices, this command will also allow a server to remove unmanaged and system apps. This command will fail for apps that are managed by Declarative Device Management.
 type RemoveApplicationCommand struct {
@@ -679,6 +783,10 @@ func (p *RemoveApplicationCommand) RequestType() string {
 
 type RemoveApplicationCommandResponse struct{}
 
+func (p *RemoveApplicationCommandResponse) ResponseRequestType() string {
+	return "RemoveApplication"
+}
+
 // Force validation of developer and universal provisioning profiles for enterprise apps.
 // This command allows the server to query for installed 3rd party applications.
 type ValidateApplicationsCommand struct {
@@ -691,6 +799,10 @@ func (p *ValidateApplicationsCommand) RequestType() string {
 }
 
 type ValidateApplicationsCommandResponse struct{}
+
+func (p *ValidateApplicationsCommandResponse) ResponseRequestType() string {
+	return "ValidateApplications"
+}
 
 // Get a list of installed certificates on a device.
 // This command allows the server to retrieve the list of installed certificates on the device. The command requires that the server has the Inspect Profile Manifest privilege.
@@ -707,6 +819,10 @@ func (p *CertificateListCommand) RequestType() string {
 type CertificateListCommandResponse struct {
 	// An array of certificate list items that describes each certificate.
 	CertificateList []*CertificateListItem `json:"CertificateList" plist:"CertificateList" required:"true"`
+}
+
+func (p *CertificateListCommandResponse) ResponseRequestType() string {
+	return "CertificateList"
 }
 
 // A dictionary that contains information about a certificate list item.
@@ -732,6 +848,10 @@ func (p *DeclarativeManagementCommand) RequestType() string {
 
 type DeclarativeManagementCommandResponse struct{}
 
+func (p *DeclarativeManagementCommandResponse) ResponseRequestType() string {
+	return "DeclarativeManagement"
+}
+
 // Get the code to bypass Activation Lock on a device.
 // Retrieves the Activation Lock bypass code from the device. This bypass code is only available for 15 days after supervision.
 type ActivationLockBypassCodeCommand struct{}
@@ -745,6 +865,10 @@ type ActivationLockBypassCodeCommandResponse struct {
 	ActivationLockBypassCode string `json:"ActivationLockBypassCode" plist:"ActivationLockBypassCode" required:"true"`
 }
 
+func (p *ActivationLockBypassCodeCommandResponse) ResponseRequestType() string {
+	return "ActivationLockBypassCode"
+}
+
 // Clear the Activation Lock bypass code on a device.
 // Clears the Activation Lock bypass code from the device.
 type ClearActivationLockBypassCodeCommand struct{}
@@ -755,6 +879,10 @@ func (p *ClearActivationLockBypassCodeCommand) RequestType() string {
 
 type ClearActivationLockBypassCodeCommandResponse struct{}
 
+func (p *ClearActivationLockBypassCodeCommandResponse) ResponseRequestType() string {
+	return "ClearActivationLockBypassCode"
+}
+
 // Inform the device that it can allow the user to continue in Setup Assistant.
 // Informs the device that it can continue past DEP enrollment. Only works on devices in DEP that have their cloud configuration set to await configuration.
 type DeviceConfiguredCommand struct{}
@@ -764,6 +892,10 @@ func (p *DeviceConfiguredCommand) RequestType() string {
 }
 
 type DeviceConfiguredCommandResponse struct{}
+
+func (p *DeviceConfiguredCommandResponse) ResponseRequestType() string {
+	return "DeviceConfigured"
+}
 
 // Remotely and immediately erase a device.
 // This command allows the server to remotely erase the device. This command requires the Device Erase right.
@@ -795,6 +927,10 @@ func (p *EraseDeviceCommand) RequestType() string {
 }
 
 type EraseDeviceCommandResponse struct{}
+
+func (p *EraseDeviceCommandResponse) ResponseRequestType() string {
+	return "EraseDevice"
+}
 
 // This key defines the fallback behavior for erasing a device.
 // In macOS 12 and later, this command uses Erase All Content and Settings (EACS) on Mac computers with the Apple M1 chip or the Apple T2 Security Chip. On those devices, if EACS can't run, the device can use obliteration (macOS 11.x behavior). This key has no effect on machines prior to the T2 chip. For a list of supported macs, see [Mac models with the Apple T2 Security Chip](https://support.apple.com/en-us/HT208862).
@@ -844,6 +980,10 @@ func (p *RefreshCellularPlansCommand) RequestType() string {
 
 type RefreshCellularPlansCommandResponse struct{}
 
+func (p *RefreshCellularPlansCommandResponse) ResponseRequestType() string {
+	return "RefreshCellularPlans"
+}
+
 // Remotely and immediately lock a device.
 // This command allows the server to immediately lock the device. This command requires the Device Lock and Passcode Removal right.
 type DeviceLockCommand struct {
@@ -868,6 +1008,10 @@ type DeviceLockCommandResponse struct {
 	MessageResult *string `json:"MessageResult,omitempty" plist:"MessageResult,omitempty"`
 }
 
+func (p *DeviceLockCommandResponse) ResponseRequestType() string {
+	return "DeviceLock"
+}
+
 // Take the device out of Lost Mode.
 // This command allows the server to take the device out of MDM lost mode.
 type DisableLostModeCommand struct{}
@@ -877,6 +1021,10 @@ func (p *DisableLostModeCommand) RequestType() string {
 }
 
 type DisableLostModeCommandResponse struct{}
+
+func (p *DisableLostModeCommandResponse) ResponseRequestType() string {
+	return "DisableLostMode"
+}
 
 // Enable Lost Mode on a device, which provides a message and phone number on the Lock Screen.
 // This command allows the server to put the device in MDM lost mode, with a message, phone number, and footnote text. A message or phone number must be provided.
@@ -894,6 +1042,10 @@ func (p *EnableLostModeCommand) RequestType() string {
 }
 
 type EnableLostModeCommandResponse struct{}
+
+func (p *EnableLostModeCommandResponse) ResponseRequestType() string {
+	return "EnableLostMode"
+}
 
 // Request the location of a device when in Lost Mode.
 type DeviceLocationCommand struct{}
@@ -921,6 +1073,10 @@ type DeviceLocationCommandResponse struct {
 	Timestamp string `json:"Timestamp" plist:"Timestamp" required:"true"`
 }
 
+func (p *DeviceLocationCommandResponse) ResponseRequestType() string {
+	return "DeviceLocation"
+}
+
 // Play the Lost Mode sound on a device that's in Lost Mode.
 // This command allows the server to tell the device to play a sound if it is in MDM Lost Mode. The sound will play until the device is either removed from Lost Mode or a user disables the sound from the device.
 type PlayLostModeSoundCommand struct{}
@@ -930,6 +1086,10 @@ func (p *PlayLostModeSoundCommand) RequestType() string {
 }
 
 type PlayLostModeSoundCommandResponse struct{}
+
+func (p *PlayLostModeSoundCommandResponse) ResponseRequestType() string {
+	return "PlayLostModeSound"
+}
 
 // Remotely and immediately restart a device.
 // This command requires the Device Lock access right. The device will restart immediately.
@@ -949,6 +1109,10 @@ func (p *RestartDeviceCommand) RequestType() string {
 
 type RestartDeviceCommandResponse struct{}
 
+func (p *RestartDeviceCommandResponse) ResponseRequestType() string {
+	return "RestartDevice"
+}
+
 // Clear the Screen Time password and the restrictions on a device.
 type ClearRestrictionsPasswordCommand struct{}
 
@@ -957,6 +1121,10 @@ func (p *ClearRestrictionsPasswordCommand) RequestType() string {
 }
 
 type ClearRestrictionsPasswordCommandResponse struct{}
+
+func (p *ClearRestrictionsPasswordCommandResponse) ResponseRequestType() string {
+	return "ClearRestrictionsPassword"
+}
 
 // Get a list of restrictions on the device.
 // This command allows the server to determine what restrictions are being enforced on the device, and the total sum of all restrictions. This command requires the Restrictions Query access right. This technically does work on macOS but it returns a blank dictionary and there no plans to change this behavior.
@@ -974,6 +1142,10 @@ type RestrictionsCommandResponse struct {
 	GlobalRestrictions GlobalRestrictions `json:"GlobalRestrictions" plist:"GlobalRestrictions" required:"true"`
 	// A dictionary that contains dictionaries of restrictions from each profile. This value is only available when `ProfileRestrictions` is `true` in the command. The keys are the identifiers of the profiles. This value is available in iOS 4 and later, and tvOS 6.1 and later.
 	ProfileRestrictions ProfileRestrictions `json:"ProfileRestrictions" plist:"ProfileRestrictions" required:"true"`
+}
+
+func (p *RestrictionsCommandResponse) ResponseRequestType() string {
+	return "Restrictions"
 }
 
 // A dictionary that contains the global restrictions in effect. This value is available in iOS 4 and later, and tvOS 6.1 and later.
@@ -1064,6 +1236,10 @@ func (p *ShutDownDeviceCommand) RequestType() string {
 
 type ShutDownDeviceCommandResponse struct{}
 
+func (p *ShutDownDeviceCommandResponse) ResponseRequestType() string {
+	return "ShutDownDevice"
+}
+
 // Get the status of the content caches on a device.
 // This command allows the server to query for information about Content Caching.
 type ContentCachingInformationCommand struct{}
@@ -1075,6 +1251,10 @@ func (p *ContentCachingInformationCommand) RequestType() string {
 type ContentCachingInformationCommandResponse struct {
 	// A dictionary that contains the status of content caching on a device.
 	StatusResponse StatusResponse `json:"StatusResponse" plist:"StatusResponse" required:"true"`
+}
+
+func (p *ContentCachingInformationCommandResponse) ResponseRequestType() string {
+	return "ContentCachingInformation"
 }
 
 // A dictionary that contains the status of content caching on a device.
@@ -1452,6 +1632,10 @@ type DeviceInformationCommandResponse struct {
 	QueryResponses QueryResponses `json:"QueryResponses" plist:"QueryResponses" required:"true"`
 }
 
+func (p *DeviceInformationCommandResponse) ResponseRequestType() string {
+	return "DeviceInformation"
+}
+
 // A dictionary that contains information about the device.
 type QueryResponses struct {
 	// The unique identifier of the device.
@@ -1827,6 +2011,10 @@ type SecurityInfoCommandResponse struct {
 	SecurityInfo SecurityInfo `json:"SecurityInfo" plist:"SecurityInfo" required:"true"`
 }
 
+func (p *SecurityInfoCommandResponse) ResponseRequestType() string {
+	return "SecurityInfo"
+}
+
 // A dictionary that contains security-related information.
 type SecurityInfo struct {
 	// An integer that indicates the underlying hardware encryption capabilities of the device, which is one of the following values:
@@ -2001,6 +2189,10 @@ type LOMDeviceRequestCommandResponse struct {
 	ResponseList []ResponseListItem `json:"ResponseList" plist:"ResponseList" required:"true"`
 }
 
+func (p *LOMDeviceRequestCommandResponse) ResponseRequestType() string {
+	return "LOMDeviceRequest"
+}
+
 // A dictionary that contains a requested action to perform on a device using lights-out management (LOM).
 type RequestListItem struct {
 	// The requested action to perform on the device.
@@ -2053,6 +2245,10 @@ type LOMSetupRequestCommandResponse struct {
 	LOMProtocolVersion int64 `json:"LOMProtocolVersion" plist:"LOMProtocolVersion" required:"true"`
 }
 
+func (p *LOMSetupRequestCommandResponse) ResponseRequestType() string {
+	return "LOMSetupRequest"
+}
+
 // Query attributes in managed apps on a device.
 // Queries managed application attributes. Attributes can be set on managed apps. These attributes can be changed over time. The response will not include apps that are managed by Declarative Device Management.
 type ManagedApplicationAttributesCommand struct {
@@ -2069,6 +2265,10 @@ func (p *ManagedApplicationAttributesCommand) RequestType() string {
 type ManagedApplicationAttributesCommandResponse struct {
 	// An array of app attribute items.
 	ApplicationAttributes []*ApplicationAttributesApplicationAttributesItem `json:"ApplicationAttributes" plist:"ApplicationAttributes" required:"true"`
+}
+
+func (p *ManagedApplicationAttributesCommandResponse) ResponseRequestType() string {
+	return "ManagedApplicationAttributes"
 }
 
 // A dictionary that contains a managed app attributes item.
@@ -2129,6 +2329,10 @@ type ManagedApplicationConfigurationCommandResponse struct {
 	ApplicationConfigurations []*ApplicationConfigurationsItem `json:"ApplicationConfigurations" plist:"ApplicationConfigurations" required:"true"`
 }
 
+func (p *ManagedApplicationConfigurationCommandResponse) ResponseRequestType() string {
+	return "ManagedApplicationConfiguration"
+}
+
 // A dictionary that contains a managed app's configurations item.
 type ApplicationConfigurationsItem struct {
 	// The app's bundle identifier.
@@ -2155,6 +2359,10 @@ func (p *ManagedApplicationFeedbackCommand) RequestType() string {
 type ManagedApplicationFeedbackCommandResponse struct {
 	// An array of managed app feedback items.
 	ManagedApplicationFeedback []*ManagedApplicationFeedbackItem `json:"ManagedApplicationFeedback" plist:"ManagedApplicationFeedback" required:"true"`
+}
+
+func (p *ManagedApplicationFeedbackCommandResponse) ResponseRequestType() string {
+	return "ManagedApplicationFeedback"
 }
 
 // A dictionary that contains a managed app's feedback item.
@@ -2213,6 +2421,10 @@ type InstallMediaCommandResponse struct {
 	// - `DownloadInvalid`: The URL doesn't lead to a valid book.
 	// - `EnterpriseBooksNotSupportedInMultiUser`: Multiuser mode doesn't support enterprise books.
 	RejectionReason *InstallMediaCommandRejectionReason `json:"RejectionReason,omitempty" plist:"RejectionReason,omitempty"`
+}
+
+func (p *InstallMediaCommandResponse) ResponseRequestType() string {
+	return "InstallMedia"
 }
 
 // The media type, which can only be `Book`.
@@ -2282,6 +2494,10 @@ type ManagedMediaListCommandResponse struct {
 	Books []*BooksItem `json:"Books" plist:"Books" required:"true"`
 }
 
+func (p *ManagedMediaListCommandResponse) ResponseRequestType() string {
+	return "ManagedMediaList"
+}
+
 // A dictionary that describes a managed book.
 type BooksItem struct {
 	// The book's iTunes Store identifier.
@@ -2333,6 +2549,10 @@ func (p *RemoveMediaCommand) RequestType() string {
 
 type RemoveMediaCommandResponse struct{}
 
+func (p *RemoveMediaCommandResponse) ResponseRequestType() string {
+	return "RemoveMedia"
+}
+
 // The media type, which can only be `Book`.
 type RemoveMediaCommandMediaType string
 
@@ -2366,6 +2586,10 @@ type RequestMirroringCommandResponse struct {
 	MirroringResult *string `json:"MirroringResult,omitempty" plist:"MirroringResult,omitempty"`
 }
 
+func (p *RequestMirroringCommandResponse) ResponseRequestType() string {
+	return "RequestMirroring"
+}
+
 // Stop mirroring the display to another device.
 // This command stops AirPlay mirroring.
 type StopMirroringCommand struct{}
@@ -2375,6 +2599,10 @@ func (p *StopMirroringCommand) RequestType() string {
 }
 
 type StopMirroringCommandResponse struct{}
+
+func (p *StopMirroringCommandResponse) ResponseRequestType() string {
+	return "StopMirroring"
+}
 
 // Remove the passcode from a device.
 // This command allows the server to clear the passcode on the device. This command requires the Device Lock and Passcode Removal right.
@@ -2388,6 +2616,10 @@ func (p *ClearPasscodeCommand) RequestType() string {
 }
 
 type ClearPasscodeCommandResponse struct{}
+
+func (p *ClearPasscodeCommandResponse) ResponseRequestType() string {
+	return "ClearPasscode"
+}
 
 // Change or clear the firmware password on a device.
 // Changes or clears the firmware password for the device. Requires the "Device lock and passcode removal right". This command is not available on Mac computers with Apple silicon.
@@ -2407,6 +2639,10 @@ func (p *SetFirmwarePasswordCommand) RequestType() string {
 type SetFirmwarePasswordCommandResponse struct {
 	// A dictionary containing the results of the command.
 	SetFirmwarePassword SetFirmwarePassword `json:"SetFirmwarePassword" plist:"SetFirmwarePassword" required:"true"`
+}
+
+func (p *SetFirmwarePasswordCommandResponse) ResponseRequestType() string {
+	return "SetFirmwarePassword"
 }
 
 // A dictionary containing the results of the command.
@@ -2431,6 +2667,10 @@ type VerifyFirmwarePasswordCommandResponse struct {
 	VerifyFirmwarePassword VerifyFirmwarePassword `json:"VerifyFirmwarePassword" plist:"VerifyFirmwarePassword" required:"true"`
 }
 
+func (p *VerifyFirmwarePasswordCommandResponse) ResponseRequestType() string {
+	return "VerifyFirmwarePassword"
+}
+
 // A dictionary containing the results of the command.
 type VerifyFirmwarePassword struct {
 	// If 'true', the provided password matched the firmware password set for the device.
@@ -2452,6 +2692,10 @@ func (p *SetRecoveryLockCommand) RequestType() string {
 
 type SetRecoveryLockCommandResponse struct{}
 
+func (p *SetRecoveryLockCommandResponse) ResponseRequestType() string {
+	return "SetRecoveryLock"
+}
+
 // Verify the device's Recovery Lock password.
 // Verifies the device's recovery lock password. (AppleSilicon devices only)
 type VerifyRecoveryLockCommand struct {
@@ -2468,6 +2712,10 @@ type VerifyRecoveryLockCommandResponse struct {
 	PasswordVerified bool `json:"PasswordVerified" plist:"PasswordVerified" required:"true"`
 }
 
+func (p *VerifyRecoveryLockCommandResponse) ResponseRequestType() string {
+	return "VerifyRecoveryLock"
+}
+
 // Request an unlock token from a device.
 // This command requests an UnlockToken from the device. Pass this token to the ClearPasscode command to unlock the device.
 type RequestUnlockTokenCommand struct{}
@@ -2479,6 +2727,10 @@ func (p *RequestUnlockTokenCommand) RequestType() string {
 type RequestUnlockTokenCommandResponse struct {
 	// The unlock token. Erasing the user partition invalidates this token.
 	UnlockToken []byte `json:"UnlockToken" plist:"UnlockToken" required:"true"`
+}
+
+func (p *RequestUnlockTokenCommandResponse) ResponseRequestType() string {
+	return "RequestUnlockToken"
 }
 
 // Install a configuration profile on a device.
@@ -2494,6 +2746,10 @@ func (p *InstallProfileCommand) RequestType() string {
 
 type InstallProfileCommandResponse struct{}
 
+func (p *InstallProfileCommandResponse) ResponseRequestType() string {
+	return "InstallProfile"
+}
+
 // Get a list of installed profiles on a device.
 // This command allows the MDM server to query for the profiles installed on the device. This command requires the Inspect Profile Manifest right. It's supported on the user channel.
 type ProfileListCommand struct {
@@ -2508,6 +2764,10 @@ func (p *ProfileListCommand) RequestType() string {
 type ProfileListCommandResponse struct {
 	// An array of dictionaries that describes each installed profile.
 	ProfileList []*ProfileListItem `json:"ProfileList" plist:"ProfileList" required:"true"`
+}
+
+func (p *ProfileListCommandResponse) ResponseRequestType() string {
+	return "ProfileList"
 }
 
 // A dictionary that describes a profile list item.
@@ -2578,6 +2838,10 @@ func (p *InstallProvisioningProfileCommand) RequestType() string {
 
 type InstallProvisioningProfileCommandResponse struct{}
 
+func (p *InstallProvisioningProfileCommandResponse) ResponseRequestType() string {
+	return "InstallProvisioningProfile"
+}
+
 // Get a list of installed provisioning profiles on a device.
 // This command allows the server to retrieve the list of installed provisioning profiles on the device. This command requires the Inspect Provisioning Profiles right. On macOS, this command is for iOS and iPadOS style provisioning profiles only.
 type ProvisioningProfileListCommand struct {
@@ -2592,6 +2856,10 @@ func (p *ProvisioningProfileListCommand) RequestType() string {
 type ProvisioningProfileListCommandResponse struct {
 	// An array of dictionaries that describes each installed profile.
 	ProvisioningProfileList []*ProvisioningProfileListItem `json:"ProvisioningProfileList" plist:"ProvisioningProfileList" required:"true"`
+}
+
+func (p *ProvisioningProfileListCommandResponse) ResponseRequestType() string {
+	return "ProvisioningProfileList"
 }
 
 // A dictionary that describes a provisioning profile list item.
@@ -2617,6 +2885,10 @@ func (p *RemoveProvisioningProfileCommand) RequestType() string {
 
 type RemoveProvisioningProfileCommandResponse struct{}
 
+func (p *RemoveProvisioningProfileCommandResponse) ResponseRequestType() string {
+	return "RemoveProvisioningProfile"
+}
+
 // Remove a previously installed profile from the device.
 // This command allows the server to remove a profile. This command requires the Profile Installation and Removal Right. It's supported in the user channel.
 type RemoveProfileCommand struct {
@@ -2630,6 +2902,10 @@ func (p *RemoveProfileCommand) RequestType() string {
 
 type RemoveProfileCommandResponse struct{}
 
+func (p *RemoveProfileCommandResponse) ResponseRequestType() string {
+	return "RemoveProfile"
+}
+
 // Disable Remote Desktop on a device.
 // Disable Remote Desktop.
 type DisableRemoteDesktopCommand struct{}
@@ -2640,6 +2916,10 @@ func (p *DisableRemoteDesktopCommand) RequestType() string {
 
 type DisableRemoteDesktopCommandResponse struct{}
 
+func (p *DisableRemoteDesktopCommandResponse) ResponseRequestType() string {
+	return "DisableRemoteDesktop"
+}
+
 // Enable Remote Desktop on a device.
 // Enable Remote Desktop.
 type EnableRemoteDesktopCommand struct{}
@@ -2649,6 +2929,10 @@ func (p *EnableRemoteDesktopCommand) RequestType() string {
 }
 
 type EnableRemoteDesktopCommandResponse struct{}
+
+func (p *EnableRemoteDesktopCommandResponse) ResponseRequestType() string {
+	return "EnableRemoteDesktop"
+}
 
 // Change the FileVault primary password on a device.
 // This command allows for changing a device's FileVaultMaster password.
@@ -2670,6 +2954,10 @@ func (p *RotateFileVaultKeyCommand) RequestType() string {
 type RotateFileVaultKeyCommandResponse struct {
 	// The result of rotating the personal recovery key.
 	RotateResult *RotateResult `json:"RotateResult,omitempty" plist:"RotateResult,omitempty"`
+}
+
+func (p *RotateFileVaultKeyCommandResponse) ResponseRequestType() string {
+	return "RotateFileVaultKey"
 }
 
 // The type of FileVault key you want to change the password for. Set this value to `personal` and set a value for `Password` in the `FileVaultUnlock` dictionary to enable unlocking a device with a password. Set this value to `institutional` and set values for `PrivateKeyExport` and `PrivateKeyExportPassword` in the `FileVaultUnlock` dictionary.
@@ -2716,6 +3004,10 @@ func (p *SetAutoAdminPasswordCommand) RequestType() string {
 
 type SetAutoAdminPasswordCommandResponse struct{}
 
+func (p *SetAutoAdminPasswordCommandResponse) ResponseRequestType() string {
+	return "SetAutoAdminPassword"
+}
+
 // Configure settings on a device.
 // This command allows the server to set settings on the device. These settings take effect on a one-time basis. The user may still be able to change the settings at a later time. This command requires the ApplySettings right.
 type SettingsCommand struct {
@@ -2730,6 +3022,10 @@ func (p *SettingsCommand) RequestType() string {
 type SettingsCommandResponse struct {
 	// A dictionary that describes the results of configuring settings.
 	Settings *Settings `json:"Settings,omitempty" plist:"Settings,omitempty"`
+}
+
+func (p *SettingsCommandResponse) ResponseRequestType() string {
+	return "Settings"
 }
 
 // A dictionary that contains wallpaper settings. This setting doesn't support user enrollment. Available in iOS 8 and later. Starting in iOS 16 and iPadOS 17, when setting the wallpaper for the first time, both locations update. After that, you can set either location separately.
@@ -3270,6 +3566,10 @@ type AvailableOSUpdatesCommandResponse struct {
 	AvailableOSUpdates []AvailableOSUpdatesItem `json:"AvailableOSUpdates" plist:"AvailableOSUpdates" required:"true"`
 }
 
+func (p *AvailableOSUpdatesCommandResponse) ResponseRequestType() string {
+	return "AvailableOSUpdates"
+}
+
 // The response dictionary that describes the available operating-system updates item.
 type AvailableOSUpdatesItem struct {
 	// The product key that represents the update.
@@ -3332,6 +3632,10 @@ type ScheduleOSUpdateScanCommandResponse struct {
 	ScanInitiated bool `json:"ScanInitiated" plist:"ScanInitiated" required:"true"`
 }
 
+func (p *ScheduleOSUpdateScanCommandResponse) ResponseRequestType() string {
+	return "ScheduleOSUpdateScan"
+}
+
 // Schedule an update of the operating system on a device.
 // This command allows the server to schedule an OS update.
 type ScheduleOSUpdateCommand struct {
@@ -3347,6 +3651,10 @@ func (p *ScheduleOSUpdateCommand) RequestType() string {
 type ScheduleOSUpdateCommandResponse struct {
 	// An array of dictionaries that describes the results of processing operating-system updates.
 	UpdateResults []UpdateResultsItem `json:"UpdateResults" plist:"UpdateResults" required:"true"`
+}
+
+func (p *ScheduleOSUpdateCommandResponse) ResponseRequestType() string {
+	return "ScheduleOSUpdate"
 }
 
 // A dictionary that describes the available operating-system updates item.
@@ -3496,6 +3804,10 @@ type OSUpdateStatusCommandResponse struct {
 	OSUpdateStatus []OSUpdateStatusItem `json:"OSUpdateStatus" plist:"OSUpdateStatus" required:"true"`
 }
 
+func (p *OSUpdateStatusCommandResponse) ResponseRequestType() string {
+	return "OSUpdateStatus"
+}
+
 // A dictionary that describes the status of a software update.
 type OSUpdateStatusItem struct {
 	// The product key that represents the update.
@@ -3533,6 +3845,10 @@ func (p *UserConfiguredCommand) RequestType() string {
 
 type UserConfiguredCommandResponse struct{}
 
+func (p *UserConfiguredCommandResponse) ResponseRequestType() string {
+	return "UserConfigured"
+}
+
 // Delete a user's account from a device.
 // This command allows the server to delete a user that has an active account on the device.
 type DeleteUserCommand struct {
@@ -3550,6 +3866,10 @@ func (p *DeleteUserCommand) RequestType() string {
 
 type DeleteUserCommandResponse struct{}
 
+func (p *DeleteUserCommandResponse) ResponseRequestType() string {
+	return "DeleteUser"
+}
+
 // Get a list of users with active accounts on a device.
 // This command allows the server to query for a list of users that have an active account on the device.
 type UserListCommand struct{}
@@ -3561,6 +3881,10 @@ func (p *UserListCommand) RequestType() string {
 type UserListCommandResponse struct {
 	// An array of user dictionaries that contains information about the active accounts.
 	Users []UsersItem `json:"Users" plist:"Users" required:"true"`
+}
+
+func (p *UserListCommandResponse) ResponseRequestType() string {
+	return "UserList"
 }
 
 // A dictionary that contains information about an active account on a device.
@@ -3597,6 +3921,10 @@ func (p *LogOutUserCommand) RequestType() string {
 
 type LogOutUserCommandResponse struct{}
 
+func (p *LogOutUserCommandResponse) ResponseRequestType() string {
+	return "LogOutUser"
+}
+
 // Unlock a user account that the system locked because of too many failed password attempts.
 // This command allows the server to unlock a local user account that has been locked due to too many failed password attempts. Requires "Device lock and passcode removal right".
 type UnlockUserAccountCommand struct {
@@ -3609,3 +3937,7 @@ func (p *UnlockUserAccountCommand) RequestType() string {
 }
 
 type UnlockUserAccountCommandResponse struct{}
+
+func (p *UnlockUserAccountCommandResponse) ResponseRequestType() string {
+	return "UnlockUserAccount"
+}
