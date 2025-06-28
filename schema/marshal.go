@@ -71,18 +71,25 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 	case PayloadKeyTypeData:
 		typ = jen.Index().Byte()
 	case PayloadKeyTypeArray:
-		if key.SubKeys[0].Type == PayloadKeyTypeDictionary {
+		if len(key.SubKeys) > 0 && key.SubKeys[0].Type == PayloadKeyTypeDictionary {
 			typ = jen.Index().Add(e.fieldType(key.SubKeys[0]))
 		} else if key.IsEnum() {
 			typ = jen.Index().Id(e.Name(key, replace.Const))
-		} else {
+		} else if len(key.SubKeys) > 0 {
 			// we want *[]string, not *[]*string, so we monkey patch the sub key's presence attribute
 			orig := key.SubKeys[0].Presence
 			key.SubKeys[0].Presence = PayloadKeyPresenceRequired
 			typ = jen.Index().Add(e.fieldType(key.SubKeys[0]))
 			key.SubKeys[0].Presence = orig
+		} else {
+			// FIXME: yaml anchors seem to produce arrays with no children.
+			// e.g. com.apple.applicationaccess.new.yaml - subApps
+			return jen.Any()
 		}
 	case PayloadKeyTypeDictionary:
+		// FIXME: handle profile ANY dictionaries better
+		// e.g. com.apple.ManagedClient.preferences.yaml PayloadContent
+		// TopLevel.yaml ConsentTextItem
 		if key.IsStruct() {
 			typ = jen.Id(e.Name(key, replace.Field))
 		} else {
@@ -186,6 +193,8 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 		e.f.Type().Id(enumName).String()
 	case PayloadKeyTypeInteger:
 		e.f.Type().Id(enumName).Int64()
+	case PayloadKeyTypeReal:
+		e.f.Type().Id(enumName).Float64()
 	default:
 		panic(fmt.Errorf("unknown enumKey type: %s", enumKey.Type))
 	}
@@ -209,6 +218,15 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 					Id(enumName).
 					Op("=").
 					Lit(int(v.Int64()))
+			case PayloadKeyTypeReal:
+				// replace negative sign with "Neg"
+				val := strconv.FormatFloat(float64(v.Float64()), 'f', -1, 64)
+				val = strings.Replace(val, "-", "Neg", 1)
+				constName := e.normalizeName(enumName+val, replace.Const)
+				g.Id(constName).
+					Id(enumName).
+					Op("=").
+					Lit(float64(v.Float64()))
 			}
 		}
 	})

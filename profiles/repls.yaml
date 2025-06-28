@@ -1,0 +1,16 @@
+# repls.yaml is a simple list of regex match and replace operations
+# "<match>":
+#   repl: "<replace>"
+#   types:
+#     # available types
+#     - "field"
+#     - "struct"
+#     - "const"
+
+# fix identifiers starting with 8021X
+"^8021X(.*)$":
+  repl: "Net8021X${1}"
+  types:
+    - "struct"
+    - "field"
+    - "const"
