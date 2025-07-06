@@ -1,6 +1,6 @@
 //go:generate declgen -repo "https://github.com/apple/device-management.git" -commit "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
 
-package declarations
+package declarative
 
 import (
 	"encoding/json"
@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/korylprince/go-adm/declarations/activations"
-	"github.com/korylprince/go-adm/declarations/assets"
-	"github.com/korylprince/go-adm/declarations/configurations"
-	"github.com/korylprince/go-adm/declarations/management"
+	"github.com/korylprince/go-adm/declarative/declarations/activations"
+	"github.com/korylprince/go-adm/declarative/declarations/assets"
+	"github.com/korylprince/go-adm/declarative/declarations/configurations"
+	"github.com/korylprince/go-adm/declarative/declarations/management"
 	"github.com/korylprince/go-adm/tagutil"
 )
 

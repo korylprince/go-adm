@@ -1,15 +1,15 @@
-package declarations_test
+package declarative_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/korylprince/go-adm/declarations"
+	"github.com/korylprince/go-adm/declarative"
 )
 
 func TestNewFromType(t *testing.T) {
-	for typ := range declarations.DeclarationMap {
-		decl, err := declarations.NewFromType(typ, "com.example", "v1.0.0")
+	for typ := range declarative.DeclarationMap {
+		decl, err := declarative.NewFromType(typ, "com.example", "v1.0.0")
 		if err != nil {
 			t.Errorf("could not create declaration for %s: %v", typ, err)
 			continue

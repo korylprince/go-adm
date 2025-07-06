@@ -8,7 +8,7 @@ import (
 	"sort"
 
 	"github.com/google/uuid"
-	"github.com/korylprince/go-adm/declarations"
+	"github.com/korylprince/go-adm/declarative"
 	"github.com/korylprince/go-adm/tagutil"
 )
 
@@ -28,7 +28,7 @@ func main() {
 
 	if *flTypes {
 		var typs []string
-		for typ := range declarations.DeclarationMap {
+		for typ := range declarative.DeclarationMap {
 			typs = append(typs, typ)
 		}
 		sort.Strings(typs)
@@ -49,11 +49,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	if _, ok := declarations.DeclarationMap[*flType]; !ok {
+	if _, ok := declarative.DeclarationMap[*flType]; !ok {
 		fmt.Printf("unsupported declaration type %s. Use -types to see all supported types\n", *flType)
 	}
 
-	decl, err := declarations.NewFromType(*flType, *flIdentifier, *flServerToken)
+	decl, err := declarative.NewFromType(*flType, *flIdentifier, *flServerToken)
 	if err != nil {
 		fmt.Println("could not generate declaration:", err)
 		os.Exit(1)

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/korylprince/go-adm/declarations"
+	declarations "github.com/korylprince/go-adm/declarative"
 	"github.com/korylprince/go-adm/replace"
 )
 
@@ -20,7 +20,7 @@ func printHelp() {
 }
 
 func checkFlags() error {
-	flPath := flag.String("path", "declarative/declarations", "path to declarations directory. If -repo is given, path is rooted in git repo")
+	flPath := flag.String("path", "declarative", "path to declarative directory. If -repo is given, path is rooted in git repo")
 	flRepo := flag.String("repo", "", "git repository URL")
 	flCommit := flag.String("commit", "", "git commit")
 	flOut := flag.String("out", ".", "output directory. Leave empty for stdout")
