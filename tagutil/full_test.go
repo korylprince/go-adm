@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/korylprince/go-adm/declarations"
+	"github.com/korylprince/go-adm/declarative"
 	"github.com/korylprince/go-adm/tagutil"
 )
 
 func TestFullFields(t *testing.T) {
-	for typ := range declarations.DeclarationMap {
-		decl, err := declarations.NewFromType(typ, "id", "tok")
+	for typ := range declarative.DeclarationMap {
+		decl, err := declarative.NewFromType(typ, "id", "tok")
 		if err != nil {
 			t.Errorf("could not generate declaration %s: %v", typ, err)
 			continue
