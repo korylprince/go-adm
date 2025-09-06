@@ -34,7 +34,7 @@ func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
 	for _, opt := range opts {
 		opt(e)
 	}
-	e.enc = schema.NewEncoder(f, schema.WithReplacements(e.reps))
+	e.enc = schema.NewEncoder(f, schema.WithReplacements(e.reps), schema.WithRequiredDefault())
 	return e
 }
 
