@@ -12,9 +12,11 @@ import (
 
 // Encoder encodes a File to Go types
 type Encoder struct {
-	namer *GlobalNamer
-	f     *jen.File
-	reps  replace.Replacements
+	namer      *GlobalNamer
+	f          *jen.File
+	reps       replace.Replacements
+	tags       []string
+	reqDefTags bool
 }
 
 type EncodeOption func(*Encoder)
@@ -25,8 +27,24 @@ func WithReplacements(reps replace.Replacements) EncodeOption {
 	}
 }
 
+// WithTags overrides the default struct tags the encoder generates.
+// The default is "json", and "plist."
+// These will have ",omitempty" appended for presence-optional keys.
+func WithTags(tags []string) EncodeOption {
+	return func(e *Encoder) {
+		e.tags = tags
+	}
+}
+
+// WithRequiredDefault turns on generation of the "required" and "default" struct tags.
+func WithRequiredDefault() EncodeOption {
+	return func(e *Encoder) {
+		e.reqDefTags = true
+	}
+}
+
 func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
-	e := &Encoder{f: f}
+	e := &Encoder{f: f, tags: []string{"json", "plist"}}
 	for _, opt := range opts {
 		opt(e)
 	}
@@ -115,22 +133,23 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 // get the tags for a struct fields
 func (e *Encoder) fieldTags(fld *StructField) map[string]string {
 	// render json and plist tag
-	tags := map[string]string{
-		"json":  fld.Key.Key,
-		"plist": fld.Key.Key,
+	tags := make(map[string]string)
+	for _, tagName := range e.tags {
+		tags[tagName] = fld.Key.Key
 	}
 	if fld.Key.Presence == PayloadKeyPresenceOptional {
-		tags["json"] = fld.Key.Key + ",omitempty"
-		tags["plist"] = fld.Key.Key + ",omitempty"
+		for k, v := range tags {
+			tags[k] = v + ",omitempty"
+		}
 	}
 
 	// render required tag
-	if fld.Key.Presence == PayloadKeyPresenceRequired {
+	if e.reqDefTags && fld.Key.Presence == PayloadKeyPresenceRequired {
 		tags["required"] = "true"
 	}
 
 	// render default tag
-	if fld.Key.Default.Value() != nil {
+	if e.reqDefTags && fld.Key.Default.Value() != nil {
 		switch {
 		case fld.Key.Default.IsInt64():
 			tags["default"] = strconv.FormatInt(fld.Key.Default.Int64(), 10)
