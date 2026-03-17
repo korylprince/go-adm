@@ -71,6 +71,7 @@ func payloadType(typ schema.Type) string {
 
 func (e *Encoder) Encode(file *schema.File) {
 	e.enc.RegisterFile(file)
+
 	// there are multiple schemas with the same PayloadType (e.g. MCX), so first build a map to namespace duplicate keys
 	payloadMap := make(map[string]int)
 	for _, typ := range file.Types {
@@ -97,14 +98,19 @@ func (e *Encoder) Encode(file *schema.File) {
 		case *schema.Enum:
 			e.enc.EncodeEnum(t)
 		case *schema.Struct:
-			e.enc.EncodeStruct(t)
+			structName := e.enc.Name(t.Key, replace.Struct)
 
 			if pt := payloadType(typ); pt != "" && !slices.Contains(genericTypes, pt) {
-				structName := e.enc.Name(t.Key, replace.Struct)
+				e.enc.EncodeStruct(t, schema.WithStructEmbeds(jen.Op("*").Id("CommonPayloadKeys")))
+
 				rcvr := jen.Id("p").Op("*").Id(structName)
 				e.f.Func().Parens(rcvr).Id("PayloadType").Parens(nil).String().Block(
 					jen.Return().Lit(pt),
 				)
+			} else if structName == "TopLevel" {
+				e.enc.EncodeStruct(t, schema.WithStructFieldTypeOverride("PayloadContent", jen.Index().Id("ProfilePayload")))
+			} else {
+				e.enc.EncodeStruct(t)
 			}
 		case *schema.Map:
 			e.enc.EncodeMap(t)

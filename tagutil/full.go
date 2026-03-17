@@ -52,6 +52,18 @@ func fullFields(v any, seen map[reflect.Type]struct{}) any {
 			for idx := 0; idx < len(vals); idx++ {
 				val.Index(idx).Set(reflect.ValueOf(vals[idx]))
 			}
+		} else if typ.Elem().Kind() == reflect.Interface {
+			// recurse into interface elements (e.g. []any containing structs)
+			for idx := 0; idx < val.Len(); idx++ {
+				elem := val.Index(idx).Elem()
+				expanded := fullFields(elem.Interface(), seen)
+				ev := reflect.ValueOf(expanded)
+				// dereference pointer results so plist library sees struct values
+				if ev.Kind() == reflect.Pointer {
+					ev = ev.Elem()
+				}
+				val.Index(idx).Set(ev)
+			}
 		}
 		return val.Interface()
 	case reflect.Map:
@@ -66,6 +78,18 @@ func fullFields(v any, seen map[reflect.Type]struct{}) any {
 		}
 		seen[typ] = struct{}{}
 		defer delete(seen, typ)
+
+		// skip types with no exported fields (e.g. time.Time)
+		hasExported := false
+		for i := 0; i < typ.NumField(); i++ {
+			if typ.Field(i).IsExported() {
+				hasExported = true
+				break
+			}
+		}
+		if !hasExported {
+			return val.Interface()
+		}
 	default:
 		return val.Interface()
 	}
@@ -76,9 +100,15 @@ func fullFields(v any, seen map[reflect.Type]struct{}) any {
 	flds := make([]reflect.StructField, typ.NumField())
 	for idx := 0; idx < typ.NumField(); idx++ {
 		fld := typ.Field(idx)
+		// skip unexported fields (e.g. time.Time internals)
+		if !fld.IsExported() {
+			flds[idx] = fld
+			continue
+		}
 		// remove omitempty
 		tags, err := structtag.Parse(string(fld.Tag))
 		if err != nil {
+			flds[idx] = fld
 			continue
 		}
 		tags.DeleteOptions("json", "omitempty")
@@ -111,7 +141,7 @@ func fullFields(v any, seen map[reflect.Type]struct{}) any {
 	for idx := 0; idx < typ.NumField(); idx++ {
 		if r, ok := repl[idx]; ok {
 			ret.Elem().Field(idx).Set(r)
-		} else {
+		} else if typ.Field(idx).IsExported() {
 			ret.Elem().Field(idx).Set(val.Field(idx))
 		}
 	}

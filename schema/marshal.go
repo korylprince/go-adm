@@ -264,7 +264,37 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 	})
 }
 
-func (e *Encoder) EncodeStruct(strct *Struct) {
+type structEncodeOptions struct {
+	embeds             []jen.Code
+	fieldTypeOverrides map[string]jen.Code
+}
+
+type StructEncodeOption func(*structEncodeOptions)
+
+// WithStructEmbeds prepends embedded types at the top of the generated struct.
+func WithStructEmbeds(embeds ...jen.Code) StructEncodeOption {
+	return func(opts *structEncodeOptions) {
+		opts.embeds = append(opts.embeds, embeds...)
+	}
+}
+
+// WithStructFieldTypeOverride replaces the generated field type for the given schema key.
+func WithStructFieldTypeOverride(key string, typ jen.Code) StructEncodeOption {
+	return func(opts *structEncodeOptions) {
+		if opts.fieldTypeOverrides == nil {
+			opts.fieldTypeOverrides = make(map[string]jen.Code)
+		}
+		opts.fieldTypeOverrides[key] = typ
+	}
+}
+
+// EncodeStruct encodes a struct with optional embedded types and field type overrides.
+func (e *Encoder) EncodeStruct(strct *Struct, opts ...StructEncodeOption) {
+	var encOpts structEncodeOptions
+	for _, opt := range opts {
+		opt(&encOpts)
+	}
+
 	// render comment
 	if doc := strings.TrimSpace(strct.Key.Content); doc != "" {
 		e.f.Comment(text.DocComment(strct.Key.Content))
@@ -273,14 +303,22 @@ func (e *Encoder) EncodeStruct(strct *Struct) {
 	structName := e.Name(strct.Key, replace.Struct)
 
 	e.f.Type().Id(structName).StructFunc(func(g *jen.Group) {
+		for _, embed := range encOpts.embeds {
+			g.Add(embed)
+		}
 		for _, fld := range strct.Fields {
 			// render field comment
 			if doc := strings.TrimSpace(fld.Key.Content); doc != "" {
 				g.Comment(text.DocComment(doc))
 			}
 
+			fieldType := e.fieldType(fld.Key)
+			if override, ok := encOpts.fieldTypeOverrides[fld.Key.Key]; ok {
+				fieldType = override
+			}
+
 			g.Id(e.normalizeName(text.NormalizeName(fld.Key.Key), replace.Field)).
-				Add(e.fieldType(fld.Key)).
+				Add(fieldType).
 				Tag(e.fieldTags(fld))
 		}
 	})
