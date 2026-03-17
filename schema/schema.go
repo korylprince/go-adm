@@ -6,12 +6,19 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/korylprince/go-yaml"
 )
 
 // KeyANY is a special *PayloadKey.Key to represent a generic map[string]any instead of a struct
 const KeyANY = "ANY"
+
+// IsANY returns true if the key name indicates a dynamic/generic key.
+// This matches both "ANY" and descriptors like "ANY restriction name".
+func (key *PayloadKey) IsANY() bool {
+	return key.Key == KeyANY || strings.HasPrefix(key.Key, KeyANY+" ")
+}
 
 func New(data []byte) (*Schema, error) {
 	cmd := new(Schema)
@@ -59,7 +66,7 @@ func (key *PayloadKey) IsStruct() bool {
 	if key.Type != PayloadKeyTypeDictionary {
 		return false
 	}
-	if len(key.SubKeys) > 0 && key.SubKeys[0].Type == PayloadKeyTypeAny {
+	if len(key.SubKeys) > 0 && key.SubKeys[0].IsANY() {
 		return false
 	}
 	return true
@@ -70,7 +77,7 @@ func (key *PayloadKey) IsMap() bool {
 	if key.Type != PayloadKeyTypeDictionary {
 		return false
 	}
-	if len(key.SubKeys) > 0 && key.SubKeys[0].Type == PayloadKeyTypeAny {
+	if len(key.SubKeys) > 0 && key.SubKeys[0].IsANY() {
 		return true
 	}
 	return false

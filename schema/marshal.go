@@ -60,13 +60,28 @@ func (e *Encoder) Name(key *PayloadKey, typ replace.ReplacementType) string {
 	return e.normalizeName(e.namer.KeyName(key), typ)
 }
 
-// determine the value type of a <dictionary> with <any> fields
-func anyDictionaryType(key *PayloadKey) jen.Code {
+// mapValueType returns the Go type for the value side of a map[string]T
+// generated from a dictionary with an ANY subkey.
+func (e *Encoder) mapValueType(key *PayloadKey) jen.Code {
 	switch key.Type {
 	case PayloadKeyTypeAny:
 		return jen.Any()
 	case PayloadKeyTypeString:
 		return jen.String()
+	case PayloadKeyTypeArray:
+		// Determine the array element type from the subkeys.
+		// Temporarily force Required presence to avoid pointer wrapping.
+		orig := key.Presence
+		key.Presence = PayloadKeyPresenceRequired
+		code := e.fieldType(key)
+		key.Presence = orig
+		return code
+	case PayloadKeyTypeDictionary:
+		if key.IsStruct() {
+			return jen.Id(e.Name(key, replace.Field))
+		}
+		// nested map (ANY subkey within an ANY subkey)
+		return jen.Map(jen.String()).Add(e.mapValueType(key.SubKeys[0]))
 	default:
 		panic(fmt.Errorf("ANY <dictionary>: unknown value type: %s", key.Type))
 	}
@@ -111,7 +126,7 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 		if key.IsStruct() {
 			typ = jen.Id(e.Name(key, replace.Field))
 		} else {
-			typ = jen.Map(jen.String()).Add(anyDictionaryType(key.SubKeys[0]))
+			typ = jen.Map(jen.String()).Add(e.mapValueType(key.SubKeys[0]))
 		}
 	case PayloadKeyTypeAny:
 		typ = jen.Any()
@@ -285,5 +300,5 @@ func (e *Encoder) EncodeMap(m *Map) {
 	e.f.Type().
 		Id(mapName).
 		Map(jen.String()).
-		Add(anyDictionaryType(m.Key.SubKeys[0]))
+		Add(e.mapValueType(m.Key.SubKeys[0]))
 }

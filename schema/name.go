@@ -15,15 +15,38 @@ type payloadKey struct {
 	name    string
 }
 
+// normalizeANYKeyName returns a normalized name for a PayloadKey,
+// using SubKeyType or the descriptor for ANY keys instead of the raw key name.
+// Returns "" for plain "ANY" keys with no SubKeyType or descriptor, which
+// causes the segment to be skipped in the fully qualified name.
+func normalizeANYKeyName(key *PayloadKey) string {
+	if !key.IsANY() {
+		return text.NormalizeName(key.Key)
+	}
+	if key.SubKeyType != "" {
+		return text.NormalizeName(key.SubKeyType)
+	}
+	if desc, ok := strings.CutPrefix(key.Key, KeyANY+" "); ok {
+		// Replace spaces with hyphens so NormalizeName splits each word
+		return text.NormalizeName(strings.ReplaceAll(desc, " ", "-"))
+	}
+	// Plain "ANY" with no descriptor or SubKeyType — skip this segment
+	return ""
+}
+
 func (key *payloadKey) fullyQualified() []string {
 	var name []string
 	if !key.root {
 		name = []string{text.NormalizeName(key.schema.Title)}
 	}
 	for _, parent := range key.parents {
-		name = append(name, text.NormalizeName(parent.Key))
+		if n := normalizeANYKeyName(parent); n != "" {
+			name = append(name, n)
+		}
 	}
-	name = append(name, text.NormalizeName(key.key.Key))
+	if n := normalizeANYKeyName(key.key); n != "" {
+		name = append(name, n)
+	}
 	return name
 }
 

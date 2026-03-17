@@ -1,11 +1,11 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:7d4ba1a2bde50a4053fa5a5e0ed6c17388d82ab2/docs/schema.yaml
+// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/docs/schema.yaml
 
 package schema
 
 import yamlschema "github.com/korylprince/go-adm/yamlschema"
 
-const DeviceManagementGenerateHash = "7d4ba1a2bde50a4053fa5a5e0ed6c17388d82ab2"
+const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
 
 // Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
 type PayloadApply string

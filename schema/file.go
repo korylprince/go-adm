@@ -200,6 +200,7 @@ func NewFile(schemas []*Schema, opts ...FileOption) *File {
 				structs = append(structs, strct)
 				types = append(types, strct)
 			}
+
 		})
 
 		// build struct fields
