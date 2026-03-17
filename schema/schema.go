@@ -45,8 +45,13 @@ func NewFromFile(path string) (*Schema, error) {
 }
 
 func (s *Schema) Iter(f func(parents []*PayloadKey, key *PayloadKey)) {
+	seen := make(map[*PayloadKey]struct{})
 	var dfs func(parents []*PayloadKey, child *PayloadKey)
 	dfs = func(parents []*PayloadKey, child *PayloadKey) {
+		if _, ok := seen[child]; ok {
+			return
+		}
+		seen[child] = struct{}{}
 		f(parents, child)
 		newParents := append(slices.Clone(parents), child)
 		for _, key := range child.SubKeys {

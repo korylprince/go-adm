@@ -8,6 +8,10 @@ import (
 
 // FullFields uses reflection to fill out types and remove omitempty tags so that all fields will be marshaled to json/plist
 func FullFields(v any) any {
+	return fullFields(v, make(map[reflect.Type]struct{}))
+}
+
+func fullFields(v any, seen map[reflect.Type]struct{}) any {
 	val := reflect.ValueOf(v)
 	typ := val.Type()
 
@@ -18,7 +22,7 @@ func FullFields(v any) any {
 			val = reflect.New(typ.Elem())
 		}
 		// dereference pointer
-		return FullFields(val.Elem().Interface())
+		return fullFields(val.Elem().Interface(), seen)
 	case reflect.Slice:
 		// init slice
 		if val.IsNil() {
@@ -33,7 +37,7 @@ func FullFields(v any) any {
 		if typ.Elem().Kind() == reflect.Struct {
 			vals := make([]any, val.Len())
 			for idx := 0; idx < val.Len(); idx++ {
-				vals[idx] = FullFields(val.Index(idx).Interface())
+				vals[idx] = fullFields(val.Index(idx).Interface(), seen)
 			}
 			val = reflect.MakeSlice(reflect.SliceOf(reflect.TypeOf(vals[0]).Elem()), len(vals), len(vals))
 			for idx := 0; idx < len(vals); idx++ {
@@ -42,7 +46,7 @@ func FullFields(v any) any {
 		} else if typ.Elem().Kind() == reflect.Pointer && typ.Elem().Elem().Kind() == reflect.Struct {
 			vals := make([]any, val.Len())
 			for idx := 0; idx < val.Len(); idx++ {
-				vals[idx] = FullFields(val.Index(idx).Interface())
+				vals[idx] = fullFields(val.Index(idx).Interface(), seen)
 			}
 			val = reflect.MakeSlice(reflect.SliceOf(reflect.TypeOf(vals[0])), len(vals), len(vals))
 			for idx := 0; idx < len(vals); idx++ {
@@ -56,7 +60,12 @@ func FullFields(v any) any {
 		}
 		return val.Interface()
 	case reflect.Struct:
-		// pass
+		// break recursive type cycles
+		if _, ok := seen[typ]; ok {
+			return reflect.New(typ).Interface()
+		}
+		seen[typ] = struct{}{}
+		defer delete(seen, typ)
 	default:
 		return val.Interface()
 	}
@@ -77,7 +86,7 @@ func FullFields(v any) any {
 		fld.Tag = reflect.StructTag(tags.String())
 		// recurse into fields
 		if fld.Type.Kind() == reflect.Pointer {
-			newv := reflect.ValueOf(FullFields(val.Field(idx).Interface()))
+			newv := reflect.ValueOf(fullFields(val.Field(idx).Interface(), seen))
 			fld.Type = newv.Type()
 			if fld.Type.Kind() != reflect.Pointer {
 				ptrNewV := reflect.New(newv.Type())
@@ -87,7 +96,7 @@ func FullFields(v any) any {
 			}
 			repl[idx] = newv
 		} else {
-			newv := reflect.ValueOf(FullFields(val.Field(idx).Interface()))
+			newv := reflect.ValueOf(fullFields(val.Field(idx).Interface(), seen))
 			if newv.Type().Kind() == reflect.Pointer {
 				newv = newv.Elem()
 			}

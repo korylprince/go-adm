@@ -115,8 +115,6 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 			typ = jen.Index().Add(e.fieldType(key.SubKeys[0]))
 			key.SubKeys[0].Presence = orig
 		} else {
-			// FIXME: yaml anchors seem to produce arrays with no children.
-			// e.g. com.apple.applicationaccess.new.yaml - subApps
 			return jen.Any()
 		}
 	case PayloadKeyTypeDictionary:
