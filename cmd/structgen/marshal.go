@@ -56,7 +56,7 @@ func (e *Encoder) Encode(file *schema.File) {
 	}
 }
 
-func GenerateFromFiles(fileNames []string, pkg string, reps replace.Replacements, tags []string, out io.Writer) error {
+func GenerateFromFiles(fileNames []string, pkg string, reps replace.Replacements, tags []string, out io.Writer, opts ...EncodeOption) error {
 	var schemas []*schema.Schema
 	var baseFileNames []string
 	for _, fileName := range fileNames {
@@ -82,7 +82,8 @@ func GenerateFromFiles(fileNames []string, pkg string, reps replace.Replacements
 	f.HeaderComment(srcStr + ": " + strings.Join(baseFileNames, ", "))
 
 	file := schema.NewFile(schemas)
-	NewEncoder(f, WithSchemaEncoderOption(schema.WithTags(tags))).Encode(file)
+	opts = append([]EncodeOption{WithSchemaEncoderOption(schema.WithTags(tags))}, opts...)
+	NewEncoder(f, opts...).Encode(file)
 	if err := f.Render(out); err != nil {
 		return fmt.Errorf("could not render code: %w", err)
 	}

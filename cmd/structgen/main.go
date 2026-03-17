@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/korylprince/go-adm/replace"
+	"github.com/korylprince/go-adm/schema"
 )
 
 func main() {
@@ -16,10 +17,11 @@ func main() {
 		flag.PrintDefaults()
 	}
 	var (
-		flRepl = flag.String("repl", "", "path to replacements file")
-		flOut  = flag.String("out", "", "output file. Leave empty for stdout")
-		flPkg  = flag.String("pkg", "yamlschema", "Go package name")
-		flTags = flag.String("tags", "json,plist", "tag names to include, comma separated")
+		flRepl   = flag.String("repl", "", "path to replacements file")
+		flOut    = flag.String("out", "", "output file. Leave empty for stdout")
+		flPkg    = flag.String("pkg", "yamlschema", "Go package name")
+		flTags   = flag.String("tags", "json,plist", "tag names to include, comma separated")
+		flReqDef = flag.Bool("reqdef", false, "generate required and default struct tags")
 	)
 	flag.Parse()
 
@@ -50,7 +52,12 @@ func main() {
 	}
 	defer f.Close()
 
-	err = GenerateFromFiles(flag.Args(), *flPkg, repl, strings.Split(*flTags, ","), f)
+	var encOpts []EncodeOption
+	if *flReqDef {
+		encOpts = append(encOpts, WithSchemaEncoderOption(schema.WithRequiredDefault()))
+	}
+
+	err = GenerateFromFiles(flag.Args(), *flPkg, repl, strings.Split(*flTags, ","), f, encOpts...)
 	if err != nil {
 		log.Fatal(err)
 	}

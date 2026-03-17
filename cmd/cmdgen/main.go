@@ -25,6 +25,7 @@ func checkFlags() error {
 	flCommit := flag.String("commit", "", "git commit")
 	flOut := flag.String("out", ".", "output directory. Leave empty for stdout")
 	flRepl := flag.String("repl", "", "path to replacements file")
+	flReqDef := flag.Bool("reqdef", false, "generate required and default struct tags")
 	flag.Parse()
 
 	if *flPath == "" {
@@ -50,7 +51,12 @@ func checkFlags() error {
 		}
 	}
 
-	if err = commands.GenerateFromGit(*flRepo, *flCommit, *flPath, repl, *flOut); err != nil {
+	var opts []commands.EncodeOption
+	if *flReqDef {
+		opts = append(opts, commands.WithRequiredDefault())
+	}
+
+	if err = commands.GenerateFromGit(*flRepo, *flCommit, *flPath, repl, *flOut, opts...); err != nil {
 		return fmt.Errorf("could not generate code: %w", err)
 	}
 

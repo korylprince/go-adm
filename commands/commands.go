@@ -1,4 +1,4 @@
-//go:generate /bin/bash -c "cmdgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../GENERATE_SHA)\""
+//go:generate /bin/bash -c "cmdgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../GENERATE_SHA)\" -reqdef"
 
 package commands
 

@@ -23,10 +23,17 @@ func WithReplacements(reps replace.Replacements) EncodeOption {
 	}
 }
 
+func WithRequiredDefault() EncodeOption {
+	return func(e *Encoder) {
+		e.reqDefTags = true
+	}
+}
+
 type Encoder struct {
-	f    *jen.File
-	reps replace.Replacements
-	enc  *schema.Encoder
+	f          *jen.File
+	reps       replace.Replacements
+	reqDefTags bool
+	enc        *schema.Encoder
 }
 
 func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
@@ -34,7 +41,11 @@ func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
 	for _, opt := range opts {
 		opt(e)
 	}
-	e.enc = schema.NewEncoder(f, schema.WithReplacements(e.reps), schema.WithRequiredDefault())
+	sOpts := []schema.EncodeOption{schema.WithReplacements(e.reps)}
+	if e.reqDefTags {
+		sOpts = append(sOpts, schema.WithRequiredDefault())
+	}
+	e.enc = schema.NewEncoder(f, sOpts...)
 	return e
 }
 
@@ -194,7 +205,7 @@ func (e *Encoder) Encode(file *schema.File) {
 
 // GenerateFromGit generates Go types from the declarative schema at the git repo/commit/path using the optional replacements
 // and outputs it at the given directory
-func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, output string) error {
+func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, output string, opts ...EncodeOption) error {
 	repo, err := git.New(repoURL, commit)
 	if err != nil {
 		return fmt.Errorf("could not check out repository: %w", err)
@@ -258,7 +269,8 @@ func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, ou
 		f.Const().Id("DeviceManagementGenerateHash").Op("=").Lit(hash)
 
 		file := schema.NewFile(schemas)
-		NewEncoder(f, WithReplacements(reps)).Encode(file)
+		encOpts := append([]EncodeOption{WithReplacements(reps)}, opts...)
+		NewEncoder(f, encOpts...).Encode(file)
 
 		buf := new(bytes.Buffer)
 		if err = f.Render(buf); err != nil {
