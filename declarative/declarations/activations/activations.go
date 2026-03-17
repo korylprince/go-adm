@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:0a4527c5ea21825fd23e08273ccdb9e2302458ce/declarative/declarations/activations
+// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/declarations/activations
 
 package activations
 
-const DeviceManagementGenerateHash = "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
+const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
 
 var DeclarationMap = map[string]any{"com.apple.activation.simple": ActivationSimple{}}
 

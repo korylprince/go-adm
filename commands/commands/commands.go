@@ -1,11 +1,11 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:0a4527c5ea21825fd23e08273ccdb9e2302458ce/mdm/commands/commands
+// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/mdm/commands/commands
 
 package commands
 
 import "time"
 
-const DeviceManagementGenerateHash = "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
+const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
 
 var CommandMap = map[string]any{
 	"AccountConfiguration":            AccountConfigurationCommand{},
@@ -55,7 +55,6 @@ var CommandMap = map[string]any{
 	"RemoveProfile":                   RemoveProfileCommand{},
 	"RemoveProvisioningProfile":       RemoveProvisioningProfileCommand{},
 	"RequestMirroring":                RequestMirroringCommand{},
-	"RequestUnlockToken":              RequestUnlockTokenCommand{},
 	"RestartDevice":                   RestartDeviceCommand{},
 	"Restrictions":                    RestrictionsCommand{},
 	"RotateFileVaultKey":              RotateFileVaultKeyCommand{},
@@ -123,7 +122,6 @@ var ResponseMap = map[string]any{
 	"RemoveProfile":                   RemoveProfileCommandResponse{},
 	"RemoveProvisioningProfile":       RemoveProvisioningProfileCommandResponse{},
 	"RequestMirroring":                RequestMirroringCommandResponse{},
-	"RequestUnlockToken":              RequestUnlockTokenCommandResponse{},
 	"RestartDevice":                   RestartDeviceCommandResponse{},
 	"Restrictions":                    RestrictionsCommandResponse{},
 	"RotateFileVaultKey":              RotateFileVaultKeyCommandResponse{},
@@ -272,11 +270,10 @@ type NSExtensionMappingsCommandExtensionsExtensionsItem struct {
 }
 
 // Install an enterprise app on a device.
-// This command allows the server to install an application on a device. It provides a more secure version of 'InstallApplication' that specifies a 'ManifestURL'.
 type InstallEnterpriseApplicationCommand struct {
-	// A dictionary that specifies where to download the app. This value is backward-compatible with the manifest for the `InstallApplicationCommand`; however, it also allows you to specify `sha256s` and `sha256-size` for SHA-256 hashes.
+	// A dictionary that specifies where to download the app. This value uses the `ManifestURL` format.
 	Manifest *map[string]any `json:"Manifest,omitempty" plist:"Manifest,omitempty"`
-	// The URL of the app manifest, which needs to begin with `https:`. The manifest is returned as a property list.
+	// The URL of the app manifest, which needs to begin with `https:`. The manifest is returned as a property list that uses the `ManifestURL` format.
 	ManifestURL *string `json:"ManifestURL,omitempty" plist:"ManifestURL,omitempty"`
 	// An array of DER-encoded certificates to pin the connection when fetching the `ManifestURL`.
 	ManifestURLPinningCerts *[][]byte `json:"ManifestURLPinningCerts,omitempty" plist:"ManifestURLPinningCerts,omitempty"`
@@ -296,7 +293,7 @@ type InstallEnterpriseApplicationCommand struct {
 	// - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 	// Available in macOS 11 and later.
 	ChangeManagementState *InstallEnterpriseApplicationCommandChangeManagementState `json:"ChangeManagementState,omitempty" plist:"ChangeManagementState,omitempty"`
-	// If `true`, the app is an iOS app that can run on a Mac computer with Apple silicon in macOS 11 and later.
+	// If `true`, the app is an iOS app that can run on a Mac with Apple silicon in macOS 11 and later.
 	IOSApp *bool `json:"iOSApp,omitempty" plist:"iOSApp,omitempty"`
 }
 
@@ -329,7 +326,6 @@ const (
 )
 
 // Install a third-party app on a device.
-// This command allows the server to install an application on a device. If the app is already being managed, this command will update the app. This command will fail for apps that are managed by Declarative Device Management. macOS change - 10.9 user channel for VPP, 10.10 device channel, 10.11 both.
 type InstallApplicationCommand struct {
 	// The app's iTunes Store identifier.
 	ITunesStoreID *int64 `json:"iTunesStoreID,omitempty" plist:"iTunesStoreID,omitempty"`
@@ -339,7 +335,7 @@ type InstallApplicationCommand struct {
 	Identifier *string `json:"Identifier,omitempty" plist:"Identifier,omitempty"`
 	// A dictionary that contains the app installation options.
 	Options *Options `json:"Options,omitempty" plist:"Options,omitempty"`
-	// The URL of the app manifest, which needs to begin with `https:`. The manifest is returned as a property list.
+	// The URL of the app manifest, which needs to begin with `https:`. The manifest is returned as a property list that uses the `ManifestURL` format.
 	ManifestURL *string `json:"ManifestURL,omitempty" plist:"ManifestURL,omitempty"`
 	// A bitwise OR of the management flags. The possible values are:
 	// - `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
@@ -351,14 +347,14 @@ type InstallApplicationCommand struct {
 	Configuration *map[string]any `json:"Configuration,omitempty" plist:"Configuration,omitempty"`
 	// A dictionary that contains the initial attributes of the app, if you choose to provide it. Available in iOS 7 and later, and tvOS 10.2 and later.
 	Attributes *InstallApplicationCommandAttributes `json:"Attributes,omitempty" plist:"Attributes,omitempty"`
-	// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13. Available in iOS 9 and later, macOS 11 and later, and tvOS 10.2 and later. The only possible value is:
+	// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13, or any type of account driven enrollment. Available in iOS 9 and later, macOS 11 and later, and tvOS 10.2 and later. The only possible value is:
 	// - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 	ChangeManagementState *InstallApplicationCommandChangeManagementState `json:"ChangeManagementState,omitempty" plist:"ChangeManagementState,omitempty"`
 	// If `true`, install the app as a managed app. Otherwise, the system installs the app as unmanaged. If you reinstall a manged app and omit this value or set it to `false`, the app becomes unmanaged.
 	// For manifest-based installs, if `true`, the system only considers apps installed in `/Applications` as managed. In macOS 11 through 13, the system requires that the `pkg` only contains a single signed app.
 	// Available in macOS 11 and later.
 	InstallAsManaged *bool `json:"InstallAsManaged,omitempty" plist:"InstallAsManaged,omitempty"`
-	// If `true`, the app is an iOS app that can run on a Mac computer with Apple silicon in macOS 11 and later.
+	// If `true`, the app is an iOS app that can run on a Mac with Apple silicon in macOS 11 and later.
 	IOSApp *bool `json:"iOSApp,omitempty" plist:"iOSApp,omitempty"`
 }
 
@@ -442,7 +438,7 @@ type InstallApplicationCommandAttributes struct {
 	Lockable *bool `json:"Lockable,omitempty" plist:"Lockable,omitempty"`
 }
 
-// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13. Available in iOS 9 and later, macOS 11 and later, and tvOS 10.2 and later. The only possible value is:
+// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13, or any type of account driven enrollment. Available in iOS 9 and later, macOS 11 and later, and tvOS 10.2 and later. The only possible value is:
 // - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 type InstallApplicationCommandChangeManagementState string
 
@@ -493,15 +489,16 @@ const (
 )
 
 // Get a list of the installed apps on a device.
-// This command allows the server to query for installed 3rd party applications. Starting in iOS 26, this query will also return system apps.
 type InstalledApplicationListCommand struct {
 	// An array of app identifiers. Provide this value to limit the response to only include these apps. This value is available in iOS 7 and later, macOS 10.15 and later, tvOS 10.2 and later, visionOS 1.1 and later, and watchOS 10 and later.
 	// > Important:
 	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
 	Identifiers *[]string `json:"Identifiers,omitempty" plist:"Identifiers,omitempty"`
-	// If `true`, only get a list of managed apps, excluding ones that are managed by Declarative Device Management. This value is available in iOS 7 and later, macOS 10.15 and later, and tvOS 10.2 and later.
+	// If `true`, only get a list of managed apps, excluding ones that Declarative Device Management is managing. This value is available in iOS 7 and later, macOS 10.15 and later, and tvOS 10.2 and later.
+	// > Note:
+	// > If the enrollment type is a user enrollment, the system always considers this key as set to `true` and only returns managed apps, excluding ones that Declarative Device Management is managing.
 	ManagedAppsOnly *bool `json:"ManagedAppsOnly,omitempty" plist:"ManagedAppsOnly,omitempty"`
-	// An array of strings that represent keys in `InstalledApplicationListItem`. If present, the response only contains the keys listed here, except `Identifier` is always included. If not present, the response contains all keys.
+	// An array of strings that represent keys in `InstalledApplicationListItem`. If present, the response only contains the keys listed here, except `Identifier` is always included. If not present, the response contains all keys. Starting in iOS 26, macOS 26, tvOS 26, watchOS 26, and visionOS 26, if this key isn't present, the response omits values that are expensive to calculate.
 	// > Tip:
 	// > Only request the keys that you need, because some key values can take significant time and power to calculate on the device.
 	Items *[]Items `json:"Items,omitempty" plist:"Items,omitempty"`
@@ -520,7 +517,7 @@ func (p *InstalledApplicationListCommandResponse) ResponseRequestType() string {
 	return "InstalledApplicationList"
 }
 
-// An array of strings that represent keys in `InstalledApplicationListItem`. If present, the response only contains the keys listed here, except `Identifier` is always included. If not present, the response contains all keys.
+// An array of strings that represent keys in `InstalledApplicationListItem`. If present, the response only contains the keys listed here, except `Identifier` is always included. If not present, the response contains all keys. Starting in iOS 26, macOS 26, tvOS 26, watchOS 26, and visionOS 26, if this key isn't present, the response omits values that are expensive to calculate.
 // > Tip:
 // > Only request the keys that you need, because some key values can take significant time and power to calculate on the device.
 type Items string
@@ -550,7 +547,8 @@ type InstalledApplicationListItem struct {
 	// > Note:
 	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired.
 	Identifier *string `json:"Identifier,omitempty" plist:"Identifier,omitempty"`
-	// The app's external version identifier, which you can use in the iTunes Search API to determine if an updated version of the app is available. Compare this value to the `externalId` value in the `contentMetadataLookupUrl` response from the `VPPServiceConfigSrv` endpoint. If these values don't match, an updated version of the app may be available.
+	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
+	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
 	// > Note:
 	// > A newer version of an app might not be available for installation on the device for a variety of reasons. A common reason is that the device's operating system version or hardware is incompatible with the available version of the app.
 	ExternalVersionIdentifier *int64 `json:"ExternalVersionIdentifier,omitempty" plist:"ExternalVersionIdentifier,omitempty"`
@@ -562,9 +560,9 @@ type InstalledApplicationListItem struct {
 	ShortVersion *string `json:"ShortVersion,omitempty" plist:"ShortVersion,omitempty"`
 	// The app's name.
 	Name *string `json:"Name,omitempty" plist:"Name,omitempty"`
-	// The app's static bundle size, in bytes. This value is available in iOS 5 and later, and macOS 10.7 and later, and tvOS 10.2 and later.
+	// The app's static bundle size, in bytes. This value is expensive to calculate. Starting in iOS 26, macOS 26, tvOS 26, watchOS 26, and visionOS 26 it isn't present in the response unless it is included in the `Items` request key. This value is available in iOS 5 and later, and macOS 10.7 and later, tvOS 10.2 and later, watchOS 10 and later, and visionOS 1.1 and later.
 	BundleSize *int64 `json:"BundleSize,omitempty" plist:"BundleSize,omitempty"`
-	// The size of the app's file system in bytes, including the Documents, Library, and other directories. This value is available in iOS 5 and later, and tvOS 10.2 and later.
+	// The size of the app's file system in bytes, including the Documents, Library, and other directories. This value is expensive to calculate. Starting in iOS 26, tvOS 26, watchOS 26, and visionOS 26 it isn't present in the response unless it is included in the `Items` request key. This value is available in iOS 5 and later, tvOS 10.2 and later, watchOS 10 and later, and visionOS 1.1 and later.
 	DynamicSize *int64 `json:"DynamicSize,omitempty" plist:"DynamicSize,omitempty"`
 	// If `true`, the app is valid and can run on the device. If the app is enterprise-distributed and unvalidated, it won't be able to run until validation has occurred. This value is available in iOS 9.2 and later, and tvOS 10.2 and later.
 	IsValidated *bool `json:"IsValidated,omitempty" plist:"IsValidated,omitempty"`
@@ -595,7 +593,6 @@ type InstalledApplicationListItem struct {
 }
 
 // Invite a user to join the Volume Purchase Program (VPP).
-// This command allows a server to invite a user to join a program. This command issues the invitation, but does not allow the server to monitor whether the user has joined the program. This command is supported in the user channel. This command will yield a NotNow status until the user exits Setup Assistant. This command does not work with Account Driven Device Enrollment.
 type InviteToProgramCommand struct {
 	// The program's identifier, which can only be `com.apple.cloudvpp`.
 	ProgramID ProgramID `json:"ProgramID" plist:"ProgramID" required:"true"`
@@ -633,7 +630,6 @@ const (
 )
 
 // Get the status of all managed apps on a device.
-// This command allows the server to query the status of managed apps.
 type ManagedApplicationListCommand struct {
 	// The bundle identifiers of the managed apps to include in the response.
 	// > Important:
@@ -647,21 +643,15 @@ func (p *ManagedApplicationListCommand) RequestType() string {
 
 type ManagedApplicationListCommandResponse struct {
 	// A dictionary that contains status information about each managed app. The response doesn't include apps that Declarative Device Management manages.
-	ManagedApplicationList ManagedApplicationList `json:"ManagedApplicationList" plist:"ManagedApplicationList" required:"true"`
+	ManagedApplicationList map[string]ManagedApplicationItem `json:"ManagedApplicationList" plist:"ManagedApplicationList" required:"true"`
 }
 
 func (p *ManagedApplicationListCommandResponse) ResponseRequestType() string {
 	return "ManagedApplicationList"
 }
 
-// A dictionary that contains status information about each managed app. The response doesn't include apps that Declarative Device Management manages.
-type ManagedApplicationList struct {
-	// The bundle identifier of the managed app.
-	ANYappidentifier ANYappidentifier `json:"ANY app identifier" plist:"ANY app identifier" required:"true"`
-}
-
 // The bundle identifier of the managed app.
-type ANYappidentifier struct {
+type ManagedApplicationItem struct {
 	// The status of the managed app, which is one of the following values:
 	// - `Queued`: The app is scheduled for installation.
 	// - `NeedsRedemption`: The app needs a redemption code to complete installation.
@@ -684,7 +674,7 @@ type ANYappidentifier struct {
 	// - `UpdateRejected`: The user rejected the offer to update the app.
 	// - `ManagementRejected`:The user rejected management of an installed app.
 	// - `Failed`: The app installation failed.
-	Status ANYappidentifierStatus `json:"Status" plist:"Status" required:"true"`
+	Status ManagedApplicationItemStatus `json:"Status" plist:"Status" required:"true"`
 	// The bitwise OR of the following management flags:
 	// * '1': Remove app upon removal of MDM profile.
 	// * '4': Prevent backup of app data.
@@ -697,8 +687,11 @@ type ANYappidentifier struct {
 	HasFeedback bool `json:"HasFeedback" plist:"HasFeedback" required:"true"`
 	// If 'true', the app is valid and can run on the device. If the app is enterprise-distributed and unvalidated, it won't be able to run until validation has occurred. This value is available in iOS 9.2 and later, and tvOS 10.2 and later.
 	IsValidated bool `json:"IsValidated" plist:"IsValidated" required:"true"`
-	// The app's external version identifier, which you can use in the iTunes Search API to determine if an updated version of the app is available. Compare this value to the 'externalId' value in the 'contentMetadataLookupUrl' response from the 'VPPServiceConfigSrv' endpoint. If these values don't match, an updated version of the app may be available. This value is available in iOS 10.3 and later, macOS 11.3 and later, and tvOS 10.2 and later.
-	// A newer version of an app may not be available for installation on the device for a variety of reasons, including that the device's operating system version or hardware is incompatible with the available version of the app.
+	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
+	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
+	// Available in iOS 10.3 and later, macOS 11.3 and later, and tvOS 10.2 and later.
+	// > Note:
+	// > A newer version of an app might not be available for installation on the device for a variety of reasons. A common reason is that the device's operating system version or hardware is incompatible with the available version of the app.
 	ExternalVersionIdentifier int64 `json:"ExternalVersionIdentifier" plist:"ExternalVersionIdentifier" required:"true"`
 }
 
@@ -724,33 +717,32 @@ type ANYappidentifier struct {
 // - `UpdateRejected`: The user rejected the offer to update the app.
 // - `ManagementRejected`:The user rejected management of an installed app.
 // - `Failed`: The app installation failed.
-type ANYappidentifierStatus string
+type ManagedApplicationItemStatus string
 
 const (
-	ANYappidentifierStatusQueued                  ANYappidentifierStatus = "Queued"
-	ANYappidentifierStatusNeedsRedemption         ANYappidentifierStatus = "NeedsRedemption"
-	ANYappidentifierStatusRedeeming               ANYappidentifierStatus = "Redeeming"
-	ANYappidentifierStatusPrompting               ANYappidentifierStatus = "Prompting"
-	ANYappidentifierStatusPromptingForLogin       ANYappidentifierStatus = "PromptingForLogin"
-	ANYappidentifierStatusValidatingPurchase      ANYappidentifierStatus = "ValidatingPurchase"
-	ANYappidentifierStatusPromptingForUpdate      ANYappidentifierStatus = "PromptingForUpdate"
-	ANYappidentifierStatusPromptingForUpdateLogin ANYappidentifierStatus = "PromptingForUpdateLogin"
-	ANYappidentifierStatusPromptingForManagement  ANYappidentifierStatus = "PromptingForManagement"
-	ANYappidentifierStatusValidatingUpdate        ANYappidentifierStatus = "ValidatingUpdate"
-	ANYappidentifierStatusUpdating                ANYappidentifierStatus = "Updating"
-	ANYappidentifierStatusInstalling              ANYappidentifierStatus = "Installing"
-	ANYappidentifierStatusManaged                 ANYappidentifierStatus = "Managed"
-	ANYappidentifierStatusManagedButUninstalled   ANYappidentifierStatus = "ManagedButUninstalled"
-	ANYappidentifierStatusUnknown                 ANYappidentifierStatus = "Unknown"
-	ANYappidentifierStatusUserInstalledApp        ANYappidentifierStatus = "UserInstalledApp"
-	ANYappidentifierStatusUserRejected            ANYappidentifierStatus = "UserRejected"
-	ANYappidentifierStatusUpdateRejected          ANYappidentifierStatus = "UpdateRejected"
-	ANYappidentifierStatusManagementRejected      ANYappidentifierStatus = "ManagementRejected"
-	ANYappidentifierStatusFailed                  ANYappidentifierStatus = "Failed"
+	ManagedApplicationItemStatusQueued                  ManagedApplicationItemStatus = "Queued"
+	ManagedApplicationItemStatusNeedsRedemption         ManagedApplicationItemStatus = "NeedsRedemption"
+	ManagedApplicationItemStatusRedeeming               ManagedApplicationItemStatus = "Redeeming"
+	ManagedApplicationItemStatusPrompting               ManagedApplicationItemStatus = "Prompting"
+	ManagedApplicationItemStatusPromptingForLogin       ManagedApplicationItemStatus = "PromptingForLogin"
+	ManagedApplicationItemStatusValidatingPurchase      ManagedApplicationItemStatus = "ValidatingPurchase"
+	ManagedApplicationItemStatusPromptingForUpdate      ManagedApplicationItemStatus = "PromptingForUpdate"
+	ManagedApplicationItemStatusPromptingForUpdateLogin ManagedApplicationItemStatus = "PromptingForUpdateLogin"
+	ManagedApplicationItemStatusPromptingForManagement  ManagedApplicationItemStatus = "PromptingForManagement"
+	ManagedApplicationItemStatusValidatingUpdate        ManagedApplicationItemStatus = "ValidatingUpdate"
+	ManagedApplicationItemStatusUpdating                ManagedApplicationItemStatus = "Updating"
+	ManagedApplicationItemStatusInstalling              ManagedApplicationItemStatus = "Installing"
+	ManagedApplicationItemStatusManaged                 ManagedApplicationItemStatus = "Managed"
+	ManagedApplicationItemStatusManagedButUninstalled   ManagedApplicationItemStatus = "ManagedButUninstalled"
+	ManagedApplicationItemStatusUnknown                 ManagedApplicationItemStatus = "Unknown"
+	ManagedApplicationItemStatusUserInstalledApp        ManagedApplicationItemStatus = "UserInstalledApp"
+	ManagedApplicationItemStatusUserRejected            ManagedApplicationItemStatus = "UserRejected"
+	ManagedApplicationItemStatusUpdateRejected          ManagedApplicationItemStatus = "UpdateRejected"
+	ManagedApplicationItemStatusManagementRejected      ManagedApplicationItemStatus = "ManagementRejected"
+	ManagedApplicationItemStatusFailed                  ManagedApplicationItemStatus = "Failed"
 )
 
 // Complete the installation of an app using a redemption code.
-// If a redemption code is needed during app installation, the server can use this command to complete the app installation.
 type ApplyRedemptionCodeCommand struct {
 	// The bundle identifier of the app.
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
@@ -768,8 +760,7 @@ func (p *ApplyRedemptionCodeCommandResponse) ResponseRequestType() string {
 	return "ApplyRedemptionCode"
 }
 
-// Remove an installed managed app.
-// This command allows a server to remove managed apps. Starting in iOS 26 on supervised devices, this command will also allow a server to remove unmanaged and system apps. This command will fail for apps that are managed by Declarative Device Management.
+// Remove an app.
 type RemoveApplicationCommand struct {
 	// The bundle identifier of the managed app.
 	// > Important:
@@ -805,8 +796,6 @@ func (p *ValidateApplicationsCommandResponse) ResponseRequestType() string {
 }
 
 // Get a list of installed certificates on a device.
-// This command allows the server to retrieve the list of installed certificates on the device. The command requires that the server has the Inspect Profile Manifest privilege.
-// For userenrollment, this request will limit to certificates pushed via MDM.
 type CertificateListCommand struct {
 	// If `true`, only include certificates that MDM installed or that are in the same profile as the MDM payload. User-enrolled devices ignore this value and always only include managed certificates. This value is available in iOS 13 and later, macOS 10.15 and later, and tvOS 13 and later.
 	ManagedOnly *bool `json:"ManagedOnly,omitempty" plist:"ManagedOnly,omitempty"`
@@ -989,7 +978,7 @@ func (p *RefreshCellularPlansCommandResponse) ResponseRequestType() string {
 type DeviceLockCommand struct {
 	// The message to display on the Lock Screen of the device. This value doesn't apply to a Shared iPad device. This value is available in iOS 4 and later, and macOS 10.14 and later.
 	Message *string `json:"Message,omitempty" plist:"Message,omitempty"`
-	// The phone number to display on the Lock Screen. This value doesn't apply to a Shared iPad device. This value is available in iOS 7 and later and macOS 11.5 and later (for Mac computers with Apple silicon only).
+	// The phone number to display on the Lock Screen. This value doesn't apply to a Shared iPad device. This value is available in iOS 7 and later and macOS 11.5 and later (for a Mac with Apple silicon only).
 	PhoneNumber *string `json:"PhoneNumber,omitempty" plist:"PhoneNumber,omitempty"`
 	// The six-character PIN for Find My. This value is available in macOS 10.8 and later.
 	PIN *string `json:"PIN,omitempty" plist:"PIN,omitempty"`
@@ -1141,7 +1130,7 @@ type RestrictionsCommandResponse struct {
 	// A dictionary that contains the global restrictions in effect. This value is available in iOS 4 and later, and tvOS 6.1 and later.
 	GlobalRestrictions GlobalRestrictions `json:"GlobalRestrictions" plist:"GlobalRestrictions" required:"true"`
 	// A dictionary that contains dictionaries of restrictions from each profile. This value is only available when `ProfileRestrictions` is `true` in the command. The keys are the identifiers of the profiles. This value is available in iOS 4 and later, and tvOS 6.1 and later.
-	ProfileRestrictions ProfileRestrictions `json:"ProfileRestrictions" plist:"ProfileRestrictions" required:"true"`
+	ProfileRestrictions map[string]RestrictionsDictionary `json:"ProfileRestrictions" plist:"ProfileRestrictions" required:"true"`
 }
 
 func (p *RestrictionsCommandResponse) ResponseRequestType() string {
@@ -1151,79 +1140,49 @@ func (p *RestrictionsCommandResponse) ResponseRequestType() string {
 // A dictionary that contains the global restrictions in effect. This value is available in iOS 4 and later, and tvOS 6.1 and later.
 type GlobalRestrictions struct {
 	// A dictionary of Boolean profile restrictions.
-	RestrictedBool *RestrictedBool `json:"restrictedBool,omitempty" plist:"restrictedBool,omitempty"`
+	RestrictedBool *map[string]RestrictedBoolRestrictionName `json:"restrictedBool,omitempty" plist:"restrictedBool,omitempty"`
 	// A dictionary of numeric profile restrictions.
-	RestrictedValue *RestrictedValue `json:"restrictedValue,omitempty" plist:"restrictedValue,omitempty"`
+	RestrictedValue *map[string]RestrictedValueRestrictionName `json:"restrictedValue,omitempty" plist:"restrictedValue,omitempty"`
 	// A dictionary of intersected profile restrictions. Intersected restrictions indicate that new restrictions can only reduce the number of strings in the set.
-	Intersection *Intersection `json:"intersection,omitempty" plist:"intersection,omitempty"`
+	Intersection *map[string]IntersectionRestrictionName `json:"intersection,omitempty" plist:"intersection,omitempty"`
 	// A dictionary of unioned profile restrictions. Unioned restrictions indicate that new restrictions can add to the set.
-	Union *Union `json:"union,omitempty" plist:"union,omitempty"`
-}
-
-// A dictionary of Boolean profile restrictions.
-type RestrictedBool struct {
-	// The Boolean restriction parameters.
-	ANYrestrictionname *RestrictedBoolANYrestrictionname `json:"ANY restriction name,omitempty" plist:"ANY restriction name,omitempty"`
+	Union *map[string]UnionRestrictionName `json:"union,omitempty" plist:"union,omitempty"`
 }
 
 // The Boolean restriction parameters.
-type RestrictedBoolANYrestrictionname struct {
+type RestrictedBoolRestrictionName struct {
 	// The value of the restriction.
 	Value bool `json:"value" plist:"value" required:"true"`
 }
 
-// A dictionary of numeric profile restrictions.
-type RestrictedValue struct {
-	// The numeric restriction parameters.
-	ANYrestrictionname *RestrictedValueANYrestrictionname `json:"ANY restriction name,omitempty" plist:"ANY restriction name,omitempty"`
-}
-
 // The numeric restriction parameters.
-type RestrictedValueANYrestrictionname struct {
+type RestrictedValueRestrictionName struct {
 	// The value of the restriction.
 	Value int64 `json:"value" plist:"value" required:"true"`
 }
 
-// A dictionary of intersected profile restrictions. Intersected restrictions indicate that new restrictions can only reduce the number of strings in the set.
-type Intersection struct {
-	// The intersected restriction parameters.
-	ANYrestrictionname *IntersectionANYrestrictionname `json:"ANY restriction name,omitempty" plist:"ANY restriction name,omitempty"`
-}
-
 // The intersected restriction parameters.
-type IntersectionANYrestrictionname struct {
+type IntersectionRestrictionName struct {
 	// The values of the restriction.
 	Values []string `json:"values" plist:"values" required:"true"`
-}
-
-// A dictionary of unioned profile restrictions. Unioned restrictions indicate that new restrictions can add to the set.
-type Union struct {
-	// The unioned restriction parameters.
-	ANYrestrictionname *UnionANYrestrictionname `json:"ANY restriction name,omitempty" plist:"ANY restriction name,omitempty"`
 }
 
 // The unioned restriction parameters.
-type UnionANYrestrictionname struct {
+type UnionRestrictionName struct {
 	// The values of the restriction.
 	Values []string `json:"values" plist:"values" required:"true"`
 }
 
-// A dictionary that contains dictionaries of restrictions from each profile. This value is only available when `ProfileRestrictions` is `true` in the command. The keys are the identifiers of the profiles. This value is available in iOS 4 and later, and tvOS 6.1 and later.
-type ProfileRestrictions struct {
-	// The profile identifiers. This dictionary is only available if `ProfileRestrictions` is `true` in the command.
-	ANYprofileidentifier *ANYprofileidentifier `json:"ANY profile identifier,omitempty" plist:"ANY profile identifier,omitempty"`
-}
-
 // The profile identifiers. This dictionary is only available if `ProfileRestrictions` is `true` in the command.
-type ANYprofileidentifier struct {
+type RestrictionsDictionary struct {
 	// A dictionary of Boolean profile restrictions.
-	RestrictedBool *RestrictedBool `json:"restrictedBool,omitempty" plist:"restrictedBool,omitempty"`
+	RestrictedBool *map[string]RestrictedBoolRestrictionName `json:"restrictedBool,omitempty" plist:"restrictedBool,omitempty"`
 	// A dictionary of numeric profile restrictions.
-	RestrictedValue *RestrictedValue `json:"restrictedValue,omitempty" plist:"restrictedValue,omitempty"`
+	RestrictedValue *map[string]RestrictedValueRestrictionName `json:"restrictedValue,omitempty" plist:"restrictedValue,omitempty"`
 	// A dictionary of intersected profile restrictions. Intersected restrictions indicate that new restrictions can only reduce the number of strings in the set.
-	Intersection *Intersection `json:"intersection,omitempty" plist:"intersection,omitempty"`
+	Intersection *map[string]IntersectionRestrictionName `json:"intersection,omitempty" plist:"intersection,omitempty"`
 	// A dictionary of unioned profile restrictions. Unioned restrictions indicate that new restrictions can add to the set.
-	Union *Union `json:"union,omitempty" plist:"union,omitempty"`
+	Union *map[string]UnionRestrictionName `json:"union,omitempty" plist:"union,omitempty"`
 }
 
 // Remotely and immediately shut down a device.
@@ -1267,7 +1226,7 @@ type StatusResponse struct {
 	ActualCacheUsed *int64 `json:"ActualCacheUsed,omitempty" plist:"ActualCacheUsed,omitempty"`
 	// The error conditions the content cache detected in the `PeerFilterRanges` in the installed `com.apple.AssetCache.managed` payload.
 	// To display these alerts on the device, set `DisplayAlerts` to `true` in the installed `ContentCaching` profile.
-	AlertsForPeerFilterRanges *AlertsForPeerFilterRanges `json:"AlertsForPeerFilterRanges,omitempty" plist:"AlertsForPeerFilterRanges,omitempty"`
+	AlertsForPeerFilterRanges *map[string]Index `json:"AlertsForPeerFilterRanges,omitempty" plist:"AlertsForPeerFilterRanges,omitempty"`
 	// An array that contains the error conditions the content cache detected that aren't related to peer filter ranges, parent content caches, or peer content caches.
 	// See `AlertsForPeerFilterRanges` for errors related to peer filter ranges.
 	// See `Parents` and `Peers` for errors related to parent and peer content caches.
@@ -1349,17 +1308,10 @@ type StatusResponse struct {
 	TotalBytesStoredFromPeers *int64 `json:"TotalBytesStoredFromPeers,omitempty" plist:"TotalBytesStoredFromPeers,omitempty"`
 }
 
-// The error conditions the content cache detected in the `PeerFilterRanges` in the installed `com.apple.AssetCache.managed` payload.
-// To display these alerts on the device, set `DisplayAlerts` to `true` in the installed `ContentCaching` profile.
-type AlertsForPeerFilterRanges struct {
-	// A dictionary that describes the alerts for the peer filter ranges. The key name is the index into the `PeerFilterRanges` array in the installed `com.apple.AssetCache.managed` payload.
-	ANYindex ANYindex `json:"ANY index" plist:"ANY index" required:"true"`
-}
-
 // A dictionary that describes the alerts for the peer filter ranges. The key name is the index into the `PeerFilterRanges` array in the installed `com.apple.AssetCache.managed` payload.
-type ANYindex struct {
+type Index struct {
 	// The type of the alert.
-	ClassName ANYindexClassName `json:"className" plist:"className" required:"true"`
+	ClassName IndexClassName `json:"className" plist:"className" required:"true"`
 	// The date of the alert.
 	PostDate time.Time `json:"postDate" plist:"postDate" required:"true"`
 	// The index into the `PeerFilterRanges` in the installed ContentCaching payload.
@@ -1369,10 +1321,10 @@ type ANYindex struct {
 }
 
 // The type of the alert.
-type ANYindexClassName string
+type IndexClassName string
 
 const (
-	ANYindexClassNameAssetCacheUnfriendlyPeersInFilterRangeAlert ANYindexClassName = "AssetCacheUnfriendlyPeersInFilterRangeAlert"
+	IndexClassNameAssetCacheUnfriendlyPeersInFilterRangeAlert IndexClassName = "AssetCacheUnfriendlyPeersInFilterRangeAlert"
 )
 
 // A dictionary that describes an alert from the content cache.
@@ -1640,7 +1592,7 @@ func (p *DeviceInformationCommandResponse) ResponseRequestType() string {
 type QueryResponses struct {
 	// The unique identifier of the device.
 	UDID *string `json:"UDID" plist:"UDID"`
-	// The device identifier to use in provisioning profiles. This value differs from the UDID on Mac computers with Apple silicon. Available in macOS 11.3 and later.
+	// The device identifier to use in provisioning profiles. This value differs from the UDID on a Mac with Apple silicon. Available in macOS 11.3 and later.
 	ProvisioningUDID *string `json:"ProvisioningUDID" plist:"ProvisioningUDID"`
 	// The contents of `OrganizationInfo`.
 	OrganizationInfo *QueryResponsesOrganizationInfo `json:"OrganizationInfo" plist:"OrganizationInfo"`
@@ -1659,7 +1611,7 @@ type QueryResponses struct {
 	DeviceName *string `json:"DeviceName" plist:"DeviceName"`
 	// The operating system version. Requires the Device Information access right.
 	OSVersion *string `json:"OSVersion" plist:"OSVersion"`
-	// The OS update rapid security response version letter.
+	// The OS update Background Security Improvement version letter.
 	SupplementalOSVersionExtra *string `json:"SupplementalOSVersionExtra" plist:"SupplementalOSVersionExtra"`
 	// The operating system version. Requires the Device Information access right.
 	BuildVersion *string `json:"BuildVersion" plist:"BuildVersion"`
@@ -1669,7 +1621,7 @@ type QueryResponses struct {
 	ModelName *string `json:"ModelName" plist:"ModelName"`
 	// The model. Requires the Device Information access right.
 	Model *string `json:"Model" plist:"Model"`
-	// The device's hardware model number including region info, for example, `MK1A3LL/A`. Requires the Device Information access right. Requires a Mac computer with Apple silicon on macOS.
+	// The device's hardware model number including region info, for example, `MK1A3LL/A`. Requires the Device Information access right. Requires a Mac with Apple silicon on macOS.
 	ModelNumber *string `json:"ModelNumber" plist:"ModelNumber"`
 	// If `true`, the macOS device uses an Apple silicon chip.
 	IsAppleSilicon *bool `json:"IsAppleSilicon" plist:"IsAppleSilicon"`
@@ -1858,7 +1810,7 @@ type QueryResponsesMDMOptions struct {
 	ActivationLockAllowedWhileSupervised *bool `json:"ActivationLockAllowedWhileSupervised,omitempty" plist:"ActivationLockAllowedWhileSupervised,omitempty"`
 	// If `true`, the server supports Bootstrap Token commands. This value is available in macOS 11 and later.
 	BootstrapTokenAllowed *bool `json:"BootstrapTokenAllowed,omitempty" plist:"BootstrapTokenAllowed,omitempty"`
-	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for Mac computers with Apple silicon in macOS 11 and later.
+	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for a Mac with Apple silicon in macOS 11 and later.
 	PromptUserToAllowBootstrapTokenForAuthentication *bool `json:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty" plist:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty"`
 }
 
@@ -2062,15 +2014,15 @@ type SecurityInfo struct {
 	// If `true`, the system booted using an Authenticated Root Volume. This value is available in macOS 11 and later.
 	AuthenticatedRootVolumeEnabled *bool `json:"AuthenticatedRootVolumeEnabled" plist:"AuthenticatedRootVolumeEnabled"`
 	// This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The value is automatically set for devices enrolled through the Device Enrollment Program (DEP). The user can also manually set this value in the RecoveryOS.
-	// This value is available for Mac computers with Apple silicon in macOS 11 and later. Not available for user enrollment.
+	// This value is available for a Mac with Apple silicon in macOS 11 and later. Not available for user enrollment.
 	BootstrapTokenAllowedForAuthentication *BootstrapTokenAllowedForAuthentication `json:"BootstrapTokenAllowedForAuthentication" plist:"BootstrapTokenAllowedForAuthentication"`
 	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response.
-	// This value is available for Mac computers with Apple silicon in macOS 11 and later. Not available for user enrollment.
+	// This value is available for a Mac with Apple silicon in macOS 11 and later. Not available for user enrollment.
 	BootstrapTokenRequiredForSoftwareUpdate *bool `json:"BootstrapTokenRequiredForSoftwareUpdate" plist:"BootstrapTokenRequiredForSoftwareUpdate"`
 	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to enabling kernel extensions. This includes enabling kexts through the `com.apple.syspolicy.kernel-extension-policy` payload or triggering the `RestartDevice` command with `RebuildKernelCache` set to `true`. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response.
-	// This value is available for Mac computers with Apple silicon in macOS 11 and later. Not available for user enrollment.
+	// This value is available for a Mac with Apple silicon in macOS 11 and later. Not available for user enrollment.
 	BootstrapTokenRequiredForKernelExtensionApproval *bool `json:"BootstrapTokenRequiredForKernelExtensionApproval" plist:"BootstrapTokenRequiredForKernelExtensionApproval"`
-	// If `true`, a password is required to enter recovery (see `SetRecoveryLockCommand`). Available in macOS 11.5 and later and only on Mac computers with Apple silicon.
+	// If `true`, a password is required to enter recovery (see `SetRecoveryLockCommand`). Available in macOS 11.5 and later and only on a Mac with Apple silicon.
 	IsRecoveryLockEnabled *bool `json:"IsRecoveryLockEnabled" plist:"IsRecoveryLockEnabled"`
 }
 
@@ -2139,7 +2091,7 @@ type SecureBoot struct {
 	SecureBootLevel *SecureBootLevel `json:"SecureBootLevel" plist:"SecureBootLevel"`
 	// The device's external boot level, which indicates whether it allows booting from an external device, disallows it, or doesn't support it.
 	ExternalBootLevel *ExternalBootLevel `json:"ExternalBootLevel" plist:"ExternalBootLevel"`
-	// Reports which security features the user disables in `recoveryOS`. This property is only present for Mac computers with Apple silicon when `SecureBootLevel` is `medium`.
+	// Reports which security features the user disables in `recoveryOS`. This property is only present for a Mac with Apple silicon when `SecureBootLevel` is `medium`.
 	// Available in iOS 11 and later.
 	ReducedSecurity *[]string `json:"ReducedSecurity" plist:"ReducedSecurity"`
 }
@@ -2164,7 +2116,7 @@ const (
 )
 
 // This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The value is automatically set for devices enrolled through the Device Enrollment Program (DEP). The user can also manually set this value in the RecoveryOS.
-// This value is available for Mac computers with Apple silicon in macOS 11 and later. Not available for user enrollment.
+// This value is available for a Mac with Apple silicon in macOS 11 and later. Not available for user enrollment.
 type BootstrapTokenAllowedForAuthentication string
 
 const (
@@ -2250,7 +2202,6 @@ func (p *LOMSetupRequestCommandResponse) ResponseRequestType() string {
 }
 
 // Query attributes in managed apps on a device.
-// Queries managed application attributes. Attributes can be set on managed apps. These attributes can be changed over time. The response will not include apps that are managed by Declarative Device Management.
 type ManagedApplicationAttributesCommand struct {
 	// The bundle identifiers of the managed apps.
 	// > Important:
@@ -2312,7 +2263,6 @@ type ApplicationAttributesItemAttributes struct {
 }
 
 // Get app configurations from managed apps on a device.
-// This command queries the device for the current configuration of managed applications. This command requires the App Management right. The response will not include apps that are managed by Declarative Device Management.
 type ManagedApplicationConfigurationCommand struct {
 	// The bundle identifiers of the managed apps.
 	// > Important:
@@ -2344,7 +2294,6 @@ type ApplicationConfigurationsItem struct {
 }
 
 // Get app feedback from a managed app on the device.
-// This command queries the device for application feedback information. This command requires the App Management right. The response will not include apps that are managed by Declarative Device Management.
 type ManagedApplicationFeedbackCommand struct {
 	// The bundle identifiers of the managed apps.
 	Identifiers []string `json:"Identifiers" plist:"Identifiers" required:"true"`
@@ -2622,7 +2571,7 @@ func (p *ClearPasscodeCommandResponse) ResponseRequestType() string {
 }
 
 // Change or clear the firmware password on a device.
-// Changes or clears the firmware password for the device. Requires the "Device lock and passcode removal right". This command is not available on Mac computers with Apple silicon.
+// Changes or clears the firmware password for the device. Requires the "Device lock and passcode removal right". This command is not available on a Mac with Apple silicon.
 type SetFirmwarePasswordCommand struct {
 	// The current password, which you must set if the device has a firmware password.
 	CurrentPassword *string `json:"CurrentPassword,omitempty" plist:"CurrentPassword,omitempty"`
@@ -2652,7 +2601,7 @@ type SetFirmwarePassword struct {
 }
 
 // Verify the firmware password on a device.
-// Verifies the device's firmware password. This command is not available on Mac computers with Apple silicon.
+// Verifies the device's firmware password. This command is not available on a Mac with Apple silicon.
 type VerifyFirmwarePasswordCommand struct {
 	// The password to verify.
 	Password string `json:"Password" plist:"Password" required:"true"`
@@ -2714,23 +2663,6 @@ type VerifyRecoveryLockCommandResponse struct {
 
 func (p *VerifyRecoveryLockCommandResponse) ResponseRequestType() string {
 	return "VerifyRecoveryLock"
-}
-
-// Request an unlock token from a device.
-// This command requests an UnlockToken from the device. Pass this token to the ClearPasscode command to unlock the device.
-type RequestUnlockTokenCommand struct{}
-
-func (p *RequestUnlockTokenCommand) RequestType() string {
-	return "RequestUnlockToken"
-}
-
-type RequestUnlockTokenCommandResponse struct {
-	// The unlock token. Erasing the user partition invalidates this token.
-	UnlockToken []byte `json:"UnlockToken" plist:"UnlockToken" required:"true"`
-}
-
-func (p *RequestUnlockTokenCommandResponse) ResponseRequestType() string {
-	return "RequestUnlockToken"
 }
 
 // Install a configuration profile on a device.
@@ -3253,6 +3185,10 @@ type OrganizationInfoOrganizationInfo struct {
 type DefaultApplications struct {
 	// The bundle identifier of the app the system sets as the default web browser. This app must be an eligible web browser for the region of the device.
 	WebBrowser *string `json:"WebBrowser,omitempty" plist:"WebBrowser,omitempty"`
+	// The bundle identifier of the app that the system sets as the default calling app. This app must be an eligible calling app.
+	Calling *string `json:"Calling,omitempty" plist:"Calling,omitempty"`
+	// The bundle identifier of the app that the system sets as the default messaging app. This app must be an eligible messaging app.
+	Messaging *string `json:"Messaging,omitempty" plist:"Messaging,omitempty"`
 }
 
 // A dictionary that contains settings related to the MDM protocol. This setting doesn't support user enrollment. Available in iOS 7 and later, macOS 10.15 and later, and visionOS 2 and later.
@@ -3276,7 +3212,7 @@ type MDMOptionsMDMOptions struct {
 	ActivationLockAllowedWhileSupervised *bool `json:"ActivationLockAllowedWhileSupervised,omitempty" plist:"ActivationLockAllowedWhileSupervised,omitempty"`
 	// If `true`, the server supports the Bootstrap Token commands.
 	BootstrapTokenAllowed *bool `json:"BootstrapTokenAllowed,omitempty" plist:"BootstrapTokenAllowed,omitempty"`
-	// If `true`, warn the user that they need to reboot into RecoveryOS and allow the MDM server to use the Bootstrap Token for authentication for certain sensitive operations; for example, enabling kernel extensions or installing certain types of software updates. Set this value to `false` if your MDM server doesn't need to perform these operations. The value provided here overrides the value specified in MDM, and only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for Mac computers with Apple silicon in macOS 11 and later.
+	// If `true`, warn the user that they need to reboot into RecoveryOS and allow the MDM server to use the Bootstrap Token for authentication for certain sensitive operations; for example, enabling kernel extensions or installing certain types of software updates. Set this value to `false` if your MDM server doesn't need to perform these operations. The value provided here overrides the value specified in MDM, and only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for a Mac with Apple silicon in macOS 11 and later.
 	PromptUserToAllowBootstrapTokenForAuthentication *bool `json:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty" plist:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty"`
 	// If `true`, the device automatically reboots while locked after several days of inactivity. This is set to `false` by default when a supervised device enrolls.
 	IdleRebootAllowed *bool `json:"IdleRebootAllowed,omitempty" plist:"IdleRebootAllowed,omitempty"`
@@ -3287,7 +3223,7 @@ type MaximumResidentUsers struct {
 	// A string that identifies this setting.
 	Item MaximumResidentUsersItem `json:"Item" plist:"Item" required:"true"`
 	// The maximum number of users that can use the device. If this value is greater than the value for the maximum possible number of users that the device supports, the MDM server uses that value instead.
-	// This setting requires that the device is in the `AwaitingConfiguration` phase before it receives the [DeviceConfigured](https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/MobileDeviceManagementProtocolRef/3-MDM_Protocol/MDM_Protocol.html#//apple_ref/doc/uid/TP40017387-CH3-SW301) message.
+	// This setting requires that the device is in the `AwaitingConfiguration` phase before it receives the `DeviceConfiguredCommand` message.
 	// When a device reaches the maximum number of resident users and a new user tries to sign in, the MDM server removes a synchronized user to make space for the new user. If there are no synchronized users, the new user sign-in fails. A synchronized user is a user that has completed syncing their data.
 	MaximumResidentUsers int64 `json:"MaximumResidentUsers" plist:"MaximumResidentUsers" required:"true"`
 }
@@ -3606,13 +3542,13 @@ type AvailableOSUpdatesItem struct {
 	AllowsInstallLater *bool `json:"AllowsInstallLater,omitempty" plist:"AllowsInstallLater,omitempty"`
 	// If present, the date when you want the update to install. This value is available in macOS 10.12.4 and later.
 	DeferredUntil *time.Time `json:"DeferredUntil,omitempty" plist:"DeferredUntil,omitempty"`
-	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for Mac computers with Apple silicon in macOS 11 and later.
+	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for a Mac with Apple silicon in macOS 11 and later.
 	RequiresBootstrapToken *bool `json:"RequiresBootstrapToken,omitempty" plist:"RequiresBootstrapToken,omitempty"`
-	// If `true`, this update is a Rapid Security Response.
+	// If `true`, this update is a Background Security Improvement.
 	IsSecurityResponse bool `json:"IsSecurityResponse" plist:"IsSecurityResponse" required:"true"`
-	// The build version for the Rapid Security Response update, for example, `13A999`, which is the same as `Build`.
+	// The build version for the Background Security Improvement update, for example, `13A999`, which is the same as `Build`.
 	SupplementalBuildVersion *string `json:"SupplementalBuildVersion,omitempty" plist:"SupplementalBuildVersion,omitempty"`
-	// The Rapid Security Response OS version suffix, for example, `(a)`. Only present if this is a Rapid Security Response update.
+	// The Background Security Improvement OS version suffix, for example, `(a)`. Only present if this is a Background Security Improvement update.
 	SupplementalOSVersionExtra *string `json:"SupplementalOSVersionExtra,omitempty" plist:"SupplementalOSVersionExtra,omitempty"`
 }
 
@@ -3663,7 +3599,7 @@ type UpdatesItem struct {
 	ProductKey *string `json:"ProductKey,omitempty" plist:"ProductKey,omitempty"`
 	// The version of the update, which the system requires if `ProductKey` isn't present. This value is available in iOS 11.3 and later, macOS 12 and later, and tvOS 12.2 and later.
 	// > Note:
-	// > This value isn't available for use with Rapid Security Response (RSR) updates.
+	// > This value isn't available for use with Background Security Improvement updates.
 	ProductVersion *string `json:"ProductVersion,omitempty" plist:"ProductVersion,omitempty"`
 	// The install action, which is one of the following values:
 	// - `Default`: Download or install the update, depending on the current state. You can check the `UpdateResults` dictionary to review scheduled updates. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.

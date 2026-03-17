@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:0a4527c5ea21825fd23e08273ccdb9e2302458ce/declarative/declarations/configurations
+// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/declarations/configurations
 
 package configurations
 
-const DeviceManagementGenerateHash = "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
+const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
 
 var DeclarationMap = map[string]any{
 	"com.apple.configuration.account.caldav":                      AccountCalDAV{},
@@ -84,7 +84,7 @@ type AccountExchange struct {
 	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
 	// The set of protocol types to enable on the Exchange server, in order of preference. This is an array of unique strings with possible values:
 	// - `EAS:` Exchange ActiveSync
-	// - `EWS:` Exchange Web Services (EWS)
+	// - `EWS:` Exchange Web Services
 	// If the device supports one or more of the listed protocol types, it sets up an account for the first supported type.
 	// If the device doesn't support any of the listed protocol types, it doesn't set up an account and the system reports an error.
 	EnabledProtocolTypes []EnabledProtocolTypes `json:"EnabledProtocolTypes" plist:"EnabledProtocolTypes" required:"true"`
@@ -138,7 +138,7 @@ func (p *AccountExchange) DeclarationType() string {
 
 // The set of protocol types to enable on the Exchange server, in order of preference. This is an array of unique strings with possible values:
 // - `EAS:` Exchange ActiveSync
-// - `EWS:` Exchange Web Services (EWS)
+// - `EWS:` Exchange Web Services
 // If the device supports one or more of the listed protocol types, it sets up an account for the first supported type.
 // If the device doesn't support any of the listed protocol types, it doesn't set up an account and the system reports an error.
 type EnabledProtocolTypes string
@@ -396,7 +396,7 @@ type AppManaged struct {
 	// In macOS, only one of `AppStoreID`, `BundleID`, or `AppComposedIdentifier` needs to be present.
 	// Available only in macOS.
 	AppComposedIdentifier *string `json:"AppComposedIdentifier,omitempty" plist:"AppComposedIdentifier,omitempty"`
-	// If `true`, the device install an iOS or iPadOS app that runs on an Apple Silicon Mac. This is only used when the app is an App Store app.
+	// If `true`, the device installs an iOS or iPadOS app that runs on a Mac with Apple Silicon. This is only used when the app is an App Store app.
 	// Available only in macOS.
 	IOSApp *bool `json:"iOSApp,omitempty" plist:"iOSApp,omitempty"`
 	// A dictionary that describes how and when to install the app.
@@ -414,7 +414,7 @@ type AppManaged struct {
 	AppConfig *AppConfig `json:"AppConfig,omitempty" plist:"AppConfig,omitempty"`
 	// A dictionary of extension config data and credentials.
 	// Available only in iOS and visionOS.
-	ExtensionConfigs *ExtensionConfigs `json:"ExtensionConfigs,omitempty" plist:"ExtensionConfigs,omitempty"`
+	ExtensionConfigs *map[string]AppConfigDictionary `json:"ExtensionConfigs,omitempty" plist:"ExtensionConfigs,omitempty"`
 	// The identifier of an asset declaration containing a reference to the app config data. The device provides the app config data to the app using the MDMv1 behavior. The corresponding asset needs to be of type `com.apple.asset.data`. The referenced data needs to be a property list file, and the asset's "ContentType"
 	// value set to match the data type.
 	// Available only in iOS and visionOS.
@@ -434,7 +434,7 @@ type AppManagedInstallBehavior struct {
 	Install *AppManagedInstallBehaviorInstall `default:"Optional" json:"Install,omitempty" plist:"Install,omitempty"`
 	// A dictionary that describes the app's license.
 	License *License `json:"License,omitempty" plist:"License,omitempty"`
-	// The App Store External Version Identifier (EVID) of the version of the app the device installs. This key is ignored if the app isn't an App Store app.
+	// The App Store external version identifier (EVID) of the version of the app the device installs. You can retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`. This key is ignored if the app isn't an App Store app.
 	// The following rules apply when the device applies or updates the configuration:
 	// - If this key isn't present:
 	// - If the app isn't present, the device installs the latest version.
@@ -446,7 +446,6 @@ type AppManagedInstallBehavior struct {
 	// - If an app with a newer version is present, the device doesn't take over management of the app. The device reports an app status failure.
 	// > Note:
 	// > The device never installs an older version of the app over a newer version.
-	// You can retrieve this value from the store through the `contentMetadataLookupUrl` of the `VPPServiceConfigSrv`.
 	Version *int64 `json:"Version,omitempty" plist:"Version,omitempty"`
 	// Indicates how the device uses a cellular network when it downloads the app for automatic install or update operations:
 	// - `AlwaysOn`: The device downloads apps of any size using a cellular network.
@@ -605,15 +604,8 @@ type CertificateAppConfigItem struct {
 	AssetReference string `json:"AssetReference" plist:"AssetReference" required:"true"`
 }
 
-// A dictionary of extension config data and credentials.
-// Available only in iOS and visionOS.
-type ExtensionConfigs struct {
-	// A dictionary mapping extension composed identifiers to the extension config data and credentials. The expected format is "Identifier (TeamIdentifier)".
-	ANY *ExtensionConfigsANY `json:"ANY,omitempty" plist:"ANY,omitempty"`
-}
-
 // A dictionary mapping extension composed identifiers to the extension config data and credentials. The expected format is "Identifier (TeamIdentifier)".
-type ExtensionConfigsANY struct {
+type AppConfigDictionary struct {
 	// Specifies the identifier of an asset declaration containing a reference to the app or extension config data. The corresponding asset needs to be of type `com.apple.asset.data`. The referenced data needs to be a property list file, and the asset's "ContentType" value set to match the data type.
 	DataAssetReference *string `json:"DataAssetReference,omitempty" plist:"DataAssetReference,omitempty"`
 	// Provides passwords to the managed app or extension. Each element in the array contains a password asset reference and an associated identifier which the app or extension uses to look up the password.
@@ -888,8 +880,8 @@ type PasscodeSettings struct {
 	MinimumLength *int64 `default:"0" json:"MinimumLength,omitempty" plist:"MinimumLength,omitempty"`
 	// Specifies the minimum number of complex characters in the password. A complex character is a character other than a number or a letter, such as `&`, `%`, `$`, and `#`.
 	MinimumComplexCharacters *int64 `default:"0" json:"MinimumComplexCharacters,omitempty" plist:"MinimumComplexCharacters,omitempty"`
-	// The number of failed passcode attempts that the system allows the user before iOS erases the device or macOS locks the device. If you don't change this setting, after six failed attempts, the device imposes a time delay before the user can enter a passcode again. The time delay increases with each failed attempt.
-	// After the final failed attempt, the system securely erases all data and settings from the iOS device. A macOS device locks after the final attempt. The passcode time delay begins after the sixth attempt, so if this value is six or lower, the system has no time delay and triggers the erase or lock as soon as the user exceeds the limit.
+	// The number of failed passcode attempts that the system allows the user before it erases or locks the device. After six failed attempts, the device imposes a time delay before the user can enter a passcode again. The time delay increases with each failed attempt. On macOS, set `FailedAttemptsResetInMinutes` to define the time delay. The time delay begins after the sixth attempt, so if `MaximumFailedAttempts` is six or lower, the system has no time delay and triggers the erase or lock as soon as the user exceeds the limit.
+	// After the final failed attempt, the system locks a macOS device, or securely erases all data and settings from an iOS, visionOS, or watchOS device.
 	MaximumFailedAttempts *int64 `default:"11" json:"MaximumFailedAttempts,omitempty" plist:"MaximumFailedAttempts,omitempty"`
 	// The number of minutes before the login is reset after the maximum number of failed attempts. Also set the `MaximumFailedAttempts` key for this to take effect.
 	FailedAttemptsResetInMinutes *int64 `json:"FailedAttemptsResetInMinutes,omitempty" plist:"FailedAttemptsResetInMinutes,omitempty"`
@@ -916,13 +908,7 @@ type CustomRegex struct {
 	// A regular expression string to match against the password to determine whether it complies with a policy. The regular expression uses the ICU syntax. The string can't exceed 2048 characters in length.
 	Regex string `json:"Regex" plist:"Regex" required:"true"`
 	// A dictionary with supported OS language IDs for the keys (such as `en-US`), and values that represent a localized description of the policy that the regular expression enforces. Use the special `default` key for languages that the dictionary doesn't contain.
-	Description *Description `json:"Description,omitempty" plist:"Description,omitempty"`
-}
-
-// A dictionary with supported OS language IDs for the keys (such as `en-US`), and values that represent a localized description of the policy that the regular expression enforces. Use the special `default` key for languages that the dictionary doesn't contain.
-type Description struct {
-	// A localized description.
-	ANY *string `json:"ANY,omitempty" plist:"ANY,omitempty"`
+	Description *map[string]string `json:"Description,omitempty" plist:"Description,omitempty"`
 }
 
 // The declaration to configure managed bookmarks in Safari.
@@ -958,30 +944,30 @@ type BookmarksItem struct {
 }
 
 // A bookmark that specifies a title, and either a URL for the bookmark, or a nested folder of bookmarks.
-type FolderItem struct{}
+type FolderItem struct {
+	// The title of the bookmark shown in Safari.
+	Title string `json:"Title" plist:"Title" required:"true"`
+	// The URL for the bookmark item.
+	// Only one of `URL` or `Folder` must be present.
+	URL *string `json:"URL,omitempty" plist:"URL,omitempty"`
+	// An array of bookmarks for each bookmark in the folder. Folders can include bookmark items and bookmark folders.
+	// Only one of `URL` or `Folder` must be present.
+	Folder *[]FolderItem `json:"Folder,omitempty" plist:"Folder,omitempty"`
+}
 
 // The declaration to configure Safari Extensions.
 type SafariExtensionSettings struct {
-	// The dictionary of managed extensions settings.
-	ManagedExtensions *ManagedExtensions `json:"ManagedExtensions,omitempty" plist:"ManagedExtensions,omitempty"`
+	// The dictionary of managed extensions settings. Each key in the dictionary represents a composed identifier for a specific managed extension, or you can specify a single "*" character to match any extension. The dictionary values represent the settings that Safari applies to each extension that matches the key. In order for the extension to be managed, its host app needs to be present on the device.
+	// The composed identifier of a managed extension uses the format "Identifier (TeamIdentifier)", for example "com.example.app (ABCD1234)". Use `codesign -dv <path_to_appex>` to show the information you need to generate this string on macOS, using the path to the extension bundle located in the "PlugIns" folder inside the app bundle. For other platforms, request this information from the app developer.
+	ManagedExtensions *map[string]ExtensionDictionary `json:"ManagedExtensions,omitempty" plist:"ManagedExtensions,omitempty"`
 }
 
 func (p *SafariExtensionSettings) DeclarationType() string {
 	return "com.apple.configuration.safari.extensions.settings"
 }
 
-// The dictionary of managed extensions settings.
-type ManagedExtensions struct {
-	// The composed identifier of the managed extension, or "*" for all extensions. In order for the extension to be managed, its host app must be present on the device.
-	// To generate this string use `codesign -dv <path_to_appex>`. The browser extension is located in the PlugIns folder inside the app bundle. The expected format is "Identifier (TeamIdentifier)", for example "com.example.app (ABCD1234)".
-	// For extensions that aren't also available on macOS the app developer needs to provide this information.
-	ANY *ManagedExtensionsANY `json:"ANY,omitempty" plist:"ANY,omitempty"`
-}
-
-// The composed identifier of the managed extension, or "*" for all extensions. In order for the extension to be managed, its host app must be present on the device.
-// To generate this string use `codesign -dv <path_to_appex>`. The browser extension is located in the PlugIns folder inside the app bundle. The expected format is "Identifier (TeamIdentifier)", for example "com.example.app (ABCD1234)".
-// For extensions that aren't also available on macOS the app developer needs to provide this information.
-type ManagedExtensionsANY struct {
+// The dictionary that defines the settings for a managed extension. Each key represents a specific managed extension, or you can specify a single "*" character to match any extension.
+type ExtensionDictionary struct {
 	// Controls whether an extension is allowed.
 	// * `Allowed` - The user is allowed to turn the extension on or off.
 	// * `AlwaysOn` - The extension will always be on.
@@ -992,9 +978,9 @@ type ManagedExtensionsANY struct {
 	// * `AlwaysOn` - The extension will always be on in Private Browsing if the extension is on outside of Private Browsing.
 	// * `AlwaysOff` - The extension will never be on in Private Browsing.
 	PrivateBrowsing *PrivateBrowsing `json:"PrivateBrowsing,omitempty" plist:"PrivateBrowsing,omitempty"`
-	// Controls the domains and sub-domains the extension is granted access to. Any non-prefixed domains take precedence over prefixed domains, and `DeniedDomains` takes precedence over `AllowedDomains`. The user can configure any domains not matched by the values in `AllowedDomains` or `DeniedDomains`.
+	// Controls the domains and sub-domains the extension is granted access to.
 	AllowedDomains *[]string `json:"AllowedDomains,omitempty" plist:"AllowedDomains,omitempty"`
-	// Controls the domains and sub-domains the extension isn't allowed to access. Any non-prefixed domains take precedence over prefixed domains, and `DeniedDomains` takes precedence over `AllowedDomains`. The user can configure any domains not matched by the values in `AllowedDomains` or `DeniedDomains`.
+	// Controls the domains and sub-domains the extension isn't allowed to access.
 	DeniedDomains *[]string `json:"DeniedDomains,omitempty" plist:"DeniedDomains,omitempty"`
 }
 
@@ -1233,14 +1219,7 @@ const (
 
 // The managed configuration files for services.
 type ServicesConfigurationFiles struct {
-	// The identifier of the system service with managed configuration files. Use a reverse DNS style for this identifier. However, the system reserves `com.apple.` prefix for built-in services. The available built-in services are:
-	// - `com.apple.sshd` configures sshd
-	// - `com.apple.sudo` configures sudo
-	// - `com.apple.pam` configures PAM
-	// - `com.apple.cups` configures CUPS
-	// - `com.apple.apache.httpd` configures Apache httpd
-	// - `com.apple.bash` configures bash
-	// - `com.apple.zsh` configures zsh
+	// The identifier of the system service with managed configuration files. Use a reverse DNS style for this identifier.
 	ServiceType string `json:"ServiceType" plist:"ServiceType" required:"true"`
 	// The identifier of an asset declaration that contains a reference to the files to use for system service configuration. Ensure that the corresponding asset:
 	// - Is of type `com.apple.asset.data`
@@ -1258,11 +1237,11 @@ func (p *ServicesConfigurationFiles) DeclarationType() string {
 type SoftwareUpdateEnforcementSpecific struct {
 	// The target OS version to update the device to by the appropriate time. This is the OS version number, for example, `16.1`.
 	TargetOSVersion string `json:"TargetOSVersion" plist:"TargetOSVersion" required:"true"`
-	// The target build version to update the device to by the appropriate time, for example, `20A242`. The system uses the build version for testing during seeding periods. The build version can include a supplemental version identifier, for example, `20A242a`. If the build version isn't consistent with the target OS version specified in the `TargetOSVersion` key, the target OS version takes precedence.
+	// The target build version to update the device to by the appropriate time, for example, `20A242`. Use the build version for testing during seeding periods. The build version can include a supplemental version identifier, for example, `20A242a`.
 	TargetBuildVersion *string `json:"TargetBuildVersion,omitempty" plist:"TargetBuildVersion,omitempty"`
 	// The local date time value that specifies when to force install the software update. Use the format `yyyy-mm-ddThh:mm:ss`, which is derived from RFC3339 but doesn't include a time zone offset. If the user doesn't trigger the software update before this time, the device force installs it.
 	TargetLocalDateTime string `json:"TargetLocalDateTime" plist:"TargetLocalDateTime" required:"true"`
-	// The URL of a web page that shows details that the organization provides about the enforced update.
+	// The URL of a web page that shows details that the organization provides about the enforced software update.
 	DetailsURL *string `json:"DetailsURL,omitempty" plist:"DetailsURL,omitempty"`
 }
 
@@ -1275,7 +1254,7 @@ type SoftwareUpdateSettings struct {
 	// If set to `true`, the device shows all software update enforcement notifications.
 	// If set to `false`, the device only shows notifications triggered one hour before the enforcement deadline, and the restart countdown notification.
 	Notifications *bool `json:"Notifications,omitempty" plist:"Notifications,omitempty"`
-	// This object configures the deferral of software updates. Rapid Security Responses aren't considered in `Major`, `Minor`, or `System` deferral mechanism.
+	// This object configures the deferral of software updates. Background Security Improvements aren't considered in `Major`, `Minor`, or `System` deferral mechanism.
 	Deferrals *Deferrals `json:"Deferrals,omitempty" plist:"Deferrals,omitempty"`
 	// This string specifies how the device shows software updates to the user. When more than one update is available update, the device behaves as follows:
 	// - `All` - Shows all software update versions.
@@ -1284,7 +1263,7 @@ type SoftwareUpdateSettings struct {
 	RecommendedCadence *RecommendedCadence `json:"RecommendedCadence,omitempty" plist:"RecommendedCadence,omitempty"`
 	// This object configures various automatic Software Update functionality.
 	AutomaticActions *AutomaticActions `json:"AutomaticActions,omitempty" plist:"AutomaticActions,omitempty"`
-	// These configurations set user access to interacting with Rapid Security Responses (RSRs).
+	// These configurations set user access to interacting with Background Security Improvement.
 	RapidSecurityResponse *RapidSecurityResponse `json:"RapidSecurityResponse,omitempty" plist:"RapidSecurityResponse,omitempty"`
 	// If set to `true`, a standard user can perform Major and Minor Software Updates.
 	// If set to `false`, only administrators can perform Major and Minor Software Updates.
@@ -1297,7 +1276,7 @@ func (p *SoftwareUpdateSettings) DeclarationType() string {
 	return "com.apple.configuration.softwareupdate.settings"
 }
 
-// This object configures the deferral of software updates. Rapid Security Responses aren't considered in `Major`, `Minor`, or `System` deferral mechanism.
+// This object configures the deferral of software updates. Background Security Improvements aren't considered in `Major`, `Minor`, or `System` deferral mechanism.
 type Deferrals struct {
 	// Specifies the number of days to defer a major or minor OS software update on the device. When set, software updates only appear after the specified delay, following the release of the software update. Available in iOS 18 and later.
 	CombinedPeriodInDays *int64 `json:"CombinedPeriodInDays,omitempty" plist:"CombinedPeriodInDays,omitempty"`
@@ -1376,13 +1355,13 @@ const (
 	InstallSecurityUpdateAlwaysOff InstallSecurityUpdate = "AlwaysOff"
 )
 
-// These configurations set user access to interacting with Rapid Security Responses (RSRs).
+// These configurations set user access to interacting with Background Security Improvement.
 type RapidSecurityResponse struct {
-	// If set to `false`, Rapid Security Responses aren't offered for user installation. The system can still install Rapid Security Responses with `com.apple.configuration.softwareupdate.enforcement.specific` configurations.
-	// If set to `true`, the system offers Rapid Security Responses to the user.
+	// If set to `false`, Background Security Improvements aren't offered for user installation. The system can still install Background Security Improvements with `com.apple.configuration.softwareupdate.enforcement.specific` configurations.
+	// If set to `true`, the system offers Background Security Improvements to the user.
 	Enable *bool `json:"Enable,omitempty" plist:"Enable,omitempty"`
-	// If set to `false`, the system doesn't offer Rapid Security Response rollbacks to the user.
-	// If set to `true`, the system offers Rapid Security Response rollbacks to the user.
+	// If set to `false`, the system doesn't offer Background Security Improvement rollbacks to the user.
+	// If set to `true`, the system offers Background Security Improvement rollbacks to the user.
 	EnableRollback *bool `json:"EnableRollback,omitempty" plist:"EnableRollback,omitempty"`
 }
 

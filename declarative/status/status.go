@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:0a4527c5ea21825fd23e08273ccdb9e2302458ce/declarative/status
+// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/status
 
 package status
 
-const DeviceManagementGenerateHash = "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
+const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
 
 var DeclarationMap = map[string]any{"status-reason": StatusReason{}}
 var StatusItemType = map[string]any{
@@ -322,8 +322,8 @@ type AppmanagedlistStatusValue struct {
 	DeclarationIdentifier *string `json:"declaration-identifier,omitempty" plist:"declaration-identifier,omitempty"`
 	// The name of the app.
 	Name *string `json:"name,omitempty" plist:"name,omitempty"`
-	// The app's external version ID. You can also retrieve this value from the store through the `contentMetadataLookupUrl` of the `VPPServiceConfigSrv`.
-	// In the response from `uclient-api.itunes.apple.com` URL, there's an `externalId` at the path `results.<adamId>.offers[0].version.externalId`. If the current external version identifier of an app on the store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
+	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
+	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
 	ExternalVersionId *int64 `json:"external-version-id,omitempty" plist:"external-version-id,omitempty"`
 	// The version of the app.
 	Version *string `json:"version,omitempty" plist:"version,omitempty"`
@@ -408,7 +408,7 @@ type ConfigState struct {
 	// The status of any app managed configuration. This key is only present when the managed app has a managed configuration.
 	AppConfigState *AppConfigState `json:"app-config-state,omitempty" plist:"app-config-state,omitempty"`
 	// The status of any app extension managed configuration. This key's value is a dictionary whose keys are the bundle identifiers of app extensions that have a managed configuration. The values of each key represent the status of the corresponding app extension's managed configuration.
-	ExtensionConfigState *ExtensionConfigState `json:"extension-config-state,omitempty" plist:"extension-config-state,omitempty"`
+	ExtensionConfigState *map[string]ManagedConfigurationState `json:"extension-config-state,omitempty" plist:"extension-config-state,omitempty"`
 }
 
 // The status of any app managed configuration. This key is only present when the managed app has a managed configuration.
@@ -432,14 +432,8 @@ const (
 	AppConfigStateStateValid   AppConfigStateState = "valid"
 )
 
-// The status of any app extension managed configuration. This key's value is a dictionary whose keys are the bundle identifiers of app extensions that have a managed configuration. The values of each key represent the status of the corresponding app extension's managed configuration.
-type ExtensionConfigState struct {
-	// The bundle identifier of the managed app extension.
-	ANY *ANY `json:"ANY,omitempty" plist:"ANY,omitempty"`
-}
-
 // The bundle identifier of the managed app extension.
-type ANY struct {
+type ManagedConfigurationState struct {
 	// The managed configuration status.
 	// - `unknown`: The managed configuration has not been read
 	// - `invalid`: The managed configuration was read and deemed to be invalid
@@ -549,7 +543,7 @@ func (p *StatusDeviceOperatingSystemMarketingName) StatusItemType() string {
 
 // A status report of the device's operating system supplemental build identifier.
 type StatusDeviceOperatingSystemSupplementalBuildVersion struct {
-	// The operating system's build and rapid security response versions in use on the device, for example, `20A123a` or `20B27c`.
+	// The operating system's build and Background Security Improvement versions in use on the device, for example, `20A123a` or `20B27c`.
 	DeviceoperatingSystemsupplementalbuildVersion string `json:"device.operating-system.supplemental.build-version" plist:"device.operating-system.supplemental.build-version" required:"true"`
 }
 
@@ -557,9 +551,9 @@ func (p *StatusDeviceOperatingSystemSupplementalBuildVersion) StatusItemType() s
 	return "device.operating-system.supplemental.build-version"
 }
 
-// A status report of the device's operating system's rapid security response identifier.
+// A status report of the device's operating system's Background Security Improvement identifier.
 type StatusDeviceOperatingSystemSupplementalExtraVersion struct {
-	// The operating system's rapid security response version in use on the device, for example, `a`.
+	// The operating system's Background Security Improvement version in use on the device, for example, `a`.
 	DeviceoperatingSystemsupplementalextraVersion string `json:"device.operating-system.supplemental.extra-version" plist:"device.operating-system.supplemental.extra-version" required:"true"`
 }
 
@@ -585,7 +579,7 @@ type StatusDeviceBatteryHealth struct {
 	// - `service-recommended`: The system recommends battery service.
 	// - `unknown`: The system couldn't determine battery health information.
 	// - `unsupported`: The device doesn't support battery health reporting.
-	// Available in iOS 17 and later on iPhone, iPadOS 18.4 and later on supported iPad models, and macOS 14.4 and later on Mac computers with Apple silicon.
+	// Available in iOS 17 and later on iPhone, iPadOS 18.4 and later on supported iPad models, and macOS 14.4 and later on a Mac with Apple silicon.
 	DevicepowerbatteryHealth DevicepowerbatteryHealth `json:"device.power.battery-health" plist:"device.power.battery-health" required:"true"`
 }
 
@@ -599,7 +593,7 @@ func (p *StatusDeviceBatteryHealth) StatusItemType() string {
 // - `service-recommended`: The system recommends battery service.
 // - `unknown`: The system couldn't determine battery health information.
 // - `unsupported`: The device doesn't support battery health reporting.
-// Available in iOS 17 and later on iPhone, iPadOS 18.4 and later on supported iPad models, and macOS 14.4 and later on Mac computers with Apple silicon.
+// Available in iOS 17 and later on iPhone, iPadOS 18.4 and later on supported iPad models, and macOS 14.4 and later on a Mac with Apple silicon.
 type DevicepowerbatteryHealth string
 
 const (
@@ -775,7 +769,8 @@ type MdmappStatusValue struct {
 	Removed *bool `json:"_removed,omitempty" plist:"_removed,omitempty"`
 	// The name of the app.
 	Name *string `json:"name,omitempty" plist:"name,omitempty"`
-	// The application's external version ID. Use `Service-Config` to get the `contentMetadataLookupUrl` endpoint. In the response from that URL, find a key named `externalId` at the path `results.<adamId>.offers[0].version.externalId`. If the current external version identifier of an app on the store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
+	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
+	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
 	ExternalVersionId *string `json:"external-version-id,omitempty" plist:"external-version-id,omitempty"`
 	// The version of the app.
 	Version *string `json:"version,omitempty" plist:"version,omitempty"`
@@ -1143,9 +1138,9 @@ func (p *StatusSoftwareUpdatePendingVersion) StatusItemType() string {
 
 // A dictionary that contains the build and OS versions of the software update that's pending on the device.
 type SoftwareupdatependingVersion struct {
-	// The OS version of the pending software update, including any rapid security response version. This string is empty if no update is pending.
+	// The OS version of the pending software update, including any Background Security Improvement version. This string is empty if no update is pending.
 	OsVersion string `json:"os-version" plist:"os-version" required:"true"`
-	// The build version of the pending software update, including any rapid security response version. This string is empty if no update is pending.
+	// The build version of the pending software update, including any Background Security Improvement version. This string is empty if no update is pending.
 	BuildVersion string `json:"build-version" plist:"build-version" required:"true"`
 	// The local date time value that indicates when the pending software update will be installed. This key is only present when the pending software update is being enforced.
 	TargetLocalDateTime *string `json:"target-local-date-time,omitempty" plist:"target-local-date-time,omitempty"`

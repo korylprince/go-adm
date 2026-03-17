@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:0a4527c5ea21825fd23e08273ccdb9e2302458ce/declarative/declarations/assets/credentials
+// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/declarations/assets/credentials
 
 package credentials
 
-const DeviceManagementGenerateHash = "0a4527c5ea21825fd23e08273ccdb9e2302458ce"
+const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
 
 var CredentialMap = map[string]any{
 	"com.apple.credential.acme":                ACMECredential{},
@@ -72,7 +72,7 @@ type ACMECredentialSubjectAltName struct {
 	DNSName *string `json:"dNSName,omitempty" plist:"dNSName,omitempty"`
 	// The uniform resource identifier.
 	UniformResourceIdentifier *string `json:"uniformResourceIdentifier,omitempty" plist:"uniformResourceIdentifier,omitempty"`
-	// The NT principal name.
+	// The NT principal name. Use an other name OID set to `1.3.6.1.4.1.311.20.2.3`.
 	NtPrincipalName *string `json:"ntPrincipalName,omitempty" plist:"ntPrincipalName,omitempty"`
 }
 
@@ -137,7 +137,7 @@ type SCEPCredentialSubjectAltName struct {
 	DNSName *string `json:"dNSName,omitempty" plist:"dNSName,omitempty"`
 	// The uniform resource identifier.
 	UniformResourceIdentifier *string `json:"uniformResourceIdentifier,omitempty" plist:"uniformResourceIdentifier,omitempty"`
-	// The NT principal name.
+	// The NT principal name. Use an other name OID set to `1.3.6.1.4.1.311.20.2.3`.
 	NtPrincipalName *string `json:"ntPrincipalName,omitempty" plist:"ntPrincipalName,omitempty"`
 }
 
