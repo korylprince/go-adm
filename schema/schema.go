@@ -1,4 +1,4 @@
-//go:generate yamlschemagen -repo "https://github.com/apple/device-management.git" -commit "7d4ba1a2bde50a4053fa5a5e0ed6c17388d82ab2" -path "docs/schema.yaml" -pkg schema -repl ./repls.yaml -out schema.gen.go
+//go:generate /bin/bash -c "yamlschemagen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../GENERATE_SHA)\" -path 'docs/schema.yaml' -pkg schema -repl ./repls.yaml -out schema.gen.go"
 package schema
 
 import (
