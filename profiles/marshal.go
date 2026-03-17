@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/dave/jennifer/jen"
@@ -14,6 +15,9 @@ import (
 	"github.com/korylprince/go-adm/replace"
 	"github.com/korylprince/go-adm/schema"
 )
+
+// these are types that define common keys but are not themselves payload types, so we skip generating the PayloadType method for them
+var genericTypes = []string{"CommonPayloadKeys", "TopLevel"}
 
 type EncodeOption func(*Encoder)
 
@@ -67,15 +71,26 @@ func payloadType(typ schema.Type) string {
 
 func (e *Encoder) Encode(file *schema.File) {
 	e.enc.RegisterFile(file)
-	// FIXME: there are multiple schemas with the same PayloadType (e.g. MCX)
+	// there are multiple schemas with the same PayloadType (e.g. MCX), so first build a map to namespace duplicate keys
+	payloadMap := make(map[string]int)
+	for _, typ := range file.Types {
+		if pt := payloadType(typ); pt != "" {
+			payloadMap[pt] += 1
+		}
+	}
 	// render PayloadType -> struct map
-	// e.f.Var().Id("PayloadMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
-	// 	for _, typ := range file.Types {
-	// 		if pt := payloadType(typ); pt != "" {
-	// 			d[jen.Lit(pt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
-	// 		}
-	// 	}
-	// }))
+	e.f.Var().Id("PayloadMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
+		for _, typ := range file.Types {
+			if pt := payloadType(typ); pt != "" && !slices.Contains(genericTypes, pt) {
+				if payloadMap[pt] > 1 {
+					name := e.enc.Name(typ.PayloadKey(), replace.Struct)
+					d[jen.Lit(fmt.Sprintf("%s.%s", pt, name))] = jen.Id(name).Values()
+				} else {
+					d[jen.Lit(pt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
+				}
+			}
+		}
+	}))
 
 	for _, typ := range file.Types {
 		switch t := typ.(type) {
@@ -84,7 +99,7 @@ func (e *Encoder) Encode(file *schema.File) {
 		case *schema.Struct:
 			e.enc.EncodeStruct(t)
 
-			if pt := payloadType(typ); pt != "" {
+			if pt := payloadType(typ); pt != "" && !slices.Contains(genericTypes, pt) {
 				structName := e.enc.Name(t.Key, replace.Struct)
 				rcvr := jen.Id("p").Op("*").Id(structName)
 				e.f.Func().Parens(rcvr).Id("PayloadType").Parens(nil).String().Block(
