@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/korylprince/go-adm/profiles/profiles"
 	"github.com/korylprince/go-adm/tagutil"
@@ -50,6 +51,42 @@ func initCommonPayloadKeys(payload profiles.ProfilePayload) {
 	}
 }
 
+// flattenWrapperStruct builds a flat map[string]any from a wrapper struct's
+// CommonPayloadKeys fields and Properties map entries.
+func flattenWrapperStruct(v reflect.Value) map[string]any {
+	result := make(map[string]any)
+	if cpk := v.FieldByName("CommonPayloadKeys"); cpk.IsValid() && cpk.Kind() == reflect.Pointer && !cpk.IsNil() {
+		cpkVal := cpk.Elem()
+		cpkType := cpkVal.Type()
+		for j := 0; j < cpkType.NumField(); j++ {
+			field := cpkType.Field(j)
+			tag := field.Tag.Get("plist")
+			if tag == "" || tag == "-" {
+				continue
+			}
+			key, _, _ := strings.Cut(tag, ",")
+			fv := cpkVal.Field(j)
+			if strings.Contains(tag, "omitempty") && fv.IsZero() {
+				continue
+			}
+			if fv.Kind() == reflect.Pointer {
+				if fv.IsNil() {
+					continue
+				}
+				result[key] = fv.Elem().Interface()
+			} else {
+				result[key] = fv.Interface()
+			}
+		}
+	}
+	if props := v.FieldByName("Properties"); props.IsValid() && props.Kind() == reflect.Map && !props.IsNil() {
+		for _, mk := range props.MapKeys() {
+			result[mk.String()] = props.MapIndex(mk).Interface()
+		}
+	}
+	return result
+}
+
 // PlistValue returns a composite type suitable for marshalling to plist.
 func (p *Profile) PlistValue() (any, error) {
 	if p == nil {
@@ -80,8 +117,15 @@ func (p *Profile) PlistValue() (any, error) {
 			return nil, fmt.Errorf("could not set defaults for payload %d: %w", i, err)
 		}
 
-		// dereference pointer so plist library sees a struct value
-		payloads[i] = reflect.ValueOf(payload).Elem().Interface()
+		// Check if this is a wrapper struct (has a Properties map field).
+		// If so, flatten CommonPayloadKeys + Properties into a single map.
+		v := reflect.ValueOf(payload).Elem()
+		if props := v.FieldByName("Properties"); props.IsValid() && props.Kind() == reflect.Map {
+			payloads[i] = flattenWrapperStruct(v)
+		} else {
+			// dereference pointer so plist library sees a struct value
+			payloads[i] = v.Interface()
+		}
 	}
 
 	// Build the top-level struct dynamically, replacing PayloadContent's
@@ -136,6 +180,11 @@ func NewFromType(typ, profileUUID, payloadUUID string) (*Profile, error) {
 	if cpk := v.FieldByName("CommonPayloadKeys"); cpk.IsValid() && cpk.Kind() == reflect.Pointer {
 		cpk.Set(reflect.New(cpk.Type().Elem()))
 		cpk.Elem().FieldByName("PayloadUUID").SetString(payloadUUID)
+	}
+
+	// initialize Properties map for wrapper struct payloads
+	if props := v.FieldByName("Properties"); props.IsValid() && props.Kind() == reflect.Map && props.IsNil() {
+		props.Set(reflect.MakeMap(props.Type()))
 	}
 
 	return &Profile{

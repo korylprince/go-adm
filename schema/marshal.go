@@ -60,9 +60,9 @@ func (e *Encoder) Name(key *PayloadKey, typ replace.ReplacementType) string {
 	return e.normalizeName(e.namer.KeyName(key), typ)
 }
 
-// mapValueType returns the Go type for the value side of a map[string]T
+// MapValueType returns the Go type for the value side of a map[string]T
 // generated from a dictionary with an ANY subkey.
-func (e *Encoder) mapValueType(key *PayloadKey) jen.Code {
+func (e *Encoder) MapValueType(key *PayloadKey) jen.Code {
 	switch key.Type {
 	case PayloadKeyTypeAny:
 		return jen.Any()
@@ -81,7 +81,7 @@ func (e *Encoder) mapValueType(key *PayloadKey) jen.Code {
 			return jen.Id(e.Name(key, replace.Field))
 		}
 		// nested map (ANY subkey within an ANY subkey)
-		return jen.Map(jen.String()).Add(e.mapValueType(key.SubKeys[0]))
+		return jen.Map(jen.String()).Add(e.MapValueType(key.SubKeys[0]))
 	default:
 		panic(fmt.Errorf("ANY <dictionary>: unknown value type: %s", key.Type))
 	}
@@ -118,13 +118,10 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 			return jen.Any()
 		}
 	case PayloadKeyTypeDictionary:
-		// FIXME: handle profile ANY dictionaries better
-		// e.g. com.apple.ManagedClient.preferences.yaml PayloadContent
-		// TopLevel.yaml ConsentTextItem
 		if key.IsStruct() {
 			typ = jen.Id(e.Name(key, replace.Field))
 		} else {
-			typ = jen.Map(jen.String()).Add(e.mapValueType(key.SubKeys[0]))
+			typ = jen.Map(jen.String()).Add(e.MapValueType(key.SubKeys[0]))
 		}
 	case PayloadKeyTypeAny:
 		typ = jen.Any()
@@ -336,5 +333,5 @@ func (e *Encoder) EncodeMap(m *Map) {
 	e.f.Type().
 		Id(mapName).
 		Map(jen.String()).
-		Add(e.mapValueType(m.Key.SubKeys[0]))
+		Add(e.MapValueType(m.Key.SubKeys[0]))
 }
