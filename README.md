@@ -18,9 +18,36 @@ yamlschema is a Go package that contains a YAML Schema (YAML version of [JSON Sc
 
 schema is a Go package that contains a parser (built in part by `yamlschemagen`) for Apple's device management schemas (e.g. commands, profiles, declarative management, etc). It is capable of parsing every schema in [Apple's Device Management repo](https://github.com/apple/device-management) into a [Schema AST](https://pkg.go.dev/github.com/korylprince/go-adm/schema#Schema).
 
+### structgen
+
+`structgen` is a tool to generate Go structs from one or more YAML schema files. It uses the schema parser and supports replacements and required/default struct tags.
+
+### profilegen
+
+`profilegen` generates Go profile payload types from [Apple's device management git repo](https://github.com/apple/device-management). It produces struct and map definitions for all MDM configuration profile payload types.
+
+### cmdgen
+
+`cmdgen` generates Go command types from [Apple's device management git repo](https://github.com/apple/device-management). It produces struct definitions for all MDM command request and response types.
+
+### declgen
+
+`declgen` generates Go declaration types for Declarative Device Management (DDM) from [Apple's device management git repo](https://github.com/apple/device-management). It produces struct definitions for activations, assets, configurations, and management declarations.
+
+### goprofile
+
+`goprofile` is a runtime tool that generates MDM configuration profiles as Go code. It can list all supported payload types or generate a profile with a specific payload type in plist format.
+
+### gocmd
+
+`gocmd` is a runtime tool that generates MDM commands as Go code. It can list all supported command types or generate a command with a specific type in plist format.
+
+### godeclr
+
+`godeclr` is a runtime tool that generates DDM declarations as Go code. It can list all supported declaration types or generate a declaration with a specific type in JSON format.
+
 ## TODO
 
-* Write Go struct generators for commands, profiles, and declarative management schemas
 * Write schema validators for commands, profiles, and declarative management schemas
 
 # YAML Fork
