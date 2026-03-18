@@ -1,4 +1,4 @@
-package declarative
+package gen
 
 import (
 	"bytes"

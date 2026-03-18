@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/korylprince/go-adm/profiles"
+	profiles "github.com/korylprince/go-adm/profiles/gen"
 	"github.com/korylprince/go-adm/replace"
 )
 

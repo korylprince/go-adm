@@ -1,4 +1,4 @@
-package commands
+package gen
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/dave/jennifer/jen"
@@ -13,7 +14,11 @@ import (
 	"github.com/korylprince/go-adm/git"
 	"github.com/korylprince/go-adm/replace"
 	"github.com/korylprince/go-adm/schema"
+	"github.com/korylprince/go-adm/text"
 )
+
+// these are types that define common keys but are not themselves payload types, so we skip generating the PayloadType method for them
+var genericTypes = []string{"CommonPayloadKeys", "TopLevel"}
 
 type EncodeOption func(*Encoder)
 
@@ -49,54 +54,42 @@ func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
 	return e
 }
 
-func requestType(typ schema.Type) string {
+func payloadType(typ schema.Type) string {
 	switch t := typ.(type) {
 	case *schema.Struct:
-		if t.Source != schema.SourcePayloadKeys || t.Schema.Payload == nil || t.Schema.Payload.RequestType == "" {
+		if t.Source != schema.SourcePayloadKeys || t.Schema.Payload == nil || t.Schema.Payload.PayloadType == "" {
 			return ""
 		}
-		return t.Schema.Payload.RequestType
+		return t.Schema.Payload.PayloadType
 	case *schema.Map:
-		if t.Source != schema.SourcePayloadKeys || t.Schema.Payload == nil || t.Schema.Payload.RequestType == "" {
+		if t.Source != schema.SourcePayloadKeys || t.Schema.Payload == nil || t.Schema.Payload.PayloadType == "" {
 			return ""
 		}
-		return t.Schema.Payload.RequestType
-	}
-	return ""
-}
-
-func responseType(typ schema.Type) string {
-	switch t := typ.(type) {
-	case *schema.Struct:
-		if t.Source != schema.SourceResponseKeys || t.Schema.Payload == nil || t.Schema.Payload.RequestType == "" {
-			return ""
-		}
-		return t.Schema.Payload.RequestType
-	case *schema.Map:
-		if t.Source != schema.SourceResponseKeys || t.Schema.Payload == nil || t.Schema.Payload.RequestType == "" {
-			return ""
-		}
-		return t.Schema.Payload.RequestType
+		return t.Schema.Payload.PayloadType
 	}
 	return ""
 }
 
 func (e *Encoder) Encode(file *schema.File) {
 	e.enc.RegisterFile(file)
-	// render RequestType -> request struct map
-	e.f.Var().Id("CommandMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
-		for _, typ := range file.Types {
-			if dt := requestType(typ); dt != "" {
-				d[jen.Lit(dt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
-			}
-		}
-	}))
 
-	// render RequestType -> response struct map
-	e.f.Var().Id("ResponseMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
+	// there are multiple schemas with the same PayloadType (e.g. MCX), so first build a map to namespace duplicate keys
+	payloadMap := make(map[string]int)
+	for _, typ := range file.Types {
+		if pt := payloadType(typ); pt != "" {
+			payloadMap[pt] += 1
+		}
+	}
+	// render PayloadType -> struct map
+	e.f.Var().Id("PayloadMap").Op("=").Map(jen.String()).Any().Values(jen.DictFunc(func(d jen.Dict) {
 		for _, typ := range file.Types {
-			if dt := responseType(typ); dt != "" {
-				d[jen.Lit(dt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
+			if pt := payloadType(typ); pt != "" && !slices.Contains(genericTypes, pt) {
+				if payloadMap[pt] > 1 {
+					name := e.enc.Name(typ.PayloadKey(), replace.Struct)
+					d[jen.Lit(fmt.Sprintf("%s.%s", pt, name))] = jen.Id(name).Values()
+				} else {
+					d[jen.Lit(pt)] = jen.Id(e.enc.Name(typ.PayloadKey(), replace.Struct)).Values()
+				}
 			}
 		}
 	}))
@@ -106,27 +99,45 @@ func (e *Encoder) Encode(file *schema.File) {
 		case *schema.Enum:
 			e.enc.EncodeEnum(t)
 		case *schema.Struct:
-			e.enc.EncodeStruct(t)
+			structName := e.enc.Name(t.Key, replace.Struct)
 
-			if rt := requestType(typ); rt != "" {
-				structName := e.enc.Name(t.Key, replace.Struct)
+			if pt := payloadType(typ); pt != "" && !slices.Contains(genericTypes, pt) {
+				e.enc.EncodeStruct(t, schema.WithStructEmbeds(jen.Op("*").Id("CommonPayloadKeys")))
+
 				rcvr := jen.Id("p").Op("*").Id(structName)
-				e.f.Func().Parens(rcvr).Id("RequestType").Parens(nil).String().Block(
-					jen.Return().Lit(rt),
+				e.f.Func().Parens(rcvr).Id("PayloadType").Parens(nil).String().Block(
+					jen.Return().Lit(pt),
 				)
+			} else if structName == "TopLevel" {
+				e.enc.EncodeStruct(t, schema.WithStructFieldTypeOverride("PayloadContent", jen.Index().Id("ProfilePayload")))
+			} else {
+				e.enc.EncodeStruct(t)
 			}
-			if rt := responseType(typ); rt != "" {
-				structName := e.enc.Name(t.Key, replace.Struct)
-				rcvr := jen.Id("p").Op("*").Id(structName)
-				e.f.Func().Parens(rcvr).Id("ResponseRequestType").Parens(nil).String().Block(
-					jen.Return().Lit(rt),
+		case *schema.Map:
+			if pt := payloadType(typ); pt != "" {
+				// Generate a wrapper struct with CommonPayloadKeys and a Properties map
+				// instead of a raw map type, so the common keys can be embedded.
+				mapName := e.enc.Name(t.Key, replace.Struct)
+				if doc := strings.TrimSpace(t.Key.Content); doc != "" {
+					e.f.Comment(text.DocComment(t.Key.Content))
+				}
+				e.f.Type().Id(mapName).Struct(
+					jen.Op("*").Id("CommonPayloadKeys"),
+					jen.Id("Properties").Map(jen.String()).Add(e.enc.MapValueType(t.Key.SubKeys[0])),
 				)
+
+				rcvr := jen.Id("p").Op("*").Id(mapName)
+				e.f.Func().Parens(rcvr).Id("PayloadType").Parens(nil).String().Block(
+					jen.Return().Lit(pt),
+				)
+			} else {
+				e.enc.EncodeMap(t)
 			}
 		}
 	}
 }
 
-// GenerateFromGit generates Go types from the command schema at the git repo/commit/path using the optional replacements
+// GenerateFromGit generates Go types from the profile schema at the git repo/commit/path using the optional replacements
 // and outputs it at the given directory
 func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, output string, opts ...EncodeOption) error {
 	repo, err := git.New(repoURL, commit)
@@ -173,7 +184,6 @@ func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, ou
 
 	file := schema.NewFile(schemas,
 		schema.WithIncludeEmptyPayloadKeys(true),
-		schema.WithIncludeEmptyResponseKeys(true),
 	)
 	opts = append([]EncodeOption{WithReplacements(reps)}, opts...)
 	NewEncoder(f, opts...).Encode(file)

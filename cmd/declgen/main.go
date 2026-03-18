@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	declarations "github.com/korylprince/go-adm/declarative"
+	declarations "github.com/korylprince/go-adm/declarative/gen"
 	"github.com/korylprince/go-adm/replace"
 )
 
