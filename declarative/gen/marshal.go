@@ -23,6 +23,12 @@ func WithReplacements(reps replace.Replacements) EncodeOption {
 	}
 }
 
+func WithTags(tags []string) EncodeOption {
+	return func(e *Encoder) {
+		e.tags = tags
+	}
+}
+
 func WithRequiredDefault() EncodeOption {
 	return func(e *Encoder) {
 		e.reqDefTags = true
@@ -32,16 +38,20 @@ func WithRequiredDefault() EncodeOption {
 type Encoder struct {
 	f          *jen.File
 	reps       replace.Replacements
+	tags       []string
 	reqDefTags bool
 	enc        *schema.Encoder
 }
 
 func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
-	e := &Encoder{f: f}
+	e := &Encoder{f: f, tags: []string{"json"}}
 	for _, opt := range opts {
 		opt(e)
 	}
-	sOpts := []schema.EncodeOption{schema.WithReplacements(e.reps)}
+	sOpts := []schema.EncodeOption{
+		schema.WithReplacements(e.reps),
+		schema.WithTags(e.tags),
+	}
 	if e.reqDefTags {
 		sOpts = append(sOpts, schema.WithRequiredDefault())
 	}

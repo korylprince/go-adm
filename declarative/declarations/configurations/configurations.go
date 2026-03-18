@@ -43,15 +43,15 @@ var DeclarationMap = map[string]any{
 // A CalDAV configuration defines a CalDAV calendar and reminders account for a user.
 type AccountCalDAV struct {
 	// The name that apps show to the user for this calendar account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The hostname or IP address of the CalDAV server.
-	HostName string `json:"HostName" plist:"HostName" required:"true"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the CalDAV server.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The path for the CalDAV server.
-	Path *string `json:"Path,omitempty" plist:"Path,omitempty"`
+	Path *string `json:"Path,omitempty"`
 	// The identifier of an asset declaration that contains the credentials for this account. Set the corresponding asset type to `CredentialUserNameAndPassword`.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
 
 func (p *AccountCalDAV) DeclarationType() string {
@@ -62,15 +62,15 @@ func (p *AccountCalDAV) DeclarationType() string {
 // A CardDAV configuration defines a CardDAV contacts account for a user.
 type AccountCardDAV struct {
 	// The name that apps show to the user for this address book account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The hostname or IP address of the CardDAV server.
-	HostName string `json:"HostName" plist:"HostName" required:"true"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the CardDAV server.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The path for the CardDAV server.
-	Path *string `json:"Path,omitempty" plist:"Path,omitempty"`
+	Path *string `json:"Path,omitempty"`
 	// The identifier of an asset declaration that contains the credentials for this account. Set the corresponding asset type to `CredentialUserNameAndPassword`.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
 
 func (p *AccountCardDAV) DeclarationType() string {
@@ -81,55 +81,55 @@ func (p *AccountCardDAV) DeclarationType() string {
 // This payload configures an Exchange ActiveSync account on an iOS device.
 type AccountExchange struct {
 	// The name that apps show to the user for this Exchange account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The set of protocol types to enable on the Exchange server, in order of preference. This is an array of unique strings with possible values:
 	// - `EAS:` Exchange ActiveSync
 	// - `EWS:` Exchange Web Services
 	// If the device supports one or more of the listed protocol types, it sets up an account for the first supported type.
 	// If the device doesn't support any of the listed protocol types, it doesn't set up an account and the system reports an error.
-	EnabledProtocolTypes []EnabledProtocolTypes `json:"EnabledProtocolTypes" plist:"EnabledProtocolTypes" required:"true"`
+	EnabledProtocolTypes []EnabledProtocolTypes `json:"EnabledProtocolTypes" required:"true"`
 	// The identifier of an asset declaration that contains the user identity for this account. The corresponding asset must be of type `UserIdentity`.
-	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty" plist:"UserIdentityAssetReference,omitempty"`
+	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty"`
 	// The IP address or fully qualified domain name (FQDN) of the Exchange host.
-	HostName *string `json:"HostName,omitempty" plist:"HostName,omitempty"`
+	HostName *string `json:"HostName,omitempty"`
 	// The port number of the EWS server. The system uses this only when this declaration has a `HostName` value.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The path of the EWS server. The system uses this only when this declaration has a `HostName` value.
-	Path *string `json:"Path,omitempty" plist:"Path,omitempty"`
+	Path *string `json:"Path,omitempty"`
 	// The external hostname of the EWS server (or IP address).
-	ExternalHostName *string `json:"ExternalHostName,omitempty" plist:"ExternalHostName,omitempty"`
+	ExternalHostName *string `json:"ExternalHostName,omitempty"`
 	// The external port number of the EWS server. The system uses this only when this declaration has a `ExternalHostName` value.
-	ExternalPort *int64 `json:"ExternalPort,omitempty" plist:"ExternalPort,omitempty"`
+	ExternalPort *int64 `json:"ExternalPort,omitempty"`
 	// The external path of the EWS server. The system uses this only when this declaration has a `ExternalHostName` value.
-	ExternalPath *string `json:"External Path,omitempty" plist:"External Path,omitempty"`
+	ExternalPath *string `json:"External Path,omitempty"`
 	// The configuration settings for OAuth for this account.
-	OAuth *OAuth `json:"OAuth,omitempty" plist:"OAuth,omitempty"`
+	OAuth *OAuth `json:"OAuth,omitempty"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with an Exchange server. Set the corresponding asset type to `CredentialUserNameAndPassword`.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 	// The identifier of a credential asset declaration that contains the identity that this account requires to authenticate with the Exchange server.
-	AuthenticationIdentityAssetReference *string `json:"AuthenticationIdentityAssetReference,omitempty" plist:"AuthenticationIdentityAssetReference,omitempty"`
+	AuthenticationIdentityAssetReference *string `json:"AuthenticationIdentityAssetReference,omitempty"`
 	// Settings for S/MIME.
-	SMIME *AccountExchangeSMIME `json:"SMIME,omitempty" plist:"SMIME,omitempty"`
+	SMIME *AccountExchangeSMIME `json:"SMIME,omitempty"`
 	// If `true`, the system activates the mail service for this account.
-	MailServiceActive *bool `json:"MailServiceActive,omitempty" plist:"MailServiceActive,omitempty"`
+	MailServiceActive *bool `json:"MailServiceActive,omitempty"`
 	// If `true`, the system prevents the user from changing the status of the mail service for this account.
-	LockMailService *bool `json:"LockMailService,omitempty" plist:"LockMailService,omitempty"`
+	LockMailService *bool `json:"LockMailService,omitempty"`
 	// If `true`, activates the address book service for this account.
-	ContactsServiceActive *bool `json:"ContactsServiceActive,omitempty" plist:"ContactsServiceActive,omitempty"`
+	ContactsServiceActive *bool `json:"ContactsServiceActive,omitempty"`
 	// If `true`, the system prevents the user from changing the status of the address book service for this account.
-	LockContactsService *bool `json:"LockContactsService,omitempty" plist:"LockContactsService,omitempty"`
+	LockContactsService *bool `json:"LockContactsService,omitempty"`
 	// If `true`, activates the calendar service for this account.
-	CalendarServiceActive *bool `json:"CalendarServiceActive,omitempty" plist:"CalendarServiceActive,omitempty"`
+	CalendarServiceActive *bool `json:"CalendarServiceActive,omitempty"`
 	// If `true`, the system prevents the user from changing the status of the calendar service for this account.
-	LockCalendarService *bool `json:"LockCalendarService,omitempty" plist:"LockCalendarService,omitempty"`
+	LockCalendarService *bool `json:"LockCalendarService,omitempty"`
 	// If `true`, the system activates the reminders service for this account.
-	RemindersServiceActive *bool `json:"RemindersServiceActive,omitempty" plist:"RemindersServiceActive,omitempty"`
+	RemindersServiceActive *bool `json:"RemindersServiceActive,omitempty"`
 	// If `true`, the system prevents the user from changing the status of the reminders service for this account.
-	LockRemindersService *bool `json:"LockRemindersService,omitempty" plist:"LockRemindersService,omitempty"`
+	LockRemindersService *bool `json:"LockRemindersService,omitempty"`
 	// If `true`, the system activates the notes service for this account.
-	NotesServiceActive *bool `json:"NotesServiceActive,omitempty" plist:"NotesServiceActive,omitempty"`
+	NotesServiceActive *bool `json:"NotesServiceActive,omitempty"`
 	// If `true`, the system prevents the user from changing the status of the notes service for this account.
-	LockNotesService *bool `json:"LockNotesService,omitempty" plist:"LockNotesService,omitempty"`
+	LockNotesService *bool `json:"LockNotesService,omitempty"`
 }
 
 func (p *AccountExchange) DeclarationType() string {
@@ -151,54 +151,54 @@ const (
 // The configuration settings for OAuth for this account.
 type OAuth struct {
 	// If `true`, enables OAuth for this account.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// The URL that this account uses for signing in with OAuth. The system ignores this value unless `Enabled` is `true`. The system doesn't use autodiscovery when a declaration contains this URL, so the declaration must also contain a `HostName`.
-	SignInURL *string `json:"SignInURL,omitempty" plist:"SignInURL,omitempty"`
+	SignInURL *string `json:"SignInURL,omitempty"`
 	// The URL that this account uses for token requests with OAuth. The system ignores this value unless `Enabled` is `true`.
-	TokenRequestURL *string `json:"TokenRequestURL,omitempty" plist:"TokenRequestURL,omitempty"`
+	TokenRequestURL *string `json:"TokenRequestURL,omitempty"`
 }
 
 // Settings for S/MIME.
 type AccountExchangeSMIME struct {
 	// Settings for S/MIME signing.
-	Signing *AccountExchangeSMIMESigning `json:"Signing,omitempty" plist:"Signing,omitempty"`
+	Signing *AccountExchangeSMIMESigning `json:"Signing,omitempty"`
 	// Settings for S/MIME encryption.
-	Encryption *AccountExchangeSMIMEEncryption `json:"Encryption,omitempty" plist:"Encryption,omitempty"`
+	Encryption *AccountExchangeSMIMEEncryption `json:"Encryption,omitempty"`
 }
 
 // Settings for S/MIME signing.
 type AccountExchangeSMIMESigning struct {
 	// If `true`, the system enables S/MIME signing.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME signing of messages sent from this account.
-	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty" plist:"IdentityAssetReference,omitempty"`
+	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If `true`, the user can turn S/MIME signing on or off in Settings.
-	UserOverrideable *bool `json:"UserOverrideable,omitempty" plist:"UserOverrideable,omitempty"`
+	UserOverrideable *bool `json:"UserOverrideable,omitempty"`
 	// If `true`, the user can select an S/MIME signing identity in Settings.
-	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty" plist:"IdentityUserOverrideable,omitempty"`
+	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty"`
 }
 
 // Settings for S/MIME encryption.
 type AccountExchangeSMIMEEncryption struct {
 	// If `true`, the system enables S/MIME encryption by default, which the user can't override if `PerMessageSwitchEnabled` is `false`.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME encryption. The system attaches the public certificate to outgoing mail to allow the user to receive encrypted mail. When the user sends encrypted mail, the system uses the public certificate to encrypt the copy of the mail in their Sent mailbox.
-	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty" plist:"IdentityAssetReference,omitempty"`
+	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If `true`, the user can turn S/MIME encryption by default on or off in Settings.
-	UserOverrideable *bool `json:"UserOverrideable,omitempty" plist:"UserOverrideable,omitempty"`
+	UserOverrideable *bool `json:"UserOverrideable,omitempty"`
 	// If `true`, the user can select an S/MIME signing identity in Settings.
-	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty" plist:"IdentityUserOverrideable,omitempty"`
+	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty"`
 	// If `true`, the system enables the per-message encryption switch in the compose view.
-	PerMessageSwitchEnabled *bool `json:"PerMessageSwitchEnabled,omitempty" plist:"PerMessageSwitchEnabled,omitempty"`
+	PerMessageSwitchEnabled *bool `json:"PerMessageSwitchEnabled,omitempty"`
 }
 
 // The declaration to configure a Google account.
 // A Google configuration defines a Google account for a user. The user will be prompted to enter their credentials shortly after the configuration successfully installs.
 type AccountGoogle struct {
 	// The name that apps show to the user for this Google account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The identifier of an asset declaration that contains the user identity for this Google account. Set the corresponding asset type to `UserIdentity` and ensure that it contains an `EmailAddress` key that specifies the full Google email address for the account.
-	UserIdentityAssetReference string `json:"UserIdentityAssetReference" plist:"UserIdentityAssetReference" required:"true"`
+	UserIdentityAssetReference string `json:"UserIdentityAssetReference" required:"true"`
 }
 
 func (p *AccountGoogle) DeclarationType() string {
@@ -209,15 +209,15 @@ func (p *AccountGoogle) DeclarationType() string {
 // An LDAP configuration defines an LDAP directory account for a user.
 type AccountLDAP struct {
 	// The name that apps show to the user for this LDAP account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The hostname or IP address of the LDAP server.
-	HostName string `json:"HostName" plist:"HostName" required:"true"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number or IP address of the LDAP server.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The identifier of an asset declaration that contains the credentials for this account. Set the corresponding asset type to `CredentialUserNameAndPassword`.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 	// The array of nodes to start LDAP searches from. There must be at least one node for this account to be useful. macOS only searches one node and ignores other items in the array.
-	SearchSettings *[]*SearchSettingsItem `json:"SearchSettings,omitempty" plist:"SearchSettings,omitempty"`
+	SearchSettings *[]*SearchSettingsItem `json:"SearchSettings,omitempty"`
 }
 
 func (p *AccountLDAP) DeclarationType() string {
@@ -226,14 +226,14 @@ func (p *AccountLDAP) DeclarationType() string {
 
 type SearchSettingsItem struct {
 	// The description of this search setting in the Contacts and Settings apps. If not present, the apps display no name.
-	VisibleDescription *string `json:"VisibleDescription,omitempty" plist:"VisibleDescription,omitempty"`
+	VisibleDescription *string `json:"VisibleDescription,omitempty"`
 	// The path to the node where a search starts. For example, `ou=people,o=example corp`.
-	SearchBase string `json:"SearchBase" plist:"SearchBase" required:"true"`
+	SearchBase string `json:"SearchBase" required:"true"`
 	// The type of recursion to use in the search:
 	// - `Base`: The search uses only the `SearchBase` node.
 	// - `OneLevel`: The search uses the `SearchBase` node and its immediate children.
 	// - `Subtree`: The search uses the `SearchBase` node and all its children, regardless of depth.
-	Scope *Scope `default:"Subtree" json:"Scope,omitempty" plist:"Scope,omitempty"`
+	Scope *Scope `default:"Subtree" json:"Scope,omitempty"`
 }
 
 // The type of recursion to use in the search:
@@ -252,15 +252,15 @@ const (
 // An email configuration defines an email account for a user.
 type AccountMail struct {
 	// The name that apps show to the user for this mail account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The identifier of an asset declaration that contains the user identity for this account. Set the corresponding asset type to `UserIdentity`.
-	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty" plist:"UserIdentityAssetReference,omitempty"`
+	UserIdentityAssetReference *string `json:"UserIdentityAssetReference,omitempty"`
 	// The settings for the incoming mail server for this account.
-	IncomingServer IncomingServer `json:"IncomingServer" plist:"IncomingServer" required:"true"`
+	IncomingServer IncomingServer `json:"IncomingServer" required:"true"`
 	// The settings for the outgoing mail server for this account.
-	OutgoingServer OutgoingServer `json:"OutgoingServer" plist:"OutgoingServer" required:"true"`
+	OutgoingServer OutgoingServer `json:"OutgoingServer" required:"true"`
 	// Settings for S/MIME.
-	SMIME *AccountMailSMIME `json:"SMIME,omitempty" plist:"SMIME,omitempty"`
+	SMIME *AccountMailSMIME `json:"SMIME,omitempty"`
 }
 
 func (p *AccountMail) DeclarationType() string {
@@ -270,18 +270,18 @@ func (p *AccountMail) DeclarationType() string {
 // The settings for the incoming mail server for this account.
 type IncomingServer struct {
 	// The mail protocol this account uses.
-	ServerType ServerType `json:"ServerType" plist:"ServerType" required:"true"`
+	ServerType ServerType `json:"ServerType" required:"true"`
 	// The host name for the incoming mail server.
-	HostName string `json:"HostName" plist:"HostName" required:"true"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the incoming mail server.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The authentication method for the incoming mail server.
-	AuthenticationMethod IncomingServerAuthenticationMethod `json:"AuthenticationMethod" plist:"AuthenticationMethod" required:"true"`
+	AuthenticationMethod IncomingServerAuthenticationMethod `json:"AuthenticationMethod" required:"true"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with an incoming mail server. The corresponding asset must be of type `CredentialUserNameAndPassword`.
 	// If the `AuthenticationMethod` is `None`, this field must be blank. Otherwise, the declaration must contain this field.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 	// The path prefix for the IMAP server. The system uses this only when `ServerType` is `IMAP`.
-	IMAPPathPrefix *string `json:"IMAPPathPrefix,omitempty" plist:"IMAPPathPrefix,omitempty"`
+	IMAPPathPrefix *string `json:"IMAPPathPrefix,omitempty"`
 }
 
 // The mail protocol this account uses.
@@ -306,14 +306,14 @@ const (
 // The settings for the outgoing mail server for this account.
 type OutgoingServer struct {
 	// The host name for the outgoing mail server.
-	HostName string `json:"HostName" plist:"HostName" required:"true"`
+	HostName string `json:"HostName" required:"true"`
 	// The port number for the outgoing mail server.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The authentication method for the outgoing mail server.
-	AuthenticationMethod OutgoingServerAuthenticationMethod `json:"AuthenticationMethod" plist:"AuthenticationMethod" required:"true"`
+	AuthenticationMethod OutgoingServerAuthenticationMethod `json:"AuthenticationMethod" required:"true"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with an outgoing mail server. The corresponding asset must be of type `CredentialUserNameAndPassword`.
 	// If the `AuthenticationMethod` is `None`, this field must be blank. Otherwise, the declaration must contain this field.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
 
 // The authentication method for the outgoing mail server.
@@ -330,46 +330,46 @@ const (
 // Settings for S/MIME.
 type AccountMailSMIME struct {
 	// Settings for S/MIME signing.
-	Signing *AccountMailSMIMESigning `json:"Signing,omitempty" plist:"Signing,omitempty"`
+	Signing *AccountMailSMIMESigning `json:"Signing,omitempty"`
 	// Settings for S/MIME encryption.
-	Encryption *AccountMailSMIMEEncryption `json:"Encryption,omitempty" plist:"Encryption,omitempty"`
+	Encryption *AccountMailSMIMEEncryption `json:"Encryption,omitempty"`
 }
 
 // Settings for S/MIME signing.
 type AccountMailSMIMESigning struct {
 	// If `true`, the system enables S/MIME signing.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME signing of messages sent from this account.
-	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty" plist:"IdentityAssetReference,omitempty"`
+	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If `true`, the user can turn S/MIME signing on or off in Settings.
-	UserOverrideable *bool `json:"UserOverrideable,omitempty" plist:"UserOverrideable,omitempty"`
+	UserOverrideable *bool `json:"UserOverrideable,omitempty"`
 	// If `true`, the user can select an S/MIME signing identity in Settings.
-	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty" plist:"IdentityUserOverrideable,omitempty"`
+	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty"`
 }
 
 // Settings for S/MIME encryption.
 type AccountMailSMIMEEncryption struct {
 	// If `true`, the system enables S/MIME encryption by default, which the user can't override if `PerMessageSwitchEnabled` is `false`.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 	// Specifies the identifier of an asset declaration containing the identity required for S/MIME encryption. The system attaches the public certificate to outgoing mail to allow the user to receive encrypted mail. When the user sends encrypted mail, the system uses the public certificate to encrypt the copy of the mail in their Sent mailbox.
-	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty" plist:"IdentityAssetReference,omitempty"`
+	IdentityAssetReference *string `json:"IdentityAssetReference,omitempty"`
 	// If `true`, the user can set the default value for S/MIME encryption to on or off in Settings.
-	UserOverrideable *bool `json:"UserOverrideable,omitempty" plist:"UserOverrideable,omitempty"`
+	UserOverrideable *bool `json:"UserOverrideable,omitempty"`
 	// If `true`, the user can select an S/MIME signing identity in Settings.
-	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty" plist:"IdentityUserOverrideable,omitempty"`
+	IdentityUserOverrideable *bool `json:"IdentityUserOverrideable,omitempty"`
 	// If `true`, the system enables the per-message encryption switch in the compose view.
-	PerMessageSwitchEnabled *bool `json:"PerMessageSwitchEnabled,omitempty" plist:"PerMessageSwitchEnabled,omitempty"`
+	PerMessageSwitchEnabled *bool `json:"PerMessageSwitchEnabled,omitempty"`
 }
 
 // The declaration to configure a subscribed calendar.
 // A subscribed calendar configuration defines a subscribed calendar for a user.
 type AccountSubscribedCalendar struct {
 	// The name that apps show to the user for this calendar account. If not present, the system generates a suitable default.
-	VisibleName *string `json:"VisibleName,omitempty" plist:"VisibleName,omitempty"`
+	VisibleName *string `json:"VisibleName,omitempty"`
 	// The URL of the subscribed calendar, which needs to start with `https://`.
-	CalendarURL string `json:"CalendarURL" plist:"CalendarURL" required:"true"`
+	CalendarURL string `json:"CalendarURL" required:"true"`
 	// The identifier of an asset declaration that contains the credentials for this account to authenticate with a calendar server. Set the corresponding asset type to `CredentialUserNameAndPassword`.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
 
 func (p *AccountSubscribedCalendar) DeclarationType() string {
@@ -380,14 +380,14 @@ func (p *AccountSubscribedCalendar) DeclarationType() string {
 type AppManaged struct {
 	// The App Store ID of the managed app that is downloaded from the App Store.
 	// Only one of `AppStoreID`, `BundleID`, `ManifestURL`, or `AppComposedIdentifier` needs to be present.
-	AppStoreID *string `json:"AppStoreID,omitempty" plist:"AppStoreID,omitempty"`
+	AppStoreID *string `json:"AppStoreID,omitempty"`
 	// The bundle ID of the managed app that is downloaded from the App Store.
 	// Only one of `AppStoreID`, `BundleID`, `ManifestURL`, or `AppComposedIdentifier` needs to be present.
-	BundleID *string `json:"BundleID,omitempty" plist:"BundleID,omitempty"`
+	BundleID *string `json:"BundleID,omitempty"`
 	// The URL of the manifest for the managed app that the device downloads from a web site. The manifest is returned as a `ManifestURL` property list.
 	// Only one of `AppStoreID`, `BundleID`, `ManifestURL`, or `AppComposedIdentifier` needs to be present.
 	// Available only in iOS and visionOS.
-	ManifestURL *string `json:"ManifestURL,omitempty" plist:"ManifestURL,omitempty"`
+	ManifestURL *string `json:"ManifestURL,omitempty"`
 	// A string that specifies the composed identifier of an existing app that needs to be managed. The device uses this to take over management of an app installed by some other process, for example installed manually by the user, or via a package configuration. If the app isn't present when the device applies the configuration, the device takes over management of it when it does install.
 	// The following rules apply when the device takes over management:
 	// - If the `InstallBehavior.Install` key is set to `Required`, the device takes over management of the app.
@@ -395,30 +395,30 @@ type AppManaged struct {
 	// The format of the composed identifier is either "Bundle-ID (Team-ID)" or "Bundle-ID {Designated-Requirement}". For example, `com.example.app (ABCD1234)` for the team ID format, or `com.example.app {anchor apple generic}` for the designated requirement format. Management of the app occurs only if its code signature matches the composed identifier.
 	// In macOS, only one of `AppStoreID`, `BundleID`, or `AppComposedIdentifier` needs to be present.
 	// Available only in macOS.
-	AppComposedIdentifier *string `json:"AppComposedIdentifier,omitempty" plist:"AppComposedIdentifier,omitempty"`
+	AppComposedIdentifier *string `json:"AppComposedIdentifier,omitempty"`
 	// If `true`, the device installs an iOS or iPadOS app that runs on a Mac with Apple Silicon. This is only used when the app is an App Store app.
 	// Available only in macOS.
-	IOSApp *bool `json:"iOSApp,omitempty" plist:"iOSApp,omitempty"`
+	IOSApp *bool `json:"iOSApp,omitempty"`
 	// A dictionary that describes how and when to install the app.
-	InstallBehavior *AppManagedInstallBehavior `json:"InstallBehavior,omitempty" plist:"InstallBehavior,omitempty"`
+	InstallBehavior *AppManagedInstallBehavior `json:"InstallBehavior,omitempty"`
 	// A dictionary that specifies how the device updates apps.
-	UpdateBehavior *UpdateBehavior `json:"UpdateBehavior,omitempty" plist:"UpdateBehavior,omitempty"`
+	UpdateBehavior *UpdateBehavior `json:"UpdateBehavior,omitempty"`
 	// If `true`, backups contain the app and its data.
 	// Available only in iOS and visionOS.
-	IncludeInBackup *bool `json:"IncludeInBackup,omitempty" plist:"IncludeInBackup,omitempty"`
+	IncludeInBackup *bool `json:"IncludeInBackup,omitempty"`
 	// A dictionary of values to associate with the app.
 	// Available only in iOS and visionOS.
-	Attributes *Attributes `json:"Attributes,omitempty" plist:"Attributes,omitempty"`
+	Attributes *Attributes `json:"Attributes,omitempty"`
 	// A dictionary of app config data and credentials.
 	// Available only in iOS and visionOS.
-	AppConfig *AppConfig `json:"AppConfig,omitempty" plist:"AppConfig,omitempty"`
+	AppConfig *AppConfig `json:"AppConfig,omitempty"`
 	// A dictionary of extension config data and credentials.
 	// Available only in iOS and visionOS.
-	ExtensionConfigs *map[string]AppConfigDictionary `json:"ExtensionConfigs,omitempty" plist:"ExtensionConfigs,omitempty"`
+	ExtensionConfigs *map[string]AppConfigDictionary `json:"ExtensionConfigs,omitempty"`
 	// The identifier of an asset declaration containing a reference to the app config data. The device provides the app config data to the app using the MDMv1 behavior. The corresponding asset needs to be of type `com.apple.asset.data`. The referenced data needs to be a property list file, and the asset's "ContentType"
 	// value set to match the data type.
 	// Available only in iOS and visionOS.
-	LegacyAppConfigAssetReference *string `json:"LegacyAppConfigAssetReference,omitempty" plist:"LegacyAppConfigAssetReference,omitempty"`
+	LegacyAppConfigAssetReference *string `json:"LegacyAppConfigAssetReference,omitempty"`
 }
 
 func (p *AppManaged) DeclarationType() string {
@@ -431,9 +431,9 @@ type AppManagedInstallBehavior struct {
 	// - `Optional`: The user can install and remove the app after the system activates the configuration.
 	// - `Required`: The system installs the app after it activates the configuration. The user can't remove the app.
 	// The system automatically installs apps on supervised devices. Otherwise, the device prompts the user to approve installation of the app.
-	Install *AppManagedInstallBehaviorInstall `default:"Optional" json:"Install,omitempty" plist:"Install,omitempty"`
+	Install *AppManagedInstallBehaviorInstall `default:"Optional" json:"Install,omitempty"`
 	// A dictionary that describes the app's license.
-	License *License `json:"License,omitempty" plist:"License,omitempty"`
+	License *License `json:"License,omitempty"`
 	// The App Store external version identifier (EVID) of the version of the app the device installs. You can retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`. This key is ignored if the app isn't an App Store app.
 	// The following rules apply when the device applies or updates the configuration:
 	// - If this key isn't present:
@@ -446,14 +446,14 @@ type AppManagedInstallBehavior struct {
 	// - If an app with a newer version is present, the device doesn't take over management of the app. The device reports an app status failure.
 	// > Note:
 	// > The device never installs an older version of the app over a newer version.
-	Version *int64 `json:"Version,omitempty" plist:"Version,omitempty"`
+	Version *int64 `json:"Version,omitempty"`
 	// Indicates how the device uses a cellular network when it downloads the app for automatic install or update operations:
 	// - `AlwaysOn`: The device downloads apps of any size using a cellular network.
 	// - `AlwaysOff`: The device doesn't download apps using a cellular network. The device pauses the automatic install or update operation until a different network is active.
 	// - `StoreSettings`: The device uses the settings for the corresponding store when downloading apps.
 	// The device always uses the store settings to download apps when the install or update operation is user initiated.
 	// Available only in iOS.
-	AllowDownloadsOverCellular *AllowDownloadsOverCellular `default:"StoreSettings" json:"AllowDownloadsOverCellular,omitempty" plist:"AllowDownloadsOverCellular,omitempty"`
+	AllowDownloadsOverCellular *AllowDownloadsOverCellular `default:"StoreSettings" json:"AllowDownloadsOverCellular,omitempty"`
 }
 
 // A string that specifies if the app needs to remain on the device at all times or if the user can freely install and remove it, which is one of the following values:
@@ -473,12 +473,12 @@ type License struct {
 	// - `Device`: The app has a device license.
 	// - `User`: The app has a user license.
 	// This key needs to be present for App Store apps, when either `AppStoreID` or `BundleID` are present in the configuration.
-	Assignment *Assignment `json:"Assignment,omitempty" plist:"Assignment,omitempty"`
+	Assignment *Assignment `json:"Assignment,omitempty"`
 	// The type of VPP license that the app uses for installation through the App Store, which is one of the following values:
 	// - `Device`: The app has a VPP device license.
 	// - `User`: The app has a VPP user license.
 	// This key needs to be present to install an app through the App Store.
-	VPPType *VPPType `json:"VPPType,omitempty" plist:"VPPType,omitempty"`
+	VPPType *VPPType `json:"VPPType,omitempty"`
 }
 
 // The type of license that the app uses for installation through the App Store, which is one of the following values:
@@ -525,7 +525,7 @@ type UpdateBehavior struct {
 	// - `StoreSettings`: The device uses the settings for the corresponding store to determine when to automatically update the app. For Enterprise apps, this setting behaves the same as `AlwaysOff`.
 	// When the `InstallBehavior.Version` key is specified, the device ignores this key and Automatic App Updates are disabled.
 	// In macOS, the device ignores this setting if the `AppComposedIdentifier` key is set in the configuration.
-	AutomaticAppUpdates AutomaticAppUpdates `json:"AutomaticAppUpdates" plist:"AutomaticAppUpdates" required:"true"`
+	AutomaticAppUpdates AutomaticAppUpdates `json:"AutomaticAppUpdates" required:"true"`
 }
 
 // Specifies whether the device automatically updates the app:
@@ -546,80 +546,80 @@ const (
 // Available only in iOS and visionOS.
 type Attributes struct {
 	// An array of domain names to associate with the app.
-	AssociatedDomains *[]string `json:"AssociatedDomains,omitempty" plist:"AssociatedDomains,omitempty"`
+	AssociatedDomains *[]string `json:"AssociatedDomains,omitempty"`
 	// If `true`, the system enables direct downloads for the `AssociatedDomains`.
-	AssociatedDomainsEnableDirectDownloads *bool `json:"AssociatedDomainsEnableDirectDownloads,omitempty" plist:"AssociatedDomainsEnableDirectDownloads,omitempty"`
+	AssociatedDomainsEnableDirectDownloads *bool `json:"AssociatedDomainsEnableDirectDownloads,omitempty"`
 	// The cellular slice identifier, which can be the data network name (DNN) or app category. For DNN, encode the value as "DNN:name", where "name" is the carrier-provided DNN name. For app category, encode the value as "AppCategory:category", where "category" is a carrier-provided string such as "Enterprise1".
-	CellularSliceUUID *string `json:"CellularSliceUUID,omitempty" plist:"CellularSliceUUID,omitempty"`
+	CellularSliceUUID *string `json:"CellularSliceUUID,omitempty"`
 	// The UUID of the content filter to associate with the app.
-	ContentFilterUUID *string `json:"ContentFilterUUID,omitempty" plist:"ContentFilterUUID,omitempty"`
+	ContentFilterUUID *string `json:"ContentFilterUUID,omitempty"`
 	// The UUID of the DNS proxy to associate with the app.
-	DNSProxyUUID *string `json:"DNSProxyUUID,omitempty" plist:"DNSProxyUUID,omitempty"`
+	DNSProxyUUID *string `json:"DNSProxyUUID,omitempty"`
 	// If `false`, the system prevents the user from hiding the app. It doesn't affect the user's ability to leave it in the App Library, while removing it from the Home Screen.
-	Hideable *bool `json:"Hideable,omitempty" plist:"Hideable,omitempty"`
+	Hideable *bool `json:"Hideable,omitempty"`
 	// If `false`, the system prevents the user from locking the app. This also prevents the user from hiding the app.
-	Lockable *bool `json:"Lockable,omitempty" plist:"Lockable,omitempty"`
+	Lockable *bool `json:"Lockable,omitempty"`
 	// The UUID of the relay to associate with the app.
-	RelayUUID *string `json:"RelayUUID,omitempty" plist:"RelayUUID,omitempty"`
+	RelayUUID *string `json:"RelayUUID,omitempty"`
 	// If `true`, the device automatically locks after every transaction that requires a customer's card PIN. If `false`, the user can choose the behavior.
-	TapToPayScreenLock *bool `json:"TapToPayScreenLock,omitempty" plist:"TapToPayScreenLock,omitempty"`
+	TapToPayScreenLock *bool `json:"TapToPayScreenLock,omitempty"`
 	// The UUID of the VPN to associate with the app.
-	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
+	VPNUUID *string `json:"VPNUUID,omitempty"`
 }
 
 // A dictionary of app config data and credentials.
 // Available only in iOS and visionOS.
 type AppConfig struct {
 	// Specifies the identifier of an asset declaration containing a reference to the app or extension config data. The corresponding asset needs to be of type `com.apple.asset.data`. The referenced data needs to be a property list file, and the asset's "ContentType" value set to match the data type.
-	DataAssetReference *string `json:"DataAssetReference,omitempty" plist:"DataAssetReference,omitempty"`
+	DataAssetReference *string `json:"DataAssetReference,omitempty"`
 	// Provides passwords to the managed app or extension. Each element in the array contains a password asset reference and an associated identifier which the app or extension uses to look up the password.
-	Passwords *[]PasswordAppConfigItem `json:"Passwords,omitempty" plist:"Passwords,omitempty"`
+	Passwords *[]PasswordAppConfigItem `json:"Passwords,omitempty"`
 	// Provides identities to the managed app or extension. Each element in the array contains an identity asset reference and an associated identifier which the app or extension uses to look up the identity.
-	Identities *[]IdentityAppConfigItem `json:"Identities,omitempty" plist:"Identities,omitempty"`
+	Identities *[]IdentityAppConfigItem `json:"Identities,omitempty"`
 	// Provides certificates to the managed app or extension. Each element in the array contains a certificate asset reference and an associated identifier which the app or extension uses to look up the certificate.
-	Certificates *[]CertificateAppConfigItem `json:"Certificates,omitempty" plist:"Certificates,omitempty"`
+	Certificates *[]CertificateAppConfigItem `json:"Certificates,omitempty"`
 }
 
 // A dictionary of values associated with a credential config.
 type PasswordAppConfigItem struct {
 	// The app or extension uses this identifier to fetch the corresponding password using the `ManagedApp` framework. App developers define the values for these identifiers.
-	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
+	Identifier string `json:"Identifier" required:"true"`
 	// Specifies the identifier of an asset declaration containing a username and password. The `ManagedApp` framework makes the password available to the app or extension. The `ManagedApp` framework ignores the username.
-	AssetReference string `json:"AssetReference" plist:"AssetReference" required:"true"`
+	AssetReference string `json:"AssetReference" required:"true"`
 }
 
 // A dictionary of values associated with a credential config.
 type IdentityAppConfigItem struct {
 	// The app or extension uses this identifier to fetch the corresponding identity using the `ManagedApp` framework. App developers define the values for these identifiers.
-	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
+	Identifier string `json:"Identifier" required:"true"`
 	// Specifies the identifier of an asset declaration containing an identity.
-	AssetReference string `json:"AssetReference" plist:"AssetReference" required:"true"`
+	AssetReference string `json:"AssetReference" required:"true"`
 }
 
 // A dictionary of values associated with a credential config.
 type CertificateAppConfigItem struct {
 	// The app or extension uses this identifier to fetch the corresponding certificate using the `ManagedApp` framework. App developers define the values for these identifiers.
-	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
+	Identifier string `json:"Identifier" required:"true"`
 	// Specifies the identifier of an asset declaration containing a certificate.
-	AssetReference string `json:"AssetReference" plist:"AssetReference" required:"true"`
+	AssetReference string `json:"AssetReference" required:"true"`
 }
 
 // A dictionary mapping extension composed identifiers to the extension config data and credentials. The expected format is "Identifier (TeamIdentifier)".
 type AppConfigDictionary struct {
 	// Specifies the identifier of an asset declaration containing a reference to the app or extension config data. The corresponding asset needs to be of type `com.apple.asset.data`. The referenced data needs to be a property list file, and the asset's "ContentType" value set to match the data type.
-	DataAssetReference *string `json:"DataAssetReference,omitempty" plist:"DataAssetReference,omitempty"`
+	DataAssetReference *string `json:"DataAssetReference,omitempty"`
 	// Provides passwords to the managed app or extension. Each element in the array contains a password asset reference and an associated identifier which the app or extension uses to look up the password.
-	Passwords *[]PasswordAppConfigItem `json:"Passwords,omitempty" plist:"Passwords,omitempty"`
+	Passwords *[]PasswordAppConfigItem `json:"Passwords,omitempty"`
 	// Provides identities to the managed app or extension. Each element in the array contains an identity asset reference and an associated identifier which the app or extension uses to look up the identity.
-	Identities *[]IdentityAppConfigItem `json:"Identities,omitempty" plist:"Identities,omitempty"`
+	Identities *[]IdentityAppConfigItem `json:"Identities,omitempty"`
 	// Provides certificates to the managed app or extension. Each element in the array contains a certificate asset reference and an associated identifier which the app or extension uses to look up the certificate.
-	Certificates *[]CertificateAppConfigItem `json:"Certificates,omitempty" plist:"Certificates,omitempty"`
+	Certificates *[]CertificateAppConfigItem `json:"Certificates,omitempty"`
 }
 
 // The declaration to configure audio accessory settings.
 type AudioAccessorySettings struct {
 	// A dictionary that describes audio accessory temporary pairing behavior. The device enables temporary pairing when this key is present and the `Disabled` key isn't `false`. The device doesn't synchronize pairing information with iCloud when temporary pairing is active.
-	TemporaryPairing *TemporaryPairing `json:"TemporaryPairing,omitempty" plist:"TemporaryPairing,omitempty"`
+	TemporaryPairing *TemporaryPairing `json:"TemporaryPairing,omitempty"`
 }
 
 func (p *AudioAccessorySettings) DeclarationType() string {
@@ -629,15 +629,15 @@ func (p *AudioAccessorySettings) DeclarationType() string {
 // A dictionary that describes audio accessory temporary pairing behavior. The device enables temporary pairing when this key is present and the `Disabled` key isn't `false`. The device doesn't synchronize pairing information with iCloud when temporary pairing is active.
 type TemporaryPairing struct {
 	// If `true`, temporary pairing of audio accessories is disabled.
-	Disabled *bool `json:"Disabled,omitempty" plist:"Disabled,omitempty"`
+	Disabled *bool `json:"Disabled,omitempty"`
 	// A dictionary providing configuration for temporary pairing. Required if `Disabled` isn't present or is `false`.
-	Configuration *Configuration `json:"Configuration,omitempty" plist:"Configuration,omitempty"`
+	Configuration *Configuration `json:"Configuration,omitempty"`
 }
 
 // A dictionary providing configuration for temporary pairing. Required if `Disabled` isn't present or is `false`.
 type Configuration struct {
 	// A dictionary that describes when the device automatically unpairs temporarily paired audio accessories.
-	UnpairingTime UnpairingTime `json:"UnpairingTime" plist:"UnpairingTime" required:"true"`
+	UnpairingTime UnpairingTime `json:"UnpairingTime" required:"true"`
 }
 
 // A dictionary that describes when the device automatically unpairs temporarily paired audio accessories.
@@ -645,9 +645,9 @@ type UnpairingTime struct {
 	// A string that specifies the device's unpairing policy.
 	// - `None`: The device doesn't automatically unpair. Use this only with a return to service device that you erase and reenroll when assigning it from one user to another.
 	// - `Hour`: The device automatically unpairs temporarily paired audio accessories at the local time that the `Hour` key specifies.
-	Policy Policy `json:"Policy" plist:"Policy" required:"true"`
+	Policy Policy `json:"Policy" required:"true"`
 	// The local time hour (24-hour clock) when the device automatically unpairs temporarily paired audio accessories. Required when setting the `Policy` key to `Hour`.
-	Hour *int64 `json:"Hour,omitempty" plist:"Hour,omitempty"`
+	Hour *int64 `json:"Hour,omitempty"`
 }
 
 // A string that specifies the device's unpairing policy.
@@ -663,7 +663,7 @@ const (
 // The declaration to configure disk management settings on the device.
 type DiskManagementSettings struct {
 	// The restrictions for the disk.
-	Restrictions *Restrictions `json:"Restrictions,omitempty" plist:"Restrictions,omitempty"`
+	Restrictions *Restrictions `json:"Restrictions,omitempty"`
 }
 
 func (p *DiskManagementSettings) DeclarationType() string {
@@ -676,12 +676,12 @@ type Restrictions struct {
 	// - `Allowed`: The system can mount external storage that is read-write or read-only.
 	// - `ReadOnly`: The system can only mount read-only external storage. Note that external storage that is read-write will not be mounted read-only.
 	// - `Disallowed`: The system can't mount any external storage.
-	ExternalStorage *ExternalStorage `json:"ExternalStorage,omitempty" plist:"ExternalStorage,omitempty"`
+	ExternalStorage *ExternalStorage `json:"ExternalStorage,omitempty"`
 	// Specifies the mount policy for network storage:
 	// - `Allowed`: The system can mount network storage that is read-write or read-only.
 	// - `ReadOnly`: The system can only mount read-only network storage. Note that network storage that is read-write will not be mounted read-only.
 	// - `Disallowed`: The system can't mount any network storage.
-	NetworkStorage *NetworkStorage `json:"NetworkStorage,omitempty" plist:"NetworkStorage,omitempty"`
+	NetworkStorage *NetworkStorage `json:"NetworkStorage,omitempty"`
 }
 
 // Specifies the mount policy for external storage:
@@ -712,9 +712,9 @@ const (
 type LegacyInteractiveProfile struct {
 	// The URL of the profile to download and install, which needs to start with `https://`, and must be hosted by the MDM server.
 	// If a user enrollment triggers this configuration, the system silently ignores any MDMv1 payloads in macOS that are forbidden with user enrollment. In iOS, the system rejects the entire profile.
-	ProfileURL string `json:"ProfileURL" plist:"ProfileURL" required:"true"`
+	ProfileURL string `json:"ProfileURL" required:"true"`
 	// The visible name of the configuration. This name needs to indicate the nature of the profile.
-	VisibleName string `json:"VisibleName" plist:"VisibleName" required:"true"`
+	VisibleName string `json:"VisibleName" required:"true"`
 }
 
 func (p *LegacyInteractiveProfile) DeclarationType() string {
@@ -725,7 +725,7 @@ func (p *LegacyInteractiveProfile) DeclarationType() string {
 type LegacyProfile struct {
 	// The URL of the profile to download and install, which needs to start with `https://`, and must be hosted by the MDM server.
 	// If a user enrollment triggers this configuration, the system silently ignores any MDMv1 payloads in macOS where the User Enrollment Mode setting is `forbidden`. In iOS, the system rejects the entire profile.
-	ProfileURL string `json:"ProfileURL" plist:"ProfileURL" required:"true"`
+	ProfileURL string `json:"ProfileURL" required:"true"`
 }
 
 func (p *LegacyProfile) DeclarationType() string {
@@ -735,7 +735,7 @@ func (p *LegacyProfile) DeclarationType() string {
 // The declaration to configure status subscriptions.
 type ManagementStatusSubscriptions struct {
 	// An array of status items that the device notifies subscribers about.
-	StatusItems []*StatusItem `json:"StatusItems" plist:"StatusItems" required:"true"`
+	StatusItems []*StatusItem `json:"StatusItems" required:"true"`
 }
 
 func (p *ManagementStatusSubscriptions) DeclarationType() string {
@@ -745,17 +745,17 @@ func (p *ManagementStatusSubscriptions) DeclarationType() string {
 // The declaration for configuring a specific status subscription.
 type StatusItem struct {
 	// The name of the status item to send to subscribers.
-	Name string `json:"Name" plist:"Name" required:"true"`
+	Name string `json:"Name" required:"true"`
 }
 
 // The declaration to test declarative device management.
 type ManagementTest struct {
 	// The string to echo back in a status response reason.
-	Echo string `json:"Echo" plist:"Echo" required:"true"`
+	Echo string `json:"Echo" required:"true"`
 	// The string to read from a data asset to echo back in status response reason description.
-	EchoDataAssetReference *string `json:"EchoDataAssetReference,omitempty" plist:"EchoDataAssetReference,omitempty"`
+	EchoDataAssetReference *string `json:"EchoDataAssetReference,omitempty"`
 	// The status the system reports back when the device implements the configuration. Use this to override the normal `success` result.
-	ReturnStatus *ReturnStatus `default:"Installed" json:"ReturnStatus,omitempty" plist:"ReturnStatus,omitempty"`
+	ReturnStatus *ReturnStatus `default:"Installed" json:"ReturnStatus,omitempty"`
 }
 
 func (p *ManagementTest) DeclarationType() string {
@@ -775,9 +775,9 @@ const (
 // Configures the built-in math and calculator app settings.
 type MathSettings struct {
 	// If present, configures the built-in Calculator app.
-	Calculator *Calculator `json:"Calculator,omitempty" plist:"Calculator,omitempty"`
+	Calculator *Calculator `json:"Calculator,omitempty"`
 	// If present, configures math behavior in the system.
-	SystemBehavior *SystemBehavior `json:"SystemBehavior,omitempty" plist:"SystemBehavior,omitempty"`
+	SystemBehavior *SystemBehavior `json:"SystemBehavior,omitempty"`
 }
 
 func (p *MathSettings) DeclarationType() string {
@@ -787,63 +787,63 @@ func (p *MathSettings) DeclarationType() string {
 // If present, configures the built-in Calculator app.
 type Calculator struct {
 	// If present, configures the basic mode of the calculator. Basic mode is always enabled.
-	BasicMode *BasicMode `json:"BasicMode,omitempty" plist:"BasicMode,omitempty"`
+	BasicMode *BasicMode `json:"BasicMode,omitempty"`
 	// If present, configures the scientific mode of the calculator. If not present, scientific mode is enabled.
-	ScientificMode *ScientificMode `json:"ScientificMode,omitempty" plist:"ScientificMode,omitempty"`
+	ScientificMode *ScientificMode `json:"ScientificMode,omitempty"`
 	// If present, configures the programmer mode of the calculator. If not present, programmer mode is enabled.
-	ProgrammerMode *ProgrammerMode `json:"ProgrammerMode,omitempty" plist:"ProgrammerMode,omitempty"`
+	ProgrammerMode *ProgrammerMode `json:"ProgrammerMode,omitempty"`
 	// If present, configures the Math Notes mode of the calculator. If not present, Math Notes mode is enabled.
-	MathNotesMode *MathNotesMode `json:"MathNotesMode,omitempty" plist:"MathNotesMode,omitempty"`
+	MathNotesMode *MathNotesMode `json:"MathNotesMode,omitempty"`
 	// If present, controls global input options of the calculator. If not present, all input modes are enabled.
-	InputModes *InputModes `json:"InputModes,omitempty" plist:"InputModes,omitempty"`
+	InputModes *InputModes `json:"InputModes,omitempty"`
 }
 
 // If present, configures the basic mode of the calculator. Basic mode is always enabled.
 type BasicMode struct {
 	// Add the square root button to the basic calculator by replacing the +/- button. Normally, the square root button is available in scientific mode, so this key can be used to make it available when the scientific mode is restricted.
-	AddSquareRoot bool `json:"AddSquareRoot" plist:"AddSquareRoot" required:"true"`
+	AddSquareRoot bool `json:"AddSquareRoot" required:"true"`
 }
 
 // If present, configures the scientific mode of the calculator. If not present, scientific mode is enabled.
 type ScientificMode struct {
 	// Controls whether the mode is enabled.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 }
 
 // If present, configures the programmer mode of the calculator. If not present, programmer mode is enabled.
 type ProgrammerMode struct {
 	// Controls whether the mode is enabled.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 }
 
 // If present, configures the Math Notes mode of the calculator. If not present, Math Notes mode is enabled.
 type MathNotesMode struct {
 	// Controls whether the mode is enabled.
-	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
+	Enabled bool `json:"Enabled" required:"true"`
 }
 
 // If present, controls global input options of the calculator. If not present, all input modes are enabled.
 type InputModes struct {
 	// Configures whether unit conversions are enabled.
-	UnitConversion bool `json:"UnitConversion" plist:"UnitConversion" required:"true"`
+	UnitConversion bool `json:"UnitConversion" required:"true"`
 	// Configures whether RPN input is enabled.
-	RPN bool `json:"RPN" plist:"RPN" required:"true"`
+	RPN bool `json:"RPN" required:"true"`
 }
 
 // If present, configures math behavior in the system.
 type SystemBehavior struct {
 	// Controls whether keyboard suggestions include math solutions.
-	KeyboardSuggestions bool `json:"KeyboardSuggestions" plist:"KeyboardSuggestions" required:"true"`
+	KeyboardSuggestions bool `json:"KeyboardSuggestions" required:"true"`
 	// Controls whether Math Notes is allowed in other apps such as Notes.
-	MathNotes bool `json:"MathNotes" plist:"MathNotes" required:"true"`
+	MathNotes bool `json:"MathNotes" required:"true"`
 }
 
 // The declaration to install a package.
 type Package struct {
 	// The URL of the manifest document for the package that the device downloads. The manifest is returned as a `ManifestURL` property list. The `url` property of the manifest must point to the package (.pkg) file to install.
-	ManifestURL string `json:"ManifestURL" plist:"ManifestURL" required:"true"`
+	ManifestURL string `json:"ManifestURL" required:"true"`
 	// A dictionary that describes how and when to install the package.
-	InstallBehavior *PackageInstallBehavior `json:"InstallBehavior,omitempty" plist:"InstallBehavior,omitempty"`
+	InstallBehavior *PackageInstallBehavior `json:"InstallBehavior,omitempty"`
 }
 
 func (p *Package) DeclarationType() string {
@@ -855,7 +855,7 @@ type PackageInstallBehavior struct {
 	// A string that specifies when the system installs the package:
 	// - `Optional`: The user can install the package after the system activates the configuration.
 	// - `Required`: The system installs the package after it activates the configuration.
-	Install *PackageInstallBehaviorInstall `default:"Optional" json:"Install,omitempty" plist:"Install,omitempty"`
+	Install *PackageInstallBehaviorInstall `default:"Optional" json:"Install,omitempty"`
 }
 
 // A string that specifies when the system installs the package:
@@ -871,32 +871,32 @@ const (
 // The declaration to configure passcode policy settings.
 type PasscodeSettings struct {
 	// If `true`, the system requires the user to set a passcode without any requirements about the length or quality of the passcode. The presence of any other keys implicitly requires a passcode, and overrides this key's value.
-	RequirePasscode *bool `json:"RequirePasscode,omitempty" plist:"RequirePasscode,omitempty"`
+	RequirePasscode *bool `json:"RequirePasscode,omitempty"`
 	// If `true`, the passcode needs to consist of at least one alphabetic character and at least one number.
-	RequireAlphanumericPasscode *bool `json:"RequireAlphanumericPasscode,omitempty" plist:"RequireAlphanumericPasscode,omitempty"`
+	RequireAlphanumericPasscode *bool `json:"RequireAlphanumericPasscode,omitempty"`
 	// If `true`, the system requires a complex passcode. A complex passcode is one that doesn't contain repeated characters or increasing or decreasing characters (such as 123 or CBA).
-	RequireComplexPasscode *bool `json:"RequireComplexPasscode,omitempty" plist:"RequireComplexPasscode,omitempty"`
+	RequireComplexPasscode *bool `json:"RequireComplexPasscode,omitempty"`
 	// The minimum number of characters a passcode can contain.
-	MinimumLength *int64 `default:"0" json:"MinimumLength,omitempty" plist:"MinimumLength,omitempty"`
+	MinimumLength *int64 `default:"0" json:"MinimumLength,omitempty"`
 	// Specifies the minimum number of complex characters in the password. A complex character is a character other than a number or a letter, such as `&`, `%`, `$`, and `#`.
-	MinimumComplexCharacters *int64 `default:"0" json:"MinimumComplexCharacters,omitempty" plist:"MinimumComplexCharacters,omitempty"`
+	MinimumComplexCharacters *int64 `default:"0" json:"MinimumComplexCharacters,omitempty"`
 	// The number of failed passcode attempts that the system allows the user before it erases or locks the device. After six failed attempts, the device imposes a time delay before the user can enter a passcode again. The time delay increases with each failed attempt. On macOS, set `FailedAttemptsResetInMinutes` to define the time delay. The time delay begins after the sixth attempt, so if `MaximumFailedAttempts` is six or lower, the system has no time delay and triggers the erase or lock as soon as the user exceeds the limit.
 	// After the final failed attempt, the system locks a macOS device, or securely erases all data and settings from an iOS, visionOS, or watchOS device.
-	MaximumFailedAttempts *int64 `default:"11" json:"MaximumFailedAttempts,omitempty" plist:"MaximumFailedAttempts,omitempty"`
+	MaximumFailedAttempts *int64 `default:"11" json:"MaximumFailedAttempts,omitempty"`
 	// The number of minutes before the login is reset after the maximum number of failed attempts. Also set the `MaximumFailedAttempts` key for this to take effect.
-	FailedAttemptsResetInMinutes *int64 `json:"FailedAttemptsResetInMinutes,omitempty" plist:"FailedAttemptsResetInMinutes,omitempty"`
+	FailedAttemptsResetInMinutes *int64 `json:"FailedAttemptsResetInMinutes,omitempty"`
 	// The maximum period that a user can select, during which the user can unlock the device without a passcode. A value of `0` means no grace period, and the device requires a passcode immediately. In the absence of this key, the user can select any period. In macOS, the system translates this to screensaver settings.
-	MaximumGracePeriodInMinutes *int64 `json:"MaximumGracePeriodInMinutes,omitempty" plist:"MaximumGracePeriodInMinutes,omitempty"`
+	MaximumGracePeriodInMinutes *int64 `json:"MaximumGracePeriodInMinutes,omitempty"`
 	// The maximum period that a user can select, during which the device can be idle before the system automatically locks it. When the device reaches this limit, the device locks and the user must enter the passcode to unlock it. In the absence of this key, the user can select any period. In macOS, the system translates this to screensaver settings.
-	MaximumInactivityInMinutes *int64 `json:"MaximumInactivityInMinutes,omitempty" plist:"MaximumInactivityInMinutes,omitempty"`
+	MaximumInactivityInMinutes *int64 `json:"MaximumInactivityInMinutes,omitempty"`
 	// Specifies the maximum number of days that the passcode can remain unchanged. After this number of days, the system forces the user to change the passcode before it unlocks the device.
-	MaximumPasscodeAgeInDays *int64 `json:"MaximumPasscodeAgeInDays,omitempty" plist:"MaximumPasscodeAgeInDays,omitempty"`
+	MaximumPasscodeAgeInDays *int64 `json:"MaximumPasscodeAgeInDays,omitempty"`
 	// The number of historical passcode entries the system checks when validating a new passcode. The device refuses a new passcode if it matches a previously used passcode within the specified passcode history range. In the absence of this key, the system performs no historical check.
-	PasscodeReuseLimit *int64 `json:"PasscodeReuseLimit,omitempty" plist:"PasscodeReuseLimit,omitempty"`
+	PasscodeReuseLimit *int64 `json:"PasscodeReuseLimit,omitempty"`
 	// If `true`, the system forces a password reset the next time the user tries to authenticate. If you set this key in a configuration in the system scope (device channel), the setting takes effect for all users, and admin authentication may fail until the admin user password is also reset.
-	ChangeAtNextAuth *bool `json:"ChangeAtNextAuth,omitempty" plist:"ChangeAtNextAuth,omitempty"`
+	ChangeAtNextAuth *bool `json:"ChangeAtNextAuth,omitempty"`
 	// Specifies a regular expression, and its description, to enforce password compliance. Use the simpler passcode settings whenever possible, and rely on regular expression matching only when necessary. Mistakes in regular expressions can lead to frustrating user experiences, such as unsatisfiable passcode policies, or policy descriptions that don't match the enforced policy.
-	CustomRegex *CustomRegex `json:"CustomRegex,omitempty" plist:"CustomRegex,omitempty"`
+	CustomRegex *CustomRegex `json:"CustomRegex,omitempty"`
 }
 
 func (p *PasscodeSettings) DeclarationType() string {
@@ -906,15 +906,15 @@ func (p *PasscodeSettings) DeclarationType() string {
 // Specifies a regular expression, and its description, to enforce password compliance. Use the simpler passcode settings whenever possible, and rely on regular expression matching only when necessary. Mistakes in regular expressions can lead to frustrating user experiences, such as unsatisfiable passcode policies, or policy descriptions that don't match the enforced policy.
 type CustomRegex struct {
 	// A regular expression string to match against the password to determine whether it complies with a policy. The regular expression uses the ICU syntax. The string can't exceed 2048 characters in length.
-	Regex string `json:"Regex" plist:"Regex" required:"true"`
+	Regex string `json:"Regex" required:"true"`
 	// A dictionary with supported OS language IDs for the keys (such as `en-US`), and values that represent a localized description of the policy that the regular expression enforces. Use the special `default` key for languages that the dictionary doesn't contain.
-	Description *map[string]string `json:"Description,omitempty" plist:"Description,omitempty"`
+	Description *map[string]string `json:"Description,omitempty"`
 }
 
 // The declaration to configure managed bookmarks in Safari.
 type SafariBookmarks struct {
 	// A dictionary that specifies a set of managed bookmarks.
-	ManagedBookmarks *[]BookmarkGroup `json:"ManagedBookmarks,omitempty" plist:"ManagedBookmarks,omitempty"`
+	ManagedBookmarks *[]BookmarkGroup `json:"ManagedBookmarks,omitempty"`
 }
 
 func (p *SafariBookmarks) DeclarationType() string {
@@ -924,42 +924,42 @@ func (p *SafariBookmarks) DeclarationType() string {
 // A group of managed bookmarks.
 type BookmarkGroup struct {
 	// A string that specifies the unique identifier for this group of managed bookmarks. Safari displays a separate managed bookmarks item for each set of unique managed bookmarks based on the value of this key. If multiple active configurations use the same value for this key, Safari displays a single group formed by merging the list of `Bookmarks` from each group.
-	GroupIdentifier string `json:"GroupIdentifier" plist:"GroupIdentifier" required:"true"`
+	GroupIdentifier string `json:"GroupIdentifier" required:"true"`
 	// The name of the bookmarks folder. Safari uses this as the title for the top-level managed bookmarks item.
-	Title string `json:"Title" plist:"Title" required:"true"`
+	Title string `json:"Title" required:"true"`
 	// A list of bookmarks. Either a `URL` or `Folder` key must be present in each item.
-	Bookmarks []BookmarksItem `json:"Bookmarks" plist:"Bookmarks" required:"true"`
+	Bookmarks []BookmarksItem `json:"Bookmarks" required:"true"`
 }
 
 // A bookmark that specifies a title, and either a URL for the bookmark, or a nested folder of bookmarks.
 type BookmarksItem struct {
 	// The title of the bookmark shown in Safari.
-	Title string `json:"Title" plist:"Title" required:"true"`
+	Title string `json:"Title" required:"true"`
 	// The URL for the bookmark item.
 	// Only one of `URL` or `Folder` must be present.
-	URL *string `json:"URL,omitempty" plist:"URL,omitempty"`
+	URL *string `json:"URL,omitempty"`
 	// An array of bookmarks for each bookmark in the folder. Folders can include bookmark items and bookmark folders.
 	// Only one of `URL` or `Folder` must be present.
-	Folder *[]FolderItem `json:"Folder,omitempty" plist:"Folder,omitempty"`
+	Folder *[]FolderItem `json:"Folder,omitempty"`
 }
 
 // A bookmark that specifies a title, and either a URL for the bookmark, or a nested folder of bookmarks.
 type FolderItem struct {
 	// The title of the bookmark shown in Safari.
-	Title string `json:"Title" plist:"Title" required:"true"`
+	Title string `json:"Title" required:"true"`
 	// The URL for the bookmark item.
 	// Only one of `URL` or `Folder` must be present.
-	URL *string `json:"URL,omitempty" plist:"URL,omitempty"`
+	URL *string `json:"URL,omitempty"`
 	// An array of bookmarks for each bookmark in the folder. Folders can include bookmark items and bookmark folders.
 	// Only one of `URL` or `Folder` must be present.
-	Folder *[]FolderItem `json:"Folder,omitempty" plist:"Folder,omitempty"`
+	Folder *[]FolderItem `json:"Folder,omitempty"`
 }
 
 // The declaration to configure Safari Extensions.
 type SafariExtensionSettings struct {
 	// The dictionary of managed extensions settings. Each key in the dictionary represents a composed identifier for a specific managed extension, or you can specify a single "*" character to match any extension. The dictionary values represent the settings that Safari applies to each extension that matches the key. In order for the extension to be managed, its host app needs to be present on the device.
 	// The composed identifier of a managed extension uses the format "Identifier (TeamIdentifier)", for example "com.example.app (ABCD1234)". Use `codesign -dv <path_to_appex>` to show the information you need to generate this string on macOS, using the path to the extension bundle located in the "PlugIns" folder inside the app bundle. For other platforms, request this information from the app developer.
-	ManagedExtensions *map[string]ExtensionDictionary `json:"ManagedExtensions,omitempty" plist:"ManagedExtensions,omitempty"`
+	ManagedExtensions *map[string]ExtensionDictionary `json:"ManagedExtensions,omitempty"`
 }
 
 func (p *SafariExtensionSettings) DeclarationType() string {
@@ -972,16 +972,16 @@ type ExtensionDictionary struct {
 	// * `Allowed` - The user is allowed to turn the extension on or off.
 	// * `AlwaysOn` - The extension will always be on.
 	// * `AlwaysOff` - The extension will always be off.
-	State *State `json:"State,omitempty" plist:"State,omitempty"`
+	State *State `json:"State,omitempty"`
 	// Controls whether an extension is allowed in Private Browsing.
 	// * `Allowed` - The user is allowed to turn the extension on or off in Private Browsing.
 	// * `AlwaysOn` - The extension will always be on in Private Browsing if the extension is on outside of Private Browsing.
 	// * `AlwaysOff` - The extension will never be on in Private Browsing.
-	PrivateBrowsing *PrivateBrowsing `json:"PrivateBrowsing,omitempty" plist:"PrivateBrowsing,omitempty"`
+	PrivateBrowsing *PrivateBrowsing `json:"PrivateBrowsing,omitempty"`
 	// Controls the domains and sub-domains the extension is granted access to.
-	AllowedDomains *[]string `json:"AllowedDomains,omitempty" plist:"AllowedDomains,omitempty"`
+	AllowedDomains *[]string `json:"AllowedDomains,omitempty"`
 	// Controls the domains and sub-domains the extension isn't allowed to access.
-	DeniedDomains *[]string `json:"DeniedDomains,omitempty" plist:"DeniedDomains,omitempty"`
+	DeniedDomains *[]string `json:"DeniedDomains,omitempty"`
 }
 
 // Controls whether an extension is allowed.
@@ -1015,21 +1015,21 @@ type SafariSettings struct {
 	// - `CurrentWebsite`: Safari allows cookies only from the current website.
 	// - `VisitedWebsites`: Safari allows cookies only from visited websites.
 	// - `Always`: Safari always allows cookies.
-	AcceptCookies *AcceptCookies `default:"Always" json:"AcceptCookies,omitempty" plist:"AcceptCookies,omitempty"`
+	AcceptCookies *AcceptCookies `default:"Always" json:"AcceptCookies,omitempty"`
 	// If `false`, the system forces fraud warnings on in Safari.
-	AllowDisablingFraudWarning *bool `json:"AllowDisablingFraudWarning,omitempty" plist:"AllowDisablingFraudWarning,omitempty"`
+	AllowDisablingFraudWarning *bool `json:"AllowDisablingFraudWarning,omitempty"`
 	// If `false`, the system disables clearing history in Safari.
-	AllowHistoryClearing *bool `json:"AllowHistoryClearing,omitempty" plist:"AllowHistoryClearing,omitempty"`
+	AllowHistoryClearing *bool `json:"AllowHistoryClearing,omitempty"`
 	// If `false`, the system disables JavaScript in Safari.
-	AllowJavaScript *bool `json:"AllowJavaScript,omitempty" plist:"AllowJavaScript,omitempty"`
+	AllowJavaScript *bool `json:"AllowJavaScript,omitempty"`
 	// If `false`, the system disables private browsing in Safari.
-	AllowPrivateBrowsing *bool `json:"AllowPrivateBrowsing,omitempty" plist:"AllowPrivateBrowsing,omitempty"`
+	AllowPrivateBrowsing *bool `json:"AllowPrivateBrowsing,omitempty"`
 	// If `false`, the system disables popups in Safari.
-	AllowPopups *bool `json:"AllowPopups,omitempty" plist:"AllowPopups,omitempty"`
+	AllowPopups *bool `json:"AllowPopups,omitempty"`
 	// If `false`, the system disables summarization of content in Safari.
-	AllowSummary *bool `json:"AllowSummary,omitempty" plist:"AllowSummary,omitempty"`
+	AllowSummary *bool `json:"AllowSummary,omitempty"`
 	// Sets the start page for new tabs in Safari.
-	NewTabStartPage *NewTabStartPage `json:"NewTabStartPage,omitempty" plist:"NewTabStartPage,omitempty"`
+	NewTabStartPage *NewTabStartPage `json:"NewTabStartPage,omitempty"`
 }
 
 func (p *SafariSettings) DeclarationType() string {
@@ -1056,11 +1056,11 @@ type NewTabStartPage struct {
 	// - `Start` - Safari uses the default start page. Safari disables the Homepage.
 	// - `Home` - Safari uses the page specified by `HomepageURL`, and Safari also sets that as the Homepage.
 	// - `Extension` - Safari uses the page specified by the Safari extension whose identifier is `ExtensionIdentifier`. Safari disables the Homepage.
-	PageType PageType `json:"PageType" plist:"PageType" required:"true"`
+	PageType PageType `json:"PageType" required:"true"`
 	// The URL of the homepage which needs to start with `https://` or `http://`. Required when setting `PageType` to `Home`.
-	HomepageURL *string `json:"HomepageURL,omitempty" plist:"HomepageURL,omitempty"`
+	HomepageURL *string `json:"HomepageURL,omitempty"`
 	// The composed identifier of the extension that provides the start page. The required format is "Identifier (TeamIdentifier)", for example "com.example.app (ABCD1234)". Required when setting `PageType` to `Extension`.
-	ExtensionIdentifier *string `json:"ExtensionIdentifier,omitempty" plist:"ExtensionIdentifier,omitempty"`
+	ExtensionIdentifier *string `json:"ExtensionIdentifier,omitempty"`
 }
 
 // Sets the start page type in Safari:
@@ -1078,11 +1078,11 @@ const (
 // The declaration to configure a group of screen-sharing connections.
 type ScreenSharingConnectionGroup struct {
 	// A unique identifier for this connection group.
-	ConnectionGroupUUID string `json:"ConnectionGroupUUID" plist:"ConnectionGroupUUID" required:"true"`
+	ConnectionGroupUUID string `json:"ConnectionGroupUUID" required:"true"`
 	// The name of the connection group.
-	GroupName string `json:"GroupName" plist:"GroupName" required:"true"`
+	GroupName string `json:"GroupName" required:"true"`
 	// An array of `ConnectionUUID`s that represent connections declared in `ScreenSharingConnection` configurations that are members of this group.
-	Members []string `json:"Members" plist:"Members" required:"true"`
+	Members []string `json:"Members" required:"true"`
 }
 
 func (p *ScreenSharingConnectionGroup) DeclarationType() string {
@@ -1092,17 +1092,17 @@ func (p *ScreenSharingConnectionGroup) DeclarationType() string {
 // The declaration to configure a connection to a screen-sharing host.
 type ScreenSharingConnection struct {
 	// A unique identifier for this connection when it's in a connection group.
-	ConnectionUUID string `json:"ConnectionUUID" plist:"ConnectionUUID" required:"true"`
+	ConnectionUUID string `json:"ConnectionUUID" required:"true"`
 	// The name of the connection.
-	DisplayName string `json:"DisplayName" plist:"DisplayName" required:"true"`
+	DisplayName string `json:"DisplayName" required:"true"`
 	// The host name or IP address of the Mac that hosts the screen-sharing connection.
-	HostName string `json:"HostName" plist:"HostName" required:"true"`
+	HostName string `json:"HostName" required:"true"`
 	// The TCP port number on the host to initiate the connection.
-	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
+	Port *int64 `json:"Port,omitempty"`
 	// The display configuration for this connection.
-	DisplayConfiguration DisplayConfiguration `json:"DisplayConfiguration" plist:"DisplayConfiguration" required:"true"`
+	DisplayConfiguration DisplayConfiguration `json:"DisplayConfiguration" required:"true"`
 	// The identifier of an asset declaration that contains the required credentials for this connection to authenticate with the screen-sharing server. Set the corresponding asset type to `com.apple.asset.credential.userpassword`.
-	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty" plist:"AuthenticationCredentialsAssetReference,omitempty"`
+	AuthenticationCredentialsAssetReference *string `json:"AuthenticationCredentialsAssetReference,omitempty"`
 }
 
 func (p *ScreenSharingConnection) DeclarationType() string {
@@ -1114,7 +1114,7 @@ type DisplayConfiguration struct {
 	// The type of display for the connection, which has these allowed values:
 	// - `Virtual1`: Create one virtual display.
 	// - `Virtual2`: Create two virtual displays.
-	DisplayType DisplayType `json:"DisplayType" plist:"DisplayType" required:"true"`
+	DisplayType DisplayType `json:"DisplayType" required:"true"`
 }
 
 // The type of display for the connection, which has these allowed values:
@@ -1130,15 +1130,15 @@ const (
 // The declaration to configure screen-sharing host settings and restrictions.
 type ScreenSharingHostSettings struct {
 	// The maximum number of virtual displays to make available to clients.
-	MaximumVirtualDisplays *int64 `json:"MaximumVirtualDisplays,omitempty" plist:"MaximumVirtualDisplays,omitempty"`
+	MaximumVirtualDisplays *int64 `json:"MaximumVirtualDisplays,omitempty"`
 	// The initial UDP port number to connect to the host. Screen sharing requires multiple connections, so the system increments this value by 1 for each additional connection. This doesn't change the port number that the system uses to initially establish a connection with a host, which is always TCP port 5900.
-	PortBase *int64 `json:"PortBase,omitempty" plist:"PortBase,omitempty"`
+	PortBase *int64 `json:"PortBase,omitempty"`
 	// If `true`, the system prevents users from copying files from the screen-sharing host.
-	PreventCopyFilesFromHost *bool `json:"PreventCopyFilesFromHost,omitempty" plist:"PreventCopyFilesFromHost,omitempty"`
+	PreventCopyFilesFromHost *bool `json:"PreventCopyFilesFromHost,omitempty"`
 	// If `true`, the system prevents users from copying files to the screen-sharing host.
-	PreventCopyFilesToHost *bool `json:"PreventCopyFilesToHost,omitempty" plist:"PreventCopyFilesToHost,omitempty"`
+	PreventCopyFilesToHost *bool `json:"PreventCopyFilesToHost,omitempty"`
 	// If `true`, the system prevents clients from establishing high-performance connections to the host.
-	PreventHighPerformanceConnections *bool `json:"PreventHighPerformanceConnections,omitempty" plist:"PreventHighPerformanceConnections,omitempty"`
+	PreventHighPerformanceConnections *bool `json:"PreventHighPerformanceConnections,omitempty"`
 }
 
 func (p *ScreenSharingHostSettings) DeclarationType() string {
@@ -1148,7 +1148,7 @@ func (p *ScreenSharingHostSettings) DeclarationType() string {
 // The declaration to add a certificate to the device.
 type SecurityCertificate struct {
 	// The identifier of an asset declaration that contains the certificate to install.
-	CredentialAssetReference string `json:"CredentialAssetReference" plist:"CredentialAssetReference" required:"true"`
+	CredentialAssetReference string `json:"CredentialAssetReference" required:"true"`
 }
 
 func (p *SecurityCertificate) DeclarationType() string {
@@ -1158,11 +1158,11 @@ func (p *SecurityCertificate) DeclarationType() string {
 // The declaration to install an identity on the device.
 type SecurityIdentity struct {
 	// The identifier of an asset declaration that contains the identity to install.
-	CredentialAssetReference string `json:"CredentialAssetReference" plist:"CredentialAssetReference" required:"true"`
+	CredentialAssetReference string `json:"CredentialAssetReference" required:"true"`
 	// If `true`, apps can access the private key.
-	AllowAllAppsAccess *bool `json:"AllowAllAppsAccess,omitempty" plist:"AllowAllAppsAccess,omitempty"`
+	AllowAllAppsAccess *bool `json:"AllowAllAppsAccess,omitempty"`
 	// If `true`, the private key is extractable in the keychain.
-	KeyIsExtractable *bool `json:"KeyIsExtractable,omitempty" plist:"KeyIsExtractable,omitempty"`
+	KeyIsExtractable *bool `json:"KeyIsExtractable,omitempty"`
 }
 
 func (p *SecurityIdentity) DeclarationType() string {
@@ -1172,11 +1172,11 @@ func (p *SecurityIdentity) DeclarationType() string {
 // The declaration to configure the device to allow WebAuthn enterprise attestation for certain passkeys.
 type SecurityPasskeyAttestation struct {
 	// The identifier of an asset declaration that contains the identity to install and use for passkey attestation.
-	AttestationIdentityAssetReference string `json:"AttestationIdentityAssetReference" plist:"AttestationIdentityAssetReference" required:"true"`
+	AttestationIdentityAssetReference string `json:"AttestationIdentityAssetReference" required:"true"`
 	// If `true`, the private key for the attestation identity is extractable in the keychain.
-	AttestationIdentityKeyIsExtractable *bool `json:"AttestationIdentityKeyIsExtractable,omitempty" plist:"AttestationIdentityKeyIsExtractable,omitempty"`
+	AttestationIdentityKeyIsExtractable *bool `json:"AttestationIdentityKeyIsExtractable,omitempty"`
 	// An array of the relying parties to allow enterprise attestation.
-	RelyingParties []string `json:"RelyingParties" plist:"RelyingParties" required:"true"`
+	RelyingParties []string `json:"RelyingParties" required:"true"`
 }
 
 func (p *SecurityPasskeyAttestation) DeclarationType() string {
@@ -1186,15 +1186,15 @@ func (p *SecurityPasskeyAttestation) DeclarationType() string {
 // The declaration to configure background tasks.
 type ServicesBackgroundTasks struct {
 	// The unique identifier of the set of background tasks managed with this configuration. This should be a reverse DNS style identifier. The system uses this identifier to differentiate between tasks in different configurations.
-	TaskType string `json:"TaskType" plist:"TaskType" required:"true"`
+	TaskType string `json:"TaskType" required:"true"`
 	// A description of the set of background tasks managed by this configuration.
-	TaskDescription *string `json:"TaskDescription,omitempty" plist:"TaskDescription,omitempty"`
+	TaskDescription *string `json:"TaskDescription,omitempty"`
 	// Specifies the identifier of an asset declaration containing a reference to the files to be used for the background task configuration. The corresponding asset must be of type `com.apple.asset.data`.
 	// The referenced data must be a zip archive of an entire directory, that will be expanded and stored in a well known location for the background task. The asset's "ContentType" and "Hash-SHA-256" keys in the "Reference" key are required.
 	// This file should contain background task executables, scripts, and configuration files, but not the `launchd` configuration files.
-	ExecutableAssetReference *string `json:"ExecutableAssetReference,omitempty" plist:"ExecutableAssetReference,omitempty"`
+	ExecutableAssetReference *string `json:"ExecutableAssetReference,omitempty"`
 	// An array of `launchd` configuration files used to run the background tasks.
-	LaunchdConfigurations *[]LaunchdItem `json:"LaunchdConfigurations,omitempty" plist:"LaunchdConfigurations,omitempty"`
+	LaunchdConfigurations *[]LaunchdItem `json:"LaunchdConfigurations,omitempty"`
 }
 
 func (p *ServicesBackgroundTasks) DeclarationType() string {
@@ -1204,9 +1204,9 @@ func (p *ServicesBackgroundTasks) DeclarationType() string {
 // A dictionary of launchd configurations.
 type LaunchdItem struct {
 	// Specifies the identifier of an asset declaration containing a reference to the launchd configuration file for the background task. The referenced data must be a property list file conforming to the launchd.plist format. The asset's "ContentType" and "Hash-SHA-256" keys in the "Reference" key are required.
-	FileAssetReference string `json:"FileAssetReference" plist:"FileAssetReference" required:"true"`
+	FileAssetReference string `json:"FileAssetReference" required:"true"`
 	// Indicates whether the launchd configuration file is applied to the system daemon, or system agent domain.
-	Context Context `json:"Context" plist:"Context" required:"true"`
+	Context Context `json:"Context" required:"true"`
 }
 
 // Indicates whether the launchd configuration file is applied to the system daemon, or system agent domain.
@@ -1220,13 +1220,13 @@ const (
 // The managed configuration files for services.
 type ServicesConfigurationFiles struct {
 	// The identifier of the system service with managed configuration files. Use a reverse DNS style for this identifier.
-	ServiceType string `json:"ServiceType" plist:"ServiceType" required:"true"`
+	ServiceType string `json:"ServiceType" required:"true"`
 	// The identifier of an asset declaration that contains a reference to the files to use for system service configuration. Ensure that the corresponding asset:
 	// - Is of type `com.apple.asset.data`
 	// - Is a zip archive of an entire directory
 	// - Has a `Reference` key that includes the `ContentType` and `Hash-SHA-256` keys, which the system requires
 	// The system expands the zip archive and stores the data in a well-known location for the service.
-	DataAssetReference string `json:"DataAssetReference" plist:"DataAssetReference" required:"true"`
+	DataAssetReference string `json:"DataAssetReference" required:"true"`
 }
 
 func (p *ServicesConfigurationFiles) DeclarationType() string {
@@ -1236,13 +1236,13 @@ func (p *ServicesConfigurationFiles) DeclarationType() string {
 // A software update enforcement policy for a specific OS release.
 type SoftwareUpdateEnforcementSpecific struct {
 	// The target OS version to update the device to by the appropriate time. This is the OS version number, for example, `16.1`.
-	TargetOSVersion string `json:"TargetOSVersion" plist:"TargetOSVersion" required:"true"`
+	TargetOSVersion string `json:"TargetOSVersion" required:"true"`
 	// The target build version to update the device to by the appropriate time, for example, `20A242`. Use the build version for testing during seeding periods. The build version can include a supplemental version identifier, for example, `20A242a`.
-	TargetBuildVersion *string `json:"TargetBuildVersion,omitempty" plist:"TargetBuildVersion,omitempty"`
+	TargetBuildVersion *string `json:"TargetBuildVersion,omitempty"`
 	// The local date time value that specifies when to force install the software update. Use the format `yyyy-mm-ddThh:mm:ss`, which is derived from RFC3339 but doesn't include a time zone offset. If the user doesn't trigger the software update before this time, the device force installs it.
-	TargetLocalDateTime string `json:"TargetLocalDateTime" plist:"TargetLocalDateTime" required:"true"`
+	TargetLocalDateTime string `json:"TargetLocalDateTime" required:"true"`
 	// The URL of a web page that shows details that the organization provides about the enforced software update.
-	DetailsURL *string `json:"DetailsURL,omitempty" plist:"DetailsURL,omitempty"`
+	DetailsURL *string `json:"DetailsURL,omitempty"`
 }
 
 func (p *SoftwareUpdateEnforcementSpecific) DeclarationType() string {
@@ -1253,23 +1253,23 @@ func (p *SoftwareUpdateEnforcementSpecific) DeclarationType() string {
 type SoftwareUpdateSettings struct {
 	// If set to `true`, the device shows all software update enforcement notifications.
 	// If set to `false`, the device only shows notifications triggered one hour before the enforcement deadline, and the restart countdown notification.
-	Notifications *bool `json:"Notifications,omitempty" plist:"Notifications,omitempty"`
+	Notifications *bool `json:"Notifications,omitempty"`
 	// This object configures the deferral of software updates. Background Security Improvements aren't considered in `Major`, `Minor`, or `System` deferral mechanism.
-	Deferrals *Deferrals `json:"Deferrals,omitempty" plist:"Deferrals,omitempty"`
+	Deferrals *Deferrals `json:"Deferrals,omitempty"`
 	// This string specifies how the device shows software updates to the user. When more than one update is available update, the device behaves as follows:
 	// - `All` - Shows all software update versions.
 	// - `Oldest` - Shows only the oldest (lower numbered) software update version.
 	// - `Newest` - Shows only the newest (highest numbered) software update version.
-	RecommendedCadence *RecommendedCadence `json:"RecommendedCadence,omitempty" plist:"RecommendedCadence,omitempty"`
+	RecommendedCadence *RecommendedCadence `json:"RecommendedCadence,omitempty"`
 	// This object configures various automatic Software Update functionality.
-	AutomaticActions *AutomaticActions `json:"AutomaticActions,omitempty" plist:"AutomaticActions,omitempty"`
+	AutomaticActions *AutomaticActions `json:"AutomaticActions,omitempty"`
 	// These configurations set user access to interacting with Background Security Improvement.
-	RapidSecurityResponse *RapidSecurityResponse `json:"RapidSecurityResponse,omitempty" plist:"RapidSecurityResponse,omitempty"`
+	RapidSecurityResponse *RapidSecurityResponse `json:"RapidSecurityResponse,omitempty"`
 	// If set to `true`, a standard user can perform Major and Minor Software Updates.
 	// If set to `false`, only administrators can perform Major and Minor Software Updates.
-	AllowStandardUserOSUpdates *bool `json:"AllowStandardUserOSUpdates,omitempty" plist:"AllowStandardUserOSUpdates,omitempty"`
+	AllowStandardUserOSUpdates *bool `json:"AllowStandardUserOSUpdates,omitempty"`
 	// This object configures the beta program settings for a device.
-	Beta *Beta `json:"Beta,omitempty" plist:"Beta,omitempty"`
+	Beta *Beta `json:"Beta,omitempty"`
 }
 
 func (p *SoftwareUpdateSettings) DeclarationType() string {
@@ -1279,13 +1279,13 @@ func (p *SoftwareUpdateSettings) DeclarationType() string {
 // This object configures the deferral of software updates. Background Security Improvements aren't considered in `Major`, `Minor`, or `System` deferral mechanism.
 type Deferrals struct {
 	// Specifies the number of days to defer a major or minor OS software update on the device. When set, software updates only appear after the specified delay, following the release of the software update. Available in iOS 18 and later.
-	CombinedPeriodInDays *int64 `json:"CombinedPeriodInDays,omitempty" plist:"CombinedPeriodInDays,omitempty"`
+	CombinedPeriodInDays *int64 `json:"CombinedPeriodInDays,omitempty"`
 	// Specifies the number of days to defer a major OS software update on the device. When set, software updates only appear after the specified delay, following the release of the software update. Available in macOS 15 and later.
-	MajorPeriodInDays *int64 `json:"MajorPeriodInDays,omitempty" plist:"MajorPeriodInDays,omitempty"`
+	MajorPeriodInDays *int64 `json:"MajorPeriodInDays,omitempty"`
 	// Specifies the number of days to defer a minor OS software update on the device. It also defers major updates for iOS. When set, software updates only appear after the specified delay, following the release of the software update. Available in macOS 15 and later.
-	MinorPeriodInDays *int64 `json:"MinorPeriodInDays,omitempty" plist:"MinorPeriodInDays,omitempty"`
+	MinorPeriodInDays *int64 `json:"MinorPeriodInDays,omitempty"`
 	// Specifies the number of days to defer system or non-OS updates. When set, updates only appear after the specified delay, following the release of the update. Available in macOS 15 and later.
-	SystemPeriodInDays *int64 `json:"SystemPeriodInDays,omitempty" plist:"SystemPeriodInDays,omitempty"`
+	SystemPeriodInDays *int64 `json:"SystemPeriodInDays,omitempty"`
 }
 
 // This string specifies how the device shows software updates to the user. When more than one update is available update, the device behaves as follows:
@@ -1306,17 +1306,17 @@ type AutomaticActions struct {
 	// - `Allowed` - the user can enable or disable automatic downloads.
 	// - `AlwaysOn` - automatic downloads are always enabled.
 	// - `AlwaysOff` - automatic downloads are always disabled.
-	Download *Download `default:"Allowed" json:"Download,omitempty" plist:"Download,omitempty"`
+	Download *Download `default:"Allowed" json:"Download,omitempty"`
 	// Specifies whether the user can control automatic installation of available updates:
 	// - `Allowed` - the user can enable or disable automatic installation.
 	// - `AlwaysOn` - automatic installations are always enabled.
 	// - `AlwaysOff` - automatic installations are always disabled.
-	InstallOSUpdates *InstallOSUpdates `default:"Allowed" json:"InstallOSUpdates,omitempty" plist:"InstallOSUpdates,omitempty"`
+	InstallOSUpdates *InstallOSUpdates `default:"Allowed" json:"InstallOSUpdates,omitempty"`
 	// Specifies whether the user can control automatic installation of available security updates:
 	// - `Allowed` - the user can enable or disable automatic installation.
 	// - `AlwaysOn` - automatic installations are always enabled.
 	// - `AlwaysOff` - automatic installations are always disabled.
-	InstallSecurityUpdate *InstallSecurityUpdate `default:"Allowed" json:"InstallSecurityUpdate,omitempty" plist:"InstallSecurityUpdate,omitempty"`
+	InstallSecurityUpdate *InstallSecurityUpdate `default:"Allowed" json:"InstallSecurityUpdate,omitempty"`
 }
 
 // Specifies whether the user can control automatic downloads of available updates:
@@ -1359,10 +1359,10 @@ const (
 type RapidSecurityResponse struct {
 	// If set to `false`, Background Security Improvements aren't offered for user installation. The system can still install Background Security Improvements with `com.apple.configuration.softwareupdate.enforcement.specific` configurations.
 	// If set to `true`, the system offers Background Security Improvements to the user.
-	Enable *bool `json:"Enable,omitempty" plist:"Enable,omitempty"`
+	Enable *bool `json:"Enable,omitempty"`
 	// If set to `false`, the system doesn't offer Background Security Improvement rollbacks to the user.
 	// If set to `true`, the system offers Background Security Improvement rollbacks to the user.
-	EnableRollback *bool `json:"EnableRollback,omitempty" plist:"EnableRollback,omitempty"`
+	EnableRollback *bool `json:"EnableRollback,omitempty"`
 }
 
 // This object configures the beta program settings for a device.
@@ -1371,11 +1371,11 @@ type Beta struct {
 	// - `Allowed` - the user can enroll in any applicable beta programs associated with their logged in Apple Account. If the `OfferPrograms` key is present, then the programs listed in that key are also presented to the user.
 	// - `AlwaysOn` - the beta programs specified by the organization are used, and the user isn't able to enroll in a beta program using their logged in Apple Account. The device is automatically enrolled into the beta program specified by the `RequireProgram` key if it's present. Otherwise, the system presents the programs listed in the `OfferPrograms` key to the user to choose which to enroll with.
 	// - `AlwaysOff` - The device isn't allowed to enroll in any beta programs. The system removes the device from any beta programs, if already enrolled.
-	ProgramEnrollment *ProgramEnrollment `default:"Allowed" json:"ProgramEnrollment,omitempty" plist:"ProgramEnrollment,omitempty"`
+	ProgramEnrollment *ProgramEnrollment `default:"Allowed" json:"ProgramEnrollment,omitempty"`
 	// An array of beta programs allowed on the device. This key must only be present if the `ProgramEnrollment` key is set to `Allowed` or `AlwaysOn`. This key must not be present if the `RequireProgram` key is present. This key can be present on unsupervised devices where the `ProgramEnrollment` key isn't supported but is implicitly set to `Allowed`.
-	OfferPrograms *[]Program `json:"OfferPrograms,omitempty" plist:"OfferPrograms,omitempty"`
+	OfferPrograms *[]Program `json:"OfferPrograms,omitempty"`
 	// The device automatically enrolls in this beta program. This key must only be present if the `ProgramEnrollment` key is set to `AlwaysOn`. The `OfferPrograms` key must not be present if this key is present.
-	RequireProgram *RequireProgram `json:"RequireProgram,omitempty" plist:"RequireProgram,omitempty"`
+	RequireProgram *RequireProgram `json:"RequireProgram,omitempty"`
 }
 
 // Specifies whether the user can control beta program enrollment in the software update settings UI:
@@ -1393,27 +1393,27 @@ const (
 // The name and token associated with a specific beta program to be allowed.
 type Program struct {
 	// A human readable description of the beta program.
-	Description string `json:"Description" plist:"Description" required:"true"`
+	Description string `json:"Description" required:"true"`
 	// The Apple Business Manager or Apple School Manager seeding service token for the organization the MDM server is part of. The system uses this token to enroll the device in the corresponding beta program.
-	Token string `json:"Token" plist:"Token" required:"true"`
+	Token string `json:"Token" required:"true"`
 }
 
 // The device automatically enrolls in this beta program. This key must only be present if the `ProgramEnrollment` key is set to `AlwaysOn`. The `OfferPrograms` key must not be present if this key is present.
 type RequireProgram struct {
 	// A human readable description of the beta program.
-	Description string `json:"Description" plist:"Description" required:"true"`
+	Description string `json:"Description" required:"true"`
 	// The Apple Business Manager or Apple School Manager seeding service token for the organization the MDM server is part of. The system uses this token to enroll the device in the corresponding beta program.
-	Token string `json:"Token" plist:"Token" required:"true"`
+	Token string `json:"Token" required:"true"`
 }
 
 // The declaration to configure an MDMv1 profile for Apple Watch enrollment.
 type WatchEnrollment struct {
 	// The URL of the profile that the Apple Watch downloads and installs if the user opts in to management during the pairing process, which needs to start with `https://`. Successful enrollment requires that the pairing iPhone is supervised and the profile contains an MDM payload. Apple Watch attempts to install each payload that the profile contains.
-	EnrollmentProfileURL string `json:"EnrollmentProfileURL" plist:"EnrollmentProfileURL" required:"true"`
+	EnrollmentProfileURL string `json:"EnrollmentProfileURL" required:"true"`
 	// An array of identifiers of asset declarations that contain anchor certificates to use to evaluate the trust of the enrollment profile server. Set the type of the corresponding assets to `com.apple.asset.credential.certificate`.
 	// These certificates are pinned, meaning that the server specified by the `EnrollmentProfileURL` must use a certificate that chains to one of the certs in this array.
 	// If it chains to one of the built-in trusted root certificates but not one of the `AnchorCertificateAssetReferences` certs, the connection will fail.
-	AnchorCertificateAssetReferences *[]string `json:"AnchorCertificateAssetReferences,omitempty" plist:"AnchorCertificateAssetReferences,omitempty"`
+	AnchorCertificateAssetReferences *[]string `json:"AnchorCertificateAssetReferences,omitempty"`
 }
 
 func (p *WatchEnrollment) DeclarationType() string {

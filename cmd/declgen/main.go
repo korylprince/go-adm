@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	declarations "github.com/korylprince/go-adm/declarative/gen"
 	"github.com/korylprince/go-adm/replace"
@@ -25,6 +26,7 @@ func checkFlags() error {
 	flCommit := flag.String("commit", "", "git commit")
 	flOut := flag.String("out", ".", "output directory. Leave empty for stdout")
 	flRepl := flag.String("repl", "", "path to replacements file")
+	flTags := flag.String("tags", "json", "comma-separated struct tag names to generate")
 	flReqDef := flag.Bool("reqdef", false, "generate required and default struct tags")
 	flag.Parse()
 
@@ -54,6 +56,18 @@ func checkFlags() error {
 	var opts []declarations.EncodeOption
 	if *flReqDef {
 		opts = append(opts, declarations.WithRequiredDefault())
+	}
+
+	if *flTags != "" {
+		var tags []string
+		for _, tag := range strings.Split(*flTags, ",") {
+			tag = strings.TrimSpace(tag)
+			if tag == "" {
+				continue
+			}
+			tags = append(tags, tag)
+		}
+		opts = append(opts, declarations.WithTags(tags))
 	}
 
 	if err = declarations.GenerateFromGit(*flRepo, *flCommit, *flPath, repl, *flOut, opts...); err != nil {

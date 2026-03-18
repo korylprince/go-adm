@@ -20,13 +20,13 @@ type AssetCredentialACME struct {
 	// The external reference. Ensure that the asset data:
 	// - Is a JSON document that represents the `com.apple.credential.acme` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
-	Reference AssetCredentialACMEReference `json:"Reference" plist:"Reference" required:"true"`
+	Reference AssetCredentialACMEReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetCredentialACMEAuthentication `json:"Authentication,omitempty" plist:"Authentication,omitempty"`
+	Authentication *AssetCredentialACMEAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use, which has these allowed values:
 	// - `Default`: The most restrictive accessibility that still satisfies all uses of the asset by configurations that reference it.
 	// - `AfterFirstUnlock`: The keychain item is only available after the first unlock of the device.
-	Accessible *AssetCredentialACMEAccessible `default:"Default" json:"Accessible,omitempty" plist:"Accessible,omitempty"`
+	Accessible *AssetCredentialACMEAccessible `default:"Default" json:"Accessible,omitempty"`
 }
 
 func (p *AssetCredentialACME) DeclarationType() string {
@@ -38,13 +38,13 @@ func (p *AssetCredentialACME) DeclarationType() string {
 // - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 type AssetCredentialACMEReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
-	DataURL string `json:"DataURL" plist:"DataURL" required:"true"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
-	ContentType *string `json:"ContentType,omitempty" plist:"ContentType,omitempty"`
+	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data. Set the size to `0` if there's no expectation of a response body. If present, the system checks the actual size of the downloaded data, and an error occurs if the values don't match.
-	Size *int64 `json:"Size,omitempty" plist:"Size,omitempty"`
+	Size *int64 `json:"Size,omitempty"`
 	// A SHA-256 hash of the data stored at the `DataURL`. Don't set this value if `Size` is `0` as the client ignores it. However, if present, the system checks the actual hash of the downloaded data, and an error occurs if the values don't match.
-	HashSHA256 *string `json:"Hash-SHA-256,omitempty" plist:"Hash-SHA-256,omitempty"`
+	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
 // The server authentication details.
@@ -52,7 +52,7 @@ type AssetCredentialACMEAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetCredentialACMEAuthenticationType `json:"Type" plist:"Type" required:"true"`
+	Type AssetCredentialACMEAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
@@ -78,9 +78,9 @@ const (
 // A reference to a PKCS #1 or PEM encoded certificate.
 type AssetCredentialCertificate struct {
 	// The external reference. Ensure that the asset data uses a media type of `application/pkcs1` or `application/pem` to correctly identify the type of encoded certificate. If the asset data includes a `ContentType` sub-key, set it to the corresponding media type.
-	Reference AssetCredentialCertificateReference `json:"Reference" plist:"Reference" required:"true"`
+	Reference AssetCredentialCertificateReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetCredentialCertificateAuthentication `json:"Authentication,omitempty" plist:"Authentication,omitempty"`
+	Authentication *AssetCredentialCertificateAuthentication `json:"Authentication,omitempty"`
 }
 
 func (p *AssetCredentialCertificate) DeclarationType() string {
@@ -90,13 +90,13 @@ func (p *AssetCredentialCertificate) DeclarationType() string {
 // The external reference. Ensure that the asset data uses a media type of `application/pkcs1` or `application/pem` to correctly identify the type of encoded certificate. If the asset data includes a `ContentType` sub-key, set it to the corresponding media type.
 type AssetCredentialCertificateReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
-	DataURL string `json:"DataURL" plist:"DataURL" required:"true"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
-	ContentType *string `json:"ContentType,omitempty" plist:"ContentType,omitempty"`
+	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data. Set the size to `0` if there's no expectation of a response body. If present, the system checks the actual size of the downloaded data, and an error occurs if the values don't match.
-	Size *int64 `json:"Size,omitempty" plist:"Size,omitempty"`
+	Size *int64 `json:"Size,omitempty"`
 	// A SHA-256 hash of the data stored at the `DataURL`. Don't set this value if `Size` is `0` as the client ignores it. However, if present, the system checks the actual hash of the downloaded data, and an error occurs if the values don't match.
-	HashSHA256 *string `json:"Hash-SHA-256,omitempty" plist:"Hash-SHA-256,omitempty"`
+	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
 // The server authentication details.
@@ -104,7 +104,7 @@ type AssetCredentialCertificateAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetCredentialCertificateAuthenticationType `json:"Type" plist:"Type" required:"true"`
+	Type AssetCredentialCertificateAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
@@ -122,13 +122,13 @@ type AssetCredentialIdentity struct {
 	// The external reference. Ensure that the asset data:
 	// - Is a JSON document that represents the `com.apple.credential.identity` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
-	Reference AssetCredentialIdentityReference `json:"Reference" plist:"Reference" required:"true"`
+	Reference AssetCredentialIdentityReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetCredentialIdentityAuthentication `json:"Authentication,omitempty" plist:"Authentication,omitempty"`
+	Authentication *AssetCredentialIdentityAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use, which has these allowed values:
 	// - `Default`: The most restrictive accessibility that still satisfies all uses of the asset by configurations that reference it.
 	// - `AfterFirstUnlock`: The keychain item is only available after the first unlock of the device.
-	Accessible *AssetCredentialIdentityAccessible `default:"Default" json:"Accessible,omitempty" plist:"Accessible,omitempty"`
+	Accessible *AssetCredentialIdentityAccessible `default:"Default" json:"Accessible,omitempty"`
 }
 
 func (p *AssetCredentialIdentity) DeclarationType() string {
@@ -140,13 +140,13 @@ func (p *AssetCredentialIdentity) DeclarationType() string {
 // - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 type AssetCredentialIdentityReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
-	DataURL string `json:"DataURL" plist:"DataURL" required:"true"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
-	ContentType *string `json:"ContentType,omitempty" plist:"ContentType,omitempty"`
+	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data. Set the size to `0` if there's no expectation of a response body. If present, the system checks the actual size of the downloaded data, and an error occurs if the values don't match.
-	Size *int64 `json:"Size,omitempty" plist:"Size,omitempty"`
+	Size *int64 `json:"Size,omitempty"`
 	// A SHA-256 hash of the data stored at the `DataURL`. Don't set this value if `Size` is `0` as the client ignores it. However, if present, the system checks the actual hash of the downloaded data, and an error occurs if the values don't match.
-	HashSHA256 *string `json:"Hash-SHA-256,omitempty" plist:"Hash-SHA-256,omitempty"`
+	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
 // The server authentication details.
@@ -154,7 +154,7 @@ type AssetCredentialIdentityAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetCredentialIdentityAuthenticationType `json:"Type" plist:"Type" required:"true"`
+	Type AssetCredentialIdentityAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
@@ -182,13 +182,13 @@ type AssetCredentialSCEP struct {
 	// The external reference. Ensure that the asset data:
 	// - Is a JSON document that represents the `com.apple.credential.scep` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
-	Reference AssetCredentialSCEPReference `json:"Reference" plist:"Reference" required:"true"`
+	Reference AssetCredentialSCEPReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetCredentialSCEPAuthentication `json:"Authentication,omitempty" plist:"Authentication,omitempty"`
+	Authentication *AssetCredentialSCEPAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use, which has these allowed values:
 	// - `Default`: The most restrictive accessibility that still satisfies all uses of the asset by configurations that reference it.
 	// - `AfterFirstUnlock`: The keychain item is only available after the first unlock of the device.
-	Accessible *AssetCredentialSCEPAccessible `default:"Default" json:"Accessible,omitempty" plist:"Accessible,omitempty"`
+	Accessible *AssetCredentialSCEPAccessible `default:"Default" json:"Accessible,omitempty"`
 }
 
 func (p *AssetCredentialSCEP) DeclarationType() string {
@@ -200,13 +200,13 @@ func (p *AssetCredentialSCEP) DeclarationType() string {
 // - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 type AssetCredentialSCEPReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
-	DataURL string `json:"DataURL" plist:"DataURL" required:"true"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
-	ContentType *string `json:"ContentType,omitempty" plist:"ContentType,omitempty"`
+	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data. Set the size to `0` if there's no expectation of a response body. If present, the system checks the actual size of the downloaded data, and an error occurs if the values don't match.
-	Size *int64 `json:"Size,omitempty" plist:"Size,omitempty"`
+	Size *int64 `json:"Size,omitempty"`
 	// A SHA-256 hash of the data stored at the `DataURL`. Don't set this value if `Size` is `0` as the client ignores it. However, if present, the system checks the actual hash of the downloaded data, and an error occurs if the values don't match.
-	HashSHA256 *string `json:"Hash-SHA-256,omitempty" plist:"Hash-SHA-256,omitempty"`
+	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
 // The server authentication details.
@@ -214,7 +214,7 @@ type AssetCredentialSCEPAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetCredentialSCEPAuthenticationType `json:"Type" plist:"Type" required:"true"`
+	Type AssetCredentialSCEPAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
@@ -242,9 +242,9 @@ type AssetCredentialUserNameandPassword struct {
 	// The external reference. Ensure that the asset data:
 	// - Is a JSON document that represents the `com.apple.credential.usernameandpassword` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
-	Reference AssetCredentialUserNameandPasswordReference `json:"Reference" plist:"Reference" required:"true"`
+	Reference AssetCredentialUserNameandPasswordReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetCredentialUserNameandPasswordAuthentication `json:"Authentication,omitempty" plist:"Authentication,omitempty"`
+	Authentication *AssetCredentialUserNameandPasswordAuthentication `json:"Authentication,omitempty"`
 }
 
 func (p *AssetCredentialUserNameandPassword) DeclarationType() string {
@@ -256,13 +256,13 @@ func (p *AssetCredentialUserNameandPassword) DeclarationType() string {
 // - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 type AssetCredentialUserNameandPasswordReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
-	DataURL string `json:"DataURL" plist:"DataURL" required:"true"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
-	ContentType *string `json:"ContentType,omitempty" plist:"ContentType,omitempty"`
+	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data. Set the size to `0` if there's no expectation of a response body. If present, the system checks the actual size of the downloaded data, and an error occurs if the values don't match.
-	Size *int64 `json:"Size,omitempty" plist:"Size,omitempty"`
+	Size *int64 `json:"Size,omitempty"`
 	// A SHA-256 hash of the data stored at the `DataURL`. Don't set this value if `Size` is `0` as the client ignores it. However, if present, the system checks the actual hash of the downloaded data, and an error occurs if the values don't match.
-	HashSHA256 *string `json:"Hash-SHA-256,omitempty" plist:"Hash-SHA-256,omitempty"`
+	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
 // The server authentication details.
@@ -270,7 +270,7 @@ type AssetCredentialUserNameandPasswordAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetCredentialUserNameandPasswordAuthenticationType `json:"Type" plist:"Type" required:"true"`
+	Type AssetCredentialUserNameandPasswordAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
@@ -286,9 +286,9 @@ const (
 // A reference to arbitrary data with a specific media type.
 type AssetData struct {
 	// The external reference.
-	Reference AssetDataReference `json:"Reference" plist:"Reference" required:"true"`
+	Reference AssetDataReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetDataAuthentication `json:"Authentication,omitempty" plist:"Authentication,omitempty"`
+	Authentication *AssetDataAuthentication `json:"Authentication,omitempty"`
 }
 
 func (p *AssetData) DeclarationType() string {
@@ -298,13 +298,13 @@ func (p *AssetData) DeclarationType() string {
 // The external reference.
 type AssetDataReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
-	DataURL string `json:"DataURL" plist:"DataURL" required:"true"`
+	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
-	ContentType *string `json:"ContentType,omitempty" plist:"ContentType,omitempty"`
+	ContentType *string `json:"ContentType,omitempty"`
 	// The size of the data. Set the size to `0` if there's no expectation of a response body. If present, the system checks the actual size of the downloaded data, and an error occurs if the values don't match.
-	Size *int64 `json:"Size,omitempty" plist:"Size,omitempty"`
+	Size *int64 `json:"Size,omitempty"`
 	// A SHA-256 hash of the data stored at the `DataURL`. Don't set this value if `Size` is `0` as the client ignores it. However, if present, the system checks the actual hash of the downloaded data, and an error occurs if the values don't match.
-	HashSHA256 *string `json:"Hash-SHA-256,omitempty" plist:"Hash-SHA-256,omitempty"`
+	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
 // The server authentication details.
@@ -312,7 +312,7 @@ type AssetDataAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetDataAuthenticationType `json:"Type" plist:"Type" required:"true"`
+	Type AssetDataAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
@@ -328,9 +328,9 @@ const (
 // The user-identity data.
 type AssetUserIdentity struct {
 	// The user's full name.
-	FullName *string `json:"FullName,omitempty" plist:"FullName,omitempty"`
+	FullName *string `json:"FullName,omitempty"`
 	// The email address of the user.
-	EmailAddress *string `json:"EmailAddress,omitempty" plist:"EmailAddress,omitempty"`
+	EmailAddress *string `json:"EmailAddress,omitempty"`
 }
 
 func (p *AssetUserIdentity) DeclarationType() string {
