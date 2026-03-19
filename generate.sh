@@ -9,15 +9,24 @@ popd
 go install ./cmd/cmdgen
 go install ./cmd/declgen
 go install ./cmd/profilegen
+go install ./cmd/structgen
 
-pushd ./commands/
+pushd ./generated/mdm/
 go generate
 popd
 
-pushd ./declarative/
+pushd ./generated/declarative/
 go generate
 popd
 
-pushd ./profiles/
+pushd ./generated/mdm/checkin/
+go generate
+popd
+
+pushd ./generated/mdm/errors/
+go generate
+popd
+
+pushd ./generated/other/
 go generate
 popd
