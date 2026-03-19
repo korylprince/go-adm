@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/korylprince/go-adm/utils/replace"
 	"github.com/korylprince/go-adm/utils/text"
 )
 
@@ -13,6 +14,7 @@ type payloadKey struct {
 	key     *PayloadKey
 	root    bool
 	name    string
+	repTyp  replace.ReplacementType
 }
 
 // normalizeANYKeyName returns a normalized name for a PayloadKey,
@@ -50,12 +52,14 @@ func (key *payloadKey) fullyQualified() []string {
 	return name
 }
 
-// GlobalNamer registers Schemas to determine globally unique names for all generated types
+// GlobalNamer registers Schemas to determine globally unique names for all generated types.
+// When replacements are provided, collision detection uses post-replacement names
+// so that two raw names that produce the same replaced name are correctly disambiguated.
 type GlobalNamer struct {
 	keyNames map[*PayloadKey]*payloadKey
 }
 
-func NewGlobalNamer(file *File) *GlobalNamer {
+func NewGlobalNamer(file *File, reps replace.Replacements) *GlobalNamer {
 	namer := &GlobalNamer{
 		keyNames: make(map[*PayloadKey]*payloadKey),
 	}
@@ -69,6 +73,7 @@ func NewGlobalNamer(file *File) *GlobalNamer {
 				schema:  t.Schema,
 				parents: t.Parents,
 				key:     t.Key,
+				repTyp:  replace.Const,
 			})
 		case *Struct:
 			keys = append(keys, &payloadKey{
@@ -76,6 +81,7 @@ func NewGlobalNamer(file *File) *GlobalNamer {
 				parents: t.Parents,
 				key:     t.Key,
 				root:    t.Source != SourceSubKeys,
+				repTyp:  replace.Struct,
 			})
 		case *Map:
 			keys = append(keys, &payloadKey{
@@ -83,39 +89,51 @@ func NewGlobalNamer(file *File) *GlobalNamer {
 				parents: t.Parents,
 				key:     t.Key,
 				root:    t.Source != SourceSubKeys,
+				repTyp:  replace.Struct,
 			})
 		}
 	}
 
-	// mark every possible key name
+	// resolveName applies replacements to a candidate name for collision detection.
+	// This ensures names that differ pre-replacement but collide post-replacement
+	// are detected and disambiguated with longer qualified prefixes.
+	resolveName := func(rawName string, repTyp replace.ReplacementType) string {
+		return reps.Replace(rawName, repTyp)
+	}
+
+	// mark every possible key name (using post-replacement names for collision counting)
 	names := make(map[string]int)
 	for _, key := range keys {
 		fq := key.fullyQualified()
 		for start := len(fq) - 1; start >= 0; start-- {
-			name := strings.Join(fq[start:], "")
-			names[name] += 1
+			rawName := strings.Join(fq[start:], "")
+			resolved := resolveName(rawName, key.repTyp)
+			names[resolved] += 1
 		}
 	}
 
-	// find minimal unique names
+	// find minimal unique names (checking uniqueness of post-replacement names)
 	count := make(map[string]int)
 outer:
 	for _, key := range keys {
 		fq := key.fullyQualified()
 		for start := len(fq) - 1; start >= 0; start-- {
-			name := strings.Join(fq[start:], "")
-			if names[name] == 1 {
-				key.name = name
+			rawName := strings.Join(fq[start:], "")
+			resolved := resolveName(rawName, key.repTyp)
+			if names[resolved] == 1 {
+				key.name = rawName
 				namer.keyNames[key.key] = key
 				continue outer
 			}
 		}
 		// If we got here, the fully qualified identifier isn't unique
-		// as a safeguard, return the name suffixed with an index
-		// we shouldn't ever hit this in real life
+		// as a safeguard, return the name suffixed with an index.
+		// Use the resolved prefix for counting so that different raw
+		// prefixes that resolve to the same name get distinct indices.
 		prefix := strings.Join(fq, "")
-		count[prefix] += 1
-		key.name = fmt.Sprintf("%s%d", prefix, count[prefix])
+		resolvedPrefix := resolveName(prefix, key.repTyp)
+		count[resolvedPrefix] += 1
+		key.name = fmt.Sprintf("%s%d", prefix, count[resolvedPrefix])
 		namer.keyNames[key.key] = key
 	}
 

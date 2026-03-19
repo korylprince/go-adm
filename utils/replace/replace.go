@@ -39,10 +39,18 @@ func (r *Replacement) Replace(s string, typ ReplacementType) string {
 
 type Replacements []*Replacement
 
-// Replace processes all replacements on s in order
+// Replace processes all replacements on s in order, repeating until
+// no further changes occur. This ensures patterns that appear multiple
+// times (e.g., due to GlobalNamer prefixing) are all replaced.
 func (r Replacements) Replace(s string, typ ReplacementType) string {
-	for _, rep := range r {
-		s = rep.Replace(s, typ)
+	for {
+		prev := s
+		for _, rep := range r {
+			s = rep.Replace(s, typ)
+		}
+		if s == prev {
+			break
+		}
 	}
 	return s
 }

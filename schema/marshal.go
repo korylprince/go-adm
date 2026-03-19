@@ -179,7 +179,7 @@ func (e *Encoder) fieldTags(fld *StructField) map[string]string {
 }
 
 func (e *Encoder) RegisterFile(f *File) {
-	e.namer = NewGlobalNamer(f)
+	e.namer = NewGlobalNamer(f, e.reps)
 }
 
 func (e *Encoder) Encode(f *File) {
