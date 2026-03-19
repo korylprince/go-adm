@@ -85,13 +85,13 @@ type AssetsItem struct {
 	// An array of strings representing a set of MD5 hash values. The device uses these values to verify the integrity of the downloaded manifest item data. Required when the `md5-size` key is present.
 	Md5s *[]string `json:"md5s,omitempty" plist:"md5s,omitempty"`
 	// The SHA-256 hash value the device uses when verifying the hash of the manifest item data. When this key is present, the device ignores the `sha256-size` and `sha256` keys.
-	Sha256 *string `json:"sha256,omitempty" plist:"sha256,omitempty"`
+	SHA256 *string `json:"sha256,omitempty" plist:"sha256,omitempty"`
 	// The data *chunk* size the device uses when verifying the hash of the manifest item data. Required when the `sha256s` key is present.
-	Sha256Size *int64 `json:"sha256-size,omitempty" plist:"sha256-size,omitempty"`
+	SHA256Size *int64 `json:"sha256-size,omitempty" plist:"sha256-size,omitempty"`
 	// An array of strings representing a set of SHA-256 hash values. The device uses these values to verify the integrity of the downloaded manifest item data. Required when the `sha256-size` key is present.
-	Sha256s *[]string `json:"sha256s,omitempty" plist:"sha256s,omitempty"`
+	SHA256s *[]string `json:"sha256s,omitempty" plist:"sha256s,omitempty"`
 	// The URL that hosts the manifest item data. The URL needs to start with `https://`.
-	Url string `json:"url" plist:"url" required:"true"`
+	URL string `json:"url" plist:"url" required:"true"`
 	// removed
 	NeedsShine *bool `json:"needs-shine,omitempty" plist:"needs-shine,omitempty"`
 }

@@ -617,7 +617,7 @@ func (p *InviteToProgramCommandResponse) ResponseRequestType() string {
 type ProgramID string
 
 const (
-	ProgramIDComapplecloudvpp ProgramID = "com.apple.cloudvpp"
+	ProgramIDComApplecloudvpp ProgramID = "com.apple.cloudvpp"
 )
 
 // The result of the command.
@@ -1387,7 +1387,7 @@ type ParentsItem struct {
 	// A dictionary that contains additional details about the parent content cache.
 	Details ParentsItemDetails `json:"details" plist:"details" required:"true"`
 	// The unique identifier of the parent content cache.
-	Guid string `json:"guid" plist:"guid" required:"true"`
+	GUID string `json:"guid" plist:"guid" required:"true"`
 	// If `true,` the parent content cache is able to respond to requests from this content cache.
 	Healthy bool `json:"healthy" plist:"healthy" required:"true"`
 	// The IP port number the parent content cache listens to for requests.
@@ -1417,7 +1417,7 @@ const (
 // A dictionary that contains additional details about the parent content cache.
 type ParentsItemDetails struct {
 	// If `true`, the parent content cache power source is AC; otherwise, an internal battery provides its power.
-	AcPower *bool `json:"ac-power,omitempty" plist:"ac-power,omitempty"`
+	ACPower *bool `json:"ac-power,omitempty" plist:"ac-power,omitempty"`
 	// The maximum amount of disk space, in bytes, available to the parent content cache.
 	CacheSize *int64 `json:"cache-size,omitempty" plist:"cache-size,omitempty"`
 	// A dictionary that describes the capabilities of the parent content cache.
@@ -1463,7 +1463,7 @@ type PeersItem struct {
 	// If `true`, the peer content cache is able to respond to requests from the content cache.
 	Friendly bool `json:"friendly" plist:"friendly" required:"true"`
 	// The unique identifier of the peer content cache.
-	Guid string `json:"guid" plist:"guid" required:"true"`
+	GUID string `json:"guid" plist:"guid" required:"true"`
 	// If `true`, the peer content cache is able to respond to requests from the content cache.
 	Healthy bool `json:"healthy" plist:"healthy" required:"true"`
 	// The IP port number the peer content cache listens to for requests.
@@ -1495,7 +1495,7 @@ const (
 // A dictionary that contains additional details about the peer content cache.
 type PeersItemDetails struct {
 	// If `true`, the peer content cache power source is AC; otherwise, an internal battery provides its power.
-	AcPower *bool `json:"ac-power,omitempty" plist:"ac-power,omitempty"`
+	ACPower *bool `json:"ac-power,omitempty" plist:"ac-power,omitempty"`
 	// The maximum amount of disk space, in bytes, available to the peer content cache.
 	CacheSize *int64 `json:"cache-size,omitempty" plist:"cache-size,omitempty"`
 	// A dictionary that describes the capabilities of the peer content cache.
@@ -2103,7 +2103,7 @@ const (
 	SecureBootLevelOff          SecureBootLevel = "off"
 	SecureBootLevelMedium       SecureBootLevel = "medium"
 	SecureBootLevelFull         SecureBootLevel = "full"
-	SecureBootLevelNotsupported SecureBootLevel = "not supported"
+	SecureBootLevelNotSupported SecureBootLevel = "not supported"
 )
 
 // The device's external boot level, which indicates whether it allows booting from an external device, disallows it, or doesn't support it.
@@ -2112,7 +2112,7 @@ type ExternalBootLevel string
 const (
 	ExternalBootLevelAllowed      ExternalBootLevel = "allowed"
 	ExternalBootLevelDisallowed   ExternalBootLevel = "disallowed"
-	ExternalBootLevelNotsupported ExternalBootLevel = "not supported"
+	ExternalBootLevelNotSupported ExternalBootLevel = "not supported"
 )
 
 // This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The value is automatically set for devices enrolled through the Device Enrollment Program (DEP). The user can also manually set this value in the RecoveryOS.
@@ -2122,7 +2122,7 @@ type BootstrapTokenAllowedForAuthentication string
 const (
 	BootstrapTokenAllowedForAuthenticationAllowed      BootstrapTokenAllowedForAuthentication = "allowed"
 	BootstrapTokenAllowedForAuthenticationDisallowed   BootstrapTokenAllowedForAuthentication = "disallowed"
-	BootstrapTokenAllowedForAuthenticationNotsupported BootstrapTokenAllowedForAuthentication = "not supported"
+	BootstrapTokenAllowedForAuthenticationNotSupported BootstrapTokenAllowedForAuthentication = "not supported"
 )
 
 // Send requests to a device using lights-out management (LOM).

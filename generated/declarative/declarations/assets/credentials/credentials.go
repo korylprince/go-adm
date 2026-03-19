@@ -9,7 +9,7 @@ var CredentialMap = map[string]any{
 	"com.apple.credential.acme":                ACMECredential{},
 	"com.apple.credential.identity":            IdentityCredential{},
 	"com.apple.credential.scep":                SCEPCredential{},
-	"com.apple.credential.usernameandpassword": UserNameandPasswordCredential{},
+	"com.apple.credential.usernameandpassword": UserNameAndPasswordCredential{},
 }
 
 // An ACME identity that the device generates.
@@ -67,7 +67,7 @@ const (
 // Specifies the subject's alternative name that the device requests for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 type ACMECredentialSubjectAltName struct {
 	// The RFC 822 email address.
-	Rfc822Name *string `json:"rfc822Name,omitempty"`
+	RFC822Name *string `json:"rfc822Name,omitempty"`
 	// The DNS name.
 	DNSName *string `json:"dNSName,omitempty"`
 	// The uniform resource identifier.
@@ -101,7 +101,7 @@ type SCEPCredential struct {
 	// A preshared secret.
 	Challenge *string `json:"Challenge,omitempty"`
 	// The key size in bits, either `1024`, `2048`, or `4096`.
-	Keysize *Keysize `default:"1024" json:"Keysize,omitempty"`
+	KeySize *Keysize `default:"1024" json:"Keysize,omitempty"`
 	// The key type, which always has the value `RSA`.
 	KeyType *string `default:"RSA" json:"Key Type,omitempty"`
 	// A bitmask that specifies the use of the key: `1` is signing, `4` is encryption, and `5` is both signing and encryption. Some certificate authorities, such as Windows CA, support only encryption or signing, but not both at the same time.
@@ -132,7 +132,7 @@ const (
 // The subject's alternative name for the certificate.
 type SCEPCredentialSubjectAltName struct {
 	// The RFC 822 email address.
-	Rfc822Name *string `json:"rfc822Name,omitempty"`
+	RFC822Name *string `json:"rfc822Name,omitempty"`
 	// The DNS name.
 	DNSName *string `json:"dNSName,omitempty"`
 	// The uniform resource identifier.
@@ -142,13 +142,13 @@ type SCEPCredentialSubjectAltName struct {
 }
 
 // Data that describes a credential that represents a user name and password.
-type UserNameandPasswordCredential struct {
+type UserNameAndPasswordCredential struct {
 	// The user name for this credential.
 	UserName string `json:"UserName" required:"true"`
 	// The password for this credential.
 	Password *string `json:"Password,omitempty"`
 }
 
-func (p *UserNameandPasswordCredential) CredentialType() string {
+func (p *UserNameAndPasswordCredential) CredentialType() string {
 	return "com.apple.credential.usernameandpassword"
 }

@@ -10,7 +10,7 @@ var DeclarationMap = map[string]any{
 	"com.apple.asset.credential.certificate":  AssetCredentialCertificate{},
 	"com.apple.asset.credential.identity":     AssetCredentialIdentity{},
 	"com.apple.asset.credential.scep":         AssetCredentialSCEP{},
-	"com.apple.asset.credential.userpassword": AssetCredentialUserNameandPassword{},
+	"com.apple.asset.credential.userpassword": AssetCredentialUserNameAndPassword{},
 	"com.apple.asset.data":                    AssetData{},
 	"com.apple.asset.useridentity":            AssetUserIdentity{},
 }
@@ -238,23 +238,23 @@ const (
 )
 
 // A reference to data that describes a credential that represents a user name and password.
-type AssetCredentialUserNameandPassword struct {
+type AssetCredentialUserNameAndPassword struct {
 	// The external reference. Ensure that the asset data:
 	// - Is a JSON document that represents the `com.apple.credential.usernameandpassword` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
-	Reference AssetCredentialUserNameandPasswordReference `json:"Reference" required:"true"`
+	Reference AssetCredentialUserNameAndPasswordReference `json:"Reference" required:"true"`
 	// The server authentication details.
-	Authentication *AssetCredentialUserNameandPasswordAuthentication `json:"Authentication,omitempty"`
+	Authentication *AssetCredentialUserNameAndPasswordAuthentication `json:"Authentication,omitempty"`
 }
 
-func (p *AssetCredentialUserNameandPassword) DeclarationType() string {
+func (p *AssetCredentialUserNameAndPassword) DeclarationType() string {
 	return "com.apple.asset.credential.userpassword"
 }
 
 // The external reference. Ensure that the asset data:
 // - Is a JSON document that represents the `com.apple.credential.usernameandpassword` credential type
 // - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
-type AssetCredentialUserNameandPasswordReference struct {
+type AssetCredentialUserNameAndPasswordReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
 	DataURL string `json:"DataURL" required:"true"`
 	// The media type that describes the data. If present, the system checks the actual media type of the downloaded data, and an error occurs if the values don't match.
@@ -266,21 +266,21 @@ type AssetCredentialUserNameandPasswordReference struct {
 }
 
 // The server authentication details.
-type AssetCredentialUserNameandPasswordAuthentication struct {
+type AssetCredentialUserNameAndPasswordAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
-	Type AssetCredentialUserNameandPasswordAuthenticationType `json:"Type" required:"true"`
+	Type AssetCredentialUserNameAndPasswordAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
-type AssetCredentialUserNameandPasswordAuthenticationType string
+type AssetCredentialUserNameAndPasswordAuthenticationType string
 
 const (
-	AssetCredentialUserNameandPasswordAuthenticationTypeMDM  AssetCredentialUserNameandPasswordAuthenticationType = "MDM"
-	AssetCredentialUserNameandPasswordAuthenticationTypeNone AssetCredentialUserNameandPasswordAuthenticationType = "None"
+	AssetCredentialUserNameAndPasswordAuthenticationTypeMDM  AssetCredentialUserNameAndPasswordAuthenticationType = "MDM"
+	AssetCredentialUserNameAndPasswordAuthenticationTypeNone AssetCredentialUserNameAndPasswordAuthenticationType = "None"
 )
 
 // A reference to arbitrary data with a specific media type.

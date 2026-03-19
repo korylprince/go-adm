@@ -159,8 +159,8 @@ const (
 type TokenServiceType string
 
 const (
-	TokenServiceTypeComapplemaid         TokenServiceType = "com.apple.maid"
-	TokenServiceTypeComapplewatchpairing TokenServiceType = "com.apple.watch.pairing"
+	TokenServiceTypeComAppleMaid         TokenServiceType = "com.apple.maid"
+	TokenServiceTypeComAppleWatchPairing TokenServiceType = "com.apple.watch.pairing"
 )
 
 // Parameters that the system uses to generate the token.

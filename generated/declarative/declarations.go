@@ -1,4 +1,4 @@
-//go:generate /bin/bash -c "declgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../../GENERATE_SHA)\" -reqdef"
+//go:generate /bin/bash -c "declgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../../GENERATE_SHA)\" -repl ./repls.yaml -reqdef"
 
 package declarative
 

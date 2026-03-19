@@ -19,7 +19,7 @@ type ErrorCodePlatformSSORequired struct {
 type ErrorCodePlatformSSORequiredCode string
 
 const (
-	ErrorCodePlatformSSORequiredCodeComapplepssorequired ErrorCodePlatformSSORequiredCode = "com.apple.psso.required"
+	ErrorCodePlatformSSORequiredCodeComApplePSSORequired ErrorCodePlatformSSORequiredCode = "com.apple.psso.required"
 )
 
 // A dictionary that contains additional data about the error code.
@@ -58,7 +58,7 @@ type ErrorCodeSoftwareUpdateRequired struct {
 type ErrorCodeSoftwareUpdateRequiredCode string
 
 const (
-	ErrorCodeSoftwareUpdateRequiredCodeComapplesoftwareupdaterequired ErrorCodeSoftwareUpdateRequiredCode = "com.apple.softwareupdate.required"
+	ErrorCodeSoftwareUpdateRequiredCodeComAppleSoftwareUpdateRequired ErrorCodeSoftwareUpdateRequiredCode = "com.apple.softwareupdate.required"
 )
 
 // A dictionary that contains additional data about the error code.
@@ -93,7 +93,7 @@ type ErrorUnrecognizedDevice struct {
 type ErrorUnrecognizedDeviceCode string
 
 const (
-	ErrorUnrecognizedDeviceCodeComappleunrecognizeddevice ErrorUnrecognizedDeviceCode = "com.apple.unrecognized.device"
+	ErrorUnrecognizedDeviceCodeComAppleUnrecognizedDevice ErrorUnrecognizedDeviceCode = "com.apple.unrecognized.device"
 )
 
 // An error response that indicates a missing pairing token.
@@ -112,7 +112,7 @@ type ErrorCodePairingTokenMissing struct {
 type ErrorCodePairingTokenMissingCode string
 
 const (
-	ErrorCodePairingTokenMissingCodeComapplewatchpairingtokenmissing ErrorCodePairingTokenMissingCode = "com.apple.watch.pairing.token.missing"
+	ErrorCodePairingTokenMissingCodeComAppleWatchPairingTokenMissing ErrorCodePairingTokenMissingCode = "com.apple.watch.pairing.token.missing"
 )
 
 // A dictionary that contains additional data about the error code.
@@ -135,5 +135,5 @@ type ErrorWellKnownFailed struct {
 type ErrorWellKnownFailedCode string
 
 const (
-	ErrorWellKnownFailedCodeComapplewellKnownfailed ErrorWellKnownFailedCode = "com.apple.well-known.failed"
+	ErrorWellKnownFailedCodeComAppleWellKnownFailed ErrorWellKnownFailedCode = "com.apple.well-known.failed"
 )

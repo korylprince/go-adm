@@ -69,7 +69,7 @@ var PayloadMap = map[string]any{
 	"com.apple.globalethernet.managed":                       Net8021XGlobalEthernet{},
 	"com.apple.google-oauth":                                 GoogleAccount{},
 	"com.apple.homescreenlayout":                             HomeScreenLayout{},
-	"com.apple.ironwood.support":                             ParentalControlDictationandProfanity{},
+	"com.apple.ironwood.support":                             ParentalControlDictationAndProfanity{},
 	"com.apple.jabber.account":                               JabberAccount{},
 	"com.apple.ldap.account":                                 LDAP{},
 	"com.apple.loginitems.managed":                           LoginItemsManagedItems{},
@@ -169,7 +169,7 @@ type GlobalPreferences struct {
 	// If `false`, disables fast user switching.
 	MultipleSessionEnabled *bool `json:"MultipleSessionEnabled,omitempty" plist:"MultipleSessionEnabled,omitempty"`
 	// The `autologout` delay, in seconds. A value of `0` means `autologout` is off. In some cases, this delay may be restricted to values between 5 minutes and 24 hours.
-	ComappleautologoutAutoLogOutDelay *float64 `json:"com.apple.autologout.AutoLogOutDelay,omitempty" plist:"com.apple.autologout.AutoLogOutDelay,omitempty"`
+	ComAppleautologoutAutoLogOutDelay *float64 `json:"com.apple.autologout.AutoLogOutDelay,omitempty" plist:"com.apple.autologout.AutoLogOutDelay,omitempty"`
 }
 
 func (p *GlobalPreferences) PayloadType() string {
@@ -318,7 +318,7 @@ type ActiveDirectoryCertificate struct {
 	// If `true`, the system allows exporting the private key. Available in macOS 10.10 and later.
 	KeyIsExtractable *bool `json:"KeyIsExtractable,omitempty" plist:"KeyIsExtractable,omitempty"`
 	// The RSA key size for the certificate signing request (CSR). Available in macOS 10.11 and later.
-	Keysize *int64 `default:"2048" json:"Keysize,omitempty" plist:"Keysize,omitempty"`
+	KeySize *int64 `default:"2048" json:"Keysize,omitempty" plist:"Keysize,omitempty"`
 	// If `true`, the certificate obtained with this payload attempts auto-renewal. Auto-renewal can only be used with device Active Directory certificate payloads. Available in macOS 10.13.4 and later.
 	EnableAutoRenewal *bool `json:"EnableAutoRenewal,omitempty" plist:"EnableAutoRenewal,omitempty"`
 }
@@ -459,7 +459,7 @@ type ParentSelectionPolicy string
 
 const (
 	ParentSelectionPolicyFirstAvailable  ParentSelectionPolicy = "first-available"
-	ParentSelectionPolicyUrlPathHash     ParentSelectionPolicy = "url-path-hash"
+	ParentSelectionPolicyURLPathHash     ParentSelectionPolicy = "url-path-hash"
 	ParentSelectionPolicyRandom          ParentSelectionPolicy = "random"
 	ParentSelectionPolicyRoundRobin      ParentSelectionPolicy = "round-robin"
 	ParentSelectionPolicyStickyAvailable ParentSelectionPolicy = "sticky-available"
@@ -608,13 +608,13 @@ func (p *Accounts) PayloadType() string {
 type EnergySaver struct {
 	*CommonPayloadKeys
 	// The settings for a desktop computer.
-	ComappleEnergySaverdesktopACPower *ComappleEnergySaverdesktopACPower `json:"com.apple.EnergySaver.desktop.ACPower,omitempty" plist:"com.apple.EnergySaver.desktop.ACPower,omitempty"`
+	ComAppleEnergySaverdesktopACPower *ComAppleEnergySaverdesktopACPower `json:"com.apple.EnergySaver.desktop.ACPower,omitempty" plist:"com.apple.EnergySaver.desktop.ACPower,omitempty"`
 	// The settings for a laptop computer using AC power.
-	ComappleEnergySaverportableACPower *ComappleEnergySaverportableACPower `json:"com.apple.EnergySaver.portable.ACPower,omitempty" plist:"com.apple.EnergySaver.portable.ACPower,omitempty"`
+	ComAppleEnergySaverportableACPower *ComAppleEnergySaverportableACPower `json:"com.apple.EnergySaver.portable.ACPower,omitempty" plist:"com.apple.EnergySaver.portable.ACPower,omitempty"`
 	// The settings for a laptop computer using battery power.
-	ComappleEnergySaverportableBatteryPower *ComappleEnergySaverportableBatteryPower `json:"com.apple.EnergySaver.portable.BatteryPower,omitempty" plist:"com.apple.EnergySaver.portable.BatteryPower,omitempty"`
+	ComAppleEnergySaverportableBatteryPower *ComAppleEnergySaverportableBatteryPower `json:"com.apple.EnergySaver.portable.BatteryPower,omitempty" plist:"com.apple.EnergySaver.portable.BatteryPower,omitempty"`
 	// The schedule for turning a computer on and off.
-	ComappleEnergySaverdesktopSchedule *ComappleEnergySaverdesktopSchedule `json:"com.apple.EnergySaver.desktop.Schedule,omitempty" plist:"com.apple.EnergySaver.desktop.Schedule,omitempty"`
+	ComAppleEnergySaverdesktopSchedule *ComAppleEnergySaverdesktopSchedule `json:"com.apple.EnergySaver.desktop.Schedule,omitempty" plist:"com.apple.EnergySaver.desktop.Schedule,omitempty"`
 	// If `true`, disables sleep.
 	SleepDisabled *bool `json:"SleepDisabled,omitempty" plist:"SleepDisabled,omitempty"`
 }
@@ -624,7 +624,7 @@ func (p *EnergySaver) PayloadType() string {
 }
 
 // The settings for a desktop computer.
-type ComappleEnergySaverdesktopACPower struct {
+type ComAppleEnergySaverdesktopACPower struct {
 	// The display sleep time, in minutes. A value of 0 means never.
 	DisplaySleepTimer *int64 `json:"Display Sleep Timer,omitempty" plist:"Display Sleep Timer,omitempty"`
 	// The disk sleep time, in minutes. A value of 0 means never.
@@ -636,7 +636,7 @@ type ComappleEnergySaverdesktopACPower struct {
 	// May not be available on all systems.
 	DynamicPowerStep *DynamicPowerStep `json:"Dynamic Power Step,omitempty" plist:"Dynamic Power Step,omitempty"`
 	// If `true`, enables "Wake for network access."
-	WakeonLAN *WakeonLAN `json:"Wake on LAN,omitempty" plist:"Wake on LAN,omitempty"`
+	WakeOnLAN *WakeonLAN `json:"Wake on LAN,omitempty" plist:"Wake on LAN,omitempty"`
 	// If `true`, enables "Wake for modem ring."
 	WakeOnModemRing *WakeOnModemRing `json:"Wake On Modem Ring,omitempty" plist:"Wake On Modem Ring,omitempty"`
 	// If `true`, enables "Start up automatically after a power failure."
@@ -684,7 +684,7 @@ const (
 )
 
 // The settings for a laptop computer using AC power.
-type ComappleEnergySaverportableACPower struct {
+type ComAppleEnergySaverportableACPower struct {
 	// The display sleep time, in minutes. A value of 0 means never.
 	DisplaySleepTimer *int64 `json:"Display Sleep Timer,omitempty" plist:"Display Sleep Timer,omitempty"`
 	// The disk sleep time, in minutes. A value of 0 means never.
@@ -696,7 +696,7 @@ type ComappleEnergySaverportableACPower struct {
 	// May not be available on all systems.
 	DynamicPowerStep *DynamicPowerStep `json:"Dynamic Power Step,omitempty" plist:"Dynamic Power Step,omitempty"`
 	// If `true`, enables "Wake for network access."
-	WakeonLAN *WakeonLAN `json:"Wake on LAN,omitempty" plist:"Wake on LAN,omitempty"`
+	WakeOnLAN *WakeonLAN `json:"Wake on LAN,omitempty" plist:"Wake on LAN,omitempty"`
 	// If `true`, enables "Wake for modem ring."
 	WakeOnModemRing *WakeOnModemRing `json:"Wake On Modem Ring,omitempty" plist:"Wake On Modem Ring,omitempty"`
 	// If `true`, enables "Start up automatically after a power failure."
@@ -704,7 +704,7 @@ type ComappleEnergySaverportableACPower struct {
 }
 
 // The settings for a laptop computer using battery power.
-type ComappleEnergySaverportableBatteryPower struct {
+type ComAppleEnergySaverportableBatteryPower struct {
 	// The display sleep time, in minutes. A value of 0 means never.
 	DisplaySleepTimer *int64 `json:"Display Sleep Timer,omitempty" plist:"Display Sleep Timer,omitempty"`
 	// The disk sleep time, in minutes. A value of 0 means never.
@@ -716,7 +716,7 @@ type ComappleEnergySaverportableBatteryPower struct {
 	// May not be available on all systems.
 	DynamicPowerStep *DynamicPowerStep `json:"Dynamic Power Step,omitempty" plist:"Dynamic Power Step,omitempty"`
 	// If `true`, enables "Wake for network access."
-	WakeonLAN *WakeonLAN `json:"Wake on LAN,omitempty" plist:"Wake on LAN,omitempty"`
+	WakeOnLAN *WakeonLAN `json:"Wake on LAN,omitempty" plist:"Wake on LAN,omitempty"`
 	// If `true`, enables "Wake for modem ring."
 	WakeOnModemRing *WakeOnModemRing `json:"Wake On Modem Ring,omitempty" plist:"Wake On Modem Ring,omitempty"`
 	// If `true`, enables "Start up automatically after a power failure."
@@ -724,7 +724,7 @@ type ComappleEnergySaverportableBatteryPower struct {
 }
 
 // The schedule for turning a computer on and off.
-type ComappleEnergySaverdesktopSchedule struct {
+type ComAppleEnergySaverdesktopSchedule struct {
 	// The schedule for turning the device on.
 	RepeatingPowerOn *RepeatingPowerOn `json:"RepeatingPowerOn,omitempty" plist:"RepeatingPowerOn,omitempty"`
 	// The schedule for turning the device off.
@@ -734,7 +734,7 @@ type ComappleEnergySaverdesktopSchedule struct {
 // The schedule for turning the device on.
 type RepeatingPowerOn struct {
 	// The type of action defined by this schedule.
-	Eventtype Eventtype `json:"eventtype" plist:"eventtype" required:"true"`
+	EventType EventType `json:"eventtype" plist:"eventtype" required:"true"`
 	// One or more days of the week in an unsigned integer bitmap:
 	// - `1` = Mon
 	// - `2` = Tue
@@ -749,21 +749,21 @@ type RepeatingPowerOn struct {
 }
 
 // The type of action defined by this schedule.
-type Eventtype string
+type EventType string
 
 const (
-	EventtypeWake        Eventtype = "wake"
-	EventtypePoweron     Eventtype = "poweron"
-	EventtypeWakepoweron Eventtype = "wakepoweron"
-	EventtypeSleep       Eventtype = "sleep"
-	EventtypeShutdown    Eventtype = "shutdown"
-	EventtypeRestart     Eventtype = "restart"
+	EventTypeWake        EventType = "wake"
+	EventTypePowerOn     EventType = "poweron"
+	EventTypeWakePowerOn EventType = "wakepoweron"
+	EventTypeSleep       EventType = "sleep"
+	EventTypeShutdown    EventType = "shutdown"
+	EventTypeRestart     EventType = "restart"
 )
 
 // The schedule for turning the device off.
 type RepeatingPowerOff struct {
 	// The type of action defined by this schedule.
-	Eventtype Eventtype `json:"eventtype" plist:"eventtype" required:"true"`
+	EventType EventType `json:"eventtype" plist:"eventtype" required:"true"`
 	// One or more days of the week in an unsigned integer bitmap:
 	// - `1` = Mon
 	// - `2` = Tue
@@ -798,15 +798,15 @@ func (p *FDEFileVaultOptions) PayloadType() string {
 type MobileAccounts struct {
 	*CommonPayloadKeys
 	// If `true`, the system creates the mobile account at login time.
-	ComapplecachedaccountsCreateAtLogin *bool `json:"com.apple.cachedaccounts.CreateAtLogin,omitempty" plist:"com.apple.cachedaccounts.CreateAtLogin,omitempty"`
+	ComAppleCachedAccountsCreateAtLogin *bool `json:"com.apple.cachedaccounts.CreateAtLogin,omitempty" plist:"com.apple.cachedaccounts.CreateAtLogin,omitempty"`
 	// If `true`, the system asks the user whether to create the mobile account and it allows the user to not create it.
-	ComapplecachedaccountsWarnOnCreate *bool `json:"com.apple.cachedaccounts.WarnOnCreate,omitempty" plist:"com.apple.cachedaccounts.WarnOnCreate,omitempty"`
+	ComAppleCachedAccountsWarnOnCreate *bool `json:"com.apple.cachedaccounts.WarnOnCreate,omitempty" plist:"com.apple.cachedaccounts.WarnOnCreate,omitempty"`
 	// If `true`, the system allows the user to stop the prompts about mobile account creation every time the user logs in. This key is only valid if `com.apple.cachedaccounts.WarnOnCreate` is `true`.
-	CachedaccountsWarnOnCreateallowNever *bool `json:"cachedaccounts.WarnOnCreate.allowNever,omitempty" plist:"cachedaccounts.WarnOnCreate.allowNever,omitempty"`
+	CachedAccountsWarnOnCreateallowNever *bool `json:"cachedaccounts.WarnOnCreate.allowNever,omitempty" plist:"cachedaccounts.WarnOnCreate.allowNever,omitempty"`
 	// The minimum number of seconds a mobile account can exist before the system makes an automatic attempt to remove the mobile account. Set to `0` to attempt removing it at the next login or logout. Set to `-1` to never attempt removing the mobile account.
-	CachedaccountsexpirydeletedisusedSeconds *int64 `default:"-1" json:"cachedaccounts.expiry.delete.disusedSeconds,omitempty" plist:"cachedaccounts.expiry.delete.disusedSeconds,omitempty"`
+	CachedAccountsexpirydeletedisusedSeconds *int64 `default:"-1" json:"cachedaccounts.expiry.delete.disusedSeconds,omitempty" plist:"cachedaccounts.expiry.delete.disusedSeconds,omitempty"`
 	// If `true`, the system bypasses the secure token authorization dialog. This dialog only appears on APFS volumes.
-	CachedaccountsaskForSecureTokenAuthBypass *bool `json:"cachedaccounts.askForSecureTokenAuthBypass,omitempty" plist:"cachedaccounts.askForSecureTokenAuthBypass,omitempty"`
+	CachedAccountsaskForSecureTokenAuthBypass *bool `json:"cachedaccounts.askForSecureTokenAuthBypass,omitempty" plist:"cachedaccounts.askForSecureTokenAuthBypass,omitempty"`
 }
 
 func (p *MobileAccounts) PayloadType() string {
@@ -1351,13 +1351,13 @@ func (p *APN) PayloadType() string {
 // The list of access point names (APNs).
 type DefaultsData struct {
 	// An array of APN dictionaries (\`APN.DefaultsData.Apns\`).
-	Apns []*ApnsItem `json:"apns" plist:"apns" required:"true"`
+	APNs []*DefaultsDataAPNsAPNsItem `json:"apns" plist:"apns" required:"true"`
 }
 
 // A dictionary that describes an APN configuration.
-type ApnsItem struct {
+type DefaultsDataAPNsAPNsItem struct {
 	// The access point name.
-	Apn string `json:"apn" plist:"apn" required:"true"`
+	APN string `json:"apn" plist:"apn" required:"true"`
 	// The user name. If missing, the device prompts for it during profile installation.
 	Username *string `json:"username,omitempty" plist:"username,omitempty"`
 	// The password for the user. For obfuscation purposes, the system encodes the password. If missing, the device prompts for the password during profile installation.
@@ -1372,7 +1372,7 @@ type ApnsItem struct {
 type DefaultsDomainName string
 
 const (
-	DefaultsDomainNameComapplemanagedCarrier DefaultsDomainName = "com.apple.managedCarrier"
+	DefaultsDomainNameComApplemanagedCarrier DefaultsDomainName = "com.apple.managedCarrier"
 )
 
 // The payload that configures a device to run a single app.
@@ -2138,7 +2138,7 @@ type Cellular struct {
 	// A configuration dictionary.
 	AttachAPN *AttachAPN `json:"AttachAPN,omitempty" plist:"AttachAPN,omitempty"`
 	// An array of access point name (APN) dictionaries.
-	APNs *[]*APNsItem `json:"APNs,omitempty" plist:"APNs,omitempty"`
+	APNs *[]*CellularAPNsAPNsItem `json:"APNs,omitempty" plist:"APNs,omitempty"`
 }
 
 func (p *Cellular) PayloadType() string {
@@ -2183,7 +2183,7 @@ const (
 )
 
 // A dictionary that contains details about an access point name (APN) configuration.
-type APNsItem struct {
+type CellularAPNsAPNsItem struct {
 	// The name for this configuration.
 	Name string `json:"Name" plist:"Name" required:"true"`
 	// The authentication type for logging in.
@@ -2311,7 +2311,7 @@ type GeofenceItem struct {
 	// Specifies the radius of the geofence in meters. Set this value slightly greater than the private cellular network coverage area.
 	Radius float64 `json:"Radius" plist:"Radius" required:"true"`
 	// A geofence identifier that's unique within a list of geofences.
-	GeofenceId string `json:"GeofenceId" plist:"GeofenceId" required:"true"`
+	GeofenceID string `json:"GeofenceId" plist:"GeofenceId" required:"true"`
 }
 
 // The payload that configures Conference Room Display mode for Apple TV.
@@ -2548,7 +2548,7 @@ const (
 type Dock struct {
 	*CommonPayloadKeys
 	// The tile size. Values must be in the range from 16 to 128.
-	Tilesize *int64 `json:"tilesize,omitempty" plist:"tilesize,omitempty"`
+	TileSize *int64 `json:"tilesize,omitempty" plist:"tilesize,omitempty"`
 	// If `true`, locks the size slider.
 	SizeImmutable *bool `json:"size-immutable,omitempty" plist:"size-immutable,omitempty"`
 	// If `true`, enables magnification.
@@ -2568,13 +2568,13 @@ type Dock struct {
 	// If `true`, locks "Minimize windows using."
 	MineffectImmutable *bool `json:"mineffect-immutable,omitempty" plist:"mineffect-immutable,omitempty"`
 	// Set the "Prefer tabs when opening documents" to the provided value.
-	Windowtabbing *Windowtabbing `json:"windowtabbing,omitempty" plist:"windowtabbing,omitempty"`
+	WindowTabbing *WindowTabbing `json:"windowtabbing,omitempty" plist:"windowtabbing,omitempty"`
 	// If `true`, disables "Prefer tabs when opening documents" checkbox.
-	WindowtabbingImmutable *bool `json:"windowtabbing-immutable,omitempty" plist:"windowtabbing-immutable,omitempty"`
+	WindowTabbingImmutable *bool `json:"windowtabbing-immutable,omitempty" plist:"windowtabbing-immutable,omitempty"`
 	// The behavior when the window's title bar is double-clicked.
-	Dblclickbehavior *Dblclickbehavior `json:"dblclickbehavior,omitempty" plist:"dblclickbehavior,omitempty"`
+	DblClickBehavior *DblClickBehavior `json:"dblclickbehavior,omitempty" plist:"dblclickbehavior,omitempty"`
 	// If `true`, locks "Double-click a window's title bar."
-	DblclickbehaviorImmutable *bool `json:"dblclickbehavior-immutable,omitempty" plist:"dblclickbehavior-immutable,omitempty"`
+	DblClickBehaviorImmutable *bool `json:"dblclickbehavior-immutable,omitempty" plist:"dblclickbehavior-immutable,omitempty"`
 	// If `true`, enables "Minimize windows into application icon."
 	MinimizeToApplication *bool `json:"minimize-to-application,omitempty" plist:"minimize-to-application,omitempty"`
 	// If `true`, disables the "Minimize windows into application icon" checkbox.
@@ -2584,17 +2584,17 @@ type Dock struct {
 	// If `true`, locks "Animate opening applications."
 	LaunchanimImmutable *bool `json:"launchanim-immutable,omitempty" plist:"launchanim-immutable,omitempty"`
 	// If `true`, enables "Automatically hide and show the Dock."
-	Autohide *bool `json:"autohide,omitempty" plist:"autohide,omitempty"`
+	AutoHide *bool `json:"autohide,omitempty" plist:"autohide,omitempty"`
 	// If `true`, locks "Automatically hide."
-	AutohideImmutable *bool `json:"autohide-immutable,omitempty" plist:"autohide-immutable,omitempty"`
+	AutoHideImmutable *bool `json:"autohide-immutable,omitempty" plist:"autohide-immutable,omitempty"`
 	// If true, shows the process indicator.
 	ShowProcessIndicators *bool `json:"show-process-indicators,omitempty" plist:"show-process-indicators,omitempty"`
 	// If `true`, locks "Show indicators."
-	ShowindicatorsImmutable *bool `json:"showindicators-immutable,omitempty" plist:"showindicators-immutable,omitempty"`
+	ShowIndicatorsImmutable *bool `json:"showindicators-immutable,omitempty" plist:"showindicators-immutable,omitempty"`
 	// If `true`, enables "Show recent items."
 	ShowRecents *bool `json:"show-recents,omitempty" plist:"show-recents,omitempty"`
 	// If `true`, disables "Show recent applications" checkbox.
-	ShowrecentsImmutable *bool `json:"showrecents-immutable,omitempty" plist:"showrecents-immutable,omitempty"`
+	ShowRecentsImmutable *bool `json:"showrecents-immutable,omitempty" plist:"showrecents-immutable,omitempty"`
 	// If `true`, disables changes to the Dock.
 	ContentsImmutable *bool `json:"contents-immutable,omitempty" plist:"contents-immutable,omitempty"`
 	// One or more special folders that may be created at user login time and placed in the Dock.
@@ -2636,21 +2636,21 @@ const (
 )
 
 // Set the "Prefer tabs when opening documents" to the provided value.
-type Windowtabbing string
+type WindowTabbing string
 
 const (
-	WindowtabbingManual     Windowtabbing = "manual"
-	WindowtabbingAlways     Windowtabbing = "always"
-	WindowtabbingFullscreen Windowtabbing = "fullscreen"
+	WindowTabbingManual     WindowTabbing = "manual"
+	WindowTabbingAlways     WindowTabbing = "always"
+	WindowTabbingFullscreen WindowTabbing = "fullscreen"
 )
 
 // The behavior when the window's title bar is double-clicked.
-type Dblclickbehavior string
+type DblClickBehavior string
 
 const (
-	DblclickbehaviorMinimize Dblclickbehavior = "minimize"
-	DblclickbehaviorMaximize Dblclickbehavior = "maximize"
-	DblclickbehaviorNone     Dblclickbehavior = "none"
+	DblClickBehaviorMinimize DblClickBehavior = "minimize"
+	DblClickBehaviorMaximize DblClickBehavior = "maximize"
+	DblClickBehaviorNone     DblClickBehavior = "none"
 )
 
 // One or more special folders that may be created at user login time and placed in the Dock.
@@ -2677,7 +2677,7 @@ type TileData struct {
 	// The label of the Dock item.
 	Label string `json:"label" plist:"label" required:"true"`
 	// The URL string.
-	Url *string `json:"url,omitempty" plist:"url,omitempty"`
+	URL *string `json:"url,omitempty" plist:"url,omitempty"`
 	// The type of tile:
 	// - `0`: URL
 	// - `1`: File
@@ -2705,7 +2705,7 @@ type TileType string
 const (
 	TileTypeFileTile      TileType = "file-tile"
 	TileTypeDirectoryTile TileType = "directory-tile"
-	TileTypeUrlTile       TileType = "url-tile"
+	TileTypeURLTile       TileType = "url-tile"
 )
 
 // The payload that configures the domains under an organization's management.
@@ -3061,7 +3061,7 @@ func (p *ExtensibleSingleSignOnKerberos) PayloadType() string {
 type ExtensionIdentifier string
 
 const (
-	ExtensionIdentifierComappleAppSSOKerberosKerberosExtension ExtensionIdentifier = "com.apple.AppSSOKerberos.KerberosExtension"
+	ExtensionIdentifierComAppleAppSSOKerberosKerberosExtension ExtensionIdentifier = "com.apple.AppSSOKerberos.KerberosExtension"
 )
 
 // Set this to `apple` for this extension.
@@ -3091,11 +3091,11 @@ type ExtensionData struct {
 	// If `false`, the Kerberos extension doesn't automatically use LDAP and DNS to determine its AD site name.
 	UseSiteAutoDiscovery *bool `json:"useSiteAutoDiscovery,omitempty" plist:"useSiteAutoDiscovery,omitempty"`
 	// A list of bundle IDs allowed to access the ticket-granting ticket (TGT).
-	CredentialBundleIdACL *[]string `json:"credentialBundleIdACL,omitempty" plist:"credentialBundleIdACL,omitempty"`
+	CredentialBundleIDACL *[]string `json:"credentialBundleIdACL,omitempty" plist:"credentialBundleIdACL,omitempty"`
 	// If `true`, the Kerberos extension allows only managed apps to access and use the credential. This is in addition to the `credentialBundleIDACL`, if you specify that value. Available in iOS 14 and later, and macOS 12 and later.
-	IncludeManagedAppsInBundleIdACL *bool `json:"includeManagedAppsInBundleIdACL,omitempty" plist:"includeManagedAppsInBundleIdACL,omitempty"`
+	IncludeManagedAppsInBundleIDACL *bool `json:"includeManagedAppsInBundleIdACL,omitempty" plist:"includeManagedAppsInBundleIdACL,omitempty"`
 	// If `true`, the Kerberos extension allows the standard Kerberos utilities including `TicketViewer` and `klist` to access and use the credential. This is in addition to `includeManagedAppsInBundleIdACL` or the `credentialBundleIdACL`, if you specify those values. Available in macOS 12 and later.
-	IncludeKerberosAppsInBundleIdACL *bool `json:"includeKerberosAppsInBundleIdACL,omitempty" plist:"includeKerberosAppsInBundleIdACL,omitempty"`
+	IncludeKerberosAppsInBundleIDACL *bool `json:"includeKerberosAppsInBundleIdACL,omitempty" plist:"includeKerberosAppsInBundleIdACL,omitempty"`
 	// A custom domain-realm mapping for Kerberos. The system uses this when the DNS name of hosts doesn't match the realm name. Most administrators don't need to customize this.
 	DomainRealmMapping *DomainRealmMapping `json:"domainRealmMapping,omitempty" plist:"domainRealmMapping,omitempty"`
 	// Specifies whether this is the default realm if there's more than one Kerberos extension configuration.
@@ -3803,7 +3803,7 @@ const (
 )
 
 // The payload that configures parental control for dictation and profanity.
-type ParentalControlDictationandProfanity struct {
+type ParentalControlDictationAndProfanity struct {
 	*CommonPayloadKeys
 	// If `false`, suppresses profanity. Use `forceAssistantProfanityFilter` in Restrictions instead.
 	ProfanityAllowed *bool `json:"Profanity Allowed,omitempty" plist:"Profanity Allowed,omitempty"`
@@ -3811,7 +3811,7 @@ type ParentalControlDictationandProfanity struct {
 	IronwoodAllowed *bool `json:"Ironwood Allowed,omitempty" plist:"Ironwood Allowed,omitempty"`
 }
 
-func (p *ParentalControlDictationandProfanity) PayloadType() string {
+func (p *ParentalControlDictationAndProfanity) PayloadType() string {
 	return "com.apple.ironwood.support"
 }
 
@@ -3944,7 +3944,7 @@ type LoginWindow struct {
 	// If `true`, the system disregards the `>console` special user name, which provides a command line UI.
 	DisableConsoleAccess *bool `json:"DisableConsoleAccess,omitempty" plist:"DisableConsoleAccess,omitempty"`
 	// The text to display in the Login Window.
-	LoginwindowText *string `json:"LoginwindowText,omitempty" plist:"LoginwindowText,omitempty"`
+	LoginWindowText *string `json:"LoginwindowText,omitempty" plist:"LoginwindowText,omitempty"`
 	// If `true`, the system disables the Shut Down menu item when the user is logged in.
 	ShutDownDisabledWhileLoggedIn *bool `json:"ShutDownDisabledWhileLoggedIn,omitempty" plist:"ShutDownDisabledWhileLoggedIn,omitempty"`
 	// If `true`, the system disables the Restart menu item when the user is logged in.
@@ -4119,57 +4119,57 @@ type ManagedMenuExtras struct {
 	// The maximum wait, in seconds, for all menu extras to be added or removed.
 	MaxWaitSeconds *float64 `default:"20" json:"maxWaitSeconds,omitempty" plist:"maxWaitSeconds,omitempty"`
 	// If `true`, enables the AirPort menu extra.
-	AirPortmenu *bool `json:"AirPort.menu,omitempty" plist:"AirPort.menu,omitempty"`
+	AirPortMenu *bool `json:"AirPort.menu,omitempty" plist:"AirPort.menu,omitempty"`
 	// If `true`, enables the Battery menu extra.
-	Batterymenu *bool `json:"Battery.menu,omitempty" plist:"Battery.menu,omitempty"`
+	BatteryMenu *bool `json:"Battery.menu,omitempty" plist:"Battery.menu,omitempty"`
 	// If `true`, enables the Bluetooth menu extra.
-	Bluetoothmenu *bool `json:"Bluetooth.menu,omitempty" plist:"Bluetooth.menu,omitempty"`
+	BluetoothMenu *bool `json:"Bluetooth.menu,omitempty" plist:"Bluetooth.menu,omitempty"`
 	// If `true`, enables the CPU menu extra.
-	CPUmenu *bool `json:"CPU.menu,omitempty" plist:"CPU.menu,omitempty"`
+	CPUMenu *bool `json:"CPU.menu,omitempty" plist:"CPU.menu,omitempty"`
 	// If `true`, enables the Clock menu extra.
-	Clockmenu *bool `json:"Clock.menu,omitempty" plist:"Clock.menu,omitempty"`
+	ClockMenu *bool `json:"Clock.menu,omitempty" plist:"Clock.menu,omitempty"`
 	// If `true`, enables the Displays menu extra.
-	Displaysmenu *bool `json:"Displays.menu,omitempty" plist:"Displays.menu,omitempty"`
+	DisplaysMenu *bool `json:"Displays.menu,omitempty" plist:"Displays.menu,omitempty"`
 	// If `true`, enables the Eject menu extra.
-	Ejectmenu *bool `json:"Eject.menu,omitempty" plist:"Eject.menu,omitempty"`
+	EjectMenu *bool `json:"Eject.menu,omitempty" plist:"Eject.menu,omitempty"`
 	// If `true`, enables the Fax menu extra.
-	Faxmenu *bool `json:"Fax.menu,omitempty" plist:"Fax.menu,omitempty"`
+	FaxMenu *bool `json:"Fax.menu,omitempty" plist:"Fax.menu,omitempty"`
 	// If `true`, enables the HomeSync menu extra.
-	HomeSyncmenu *bool `json:"HomeSync.menu,omitempty" plist:"HomeSync.menu,omitempty"`
+	HomeSyncMenu *bool `json:"HomeSync.menu,omitempty" plist:"HomeSync.menu,omitempty"`
 	// If `true`, enables the iChat menu extra.
-	IChatmenu *bool `json:"iChat.menu,omitempty" plist:"iChat.menu,omitempty"`
+	IChatMenu *bool `json:"iChat.menu,omitempty" plist:"iChat.menu,omitempty"`
 	// If `true`, enables the Ink menu extra.
-	Inkmenu *bool `json:"Ink.menu,omitempty" plist:"Ink.menu,omitempty"`
+	InkMenu *bool `json:"Ink.menu,omitempty" plist:"Ink.menu,omitempty"`
 	// If `true`, enables the IrDA menu extra.
-	IrDAmenu *bool `json:"IrDA.menu,omitempty" plist:"IrDA.menu,omitempty"`
+	IrDAMenu *bool `json:"IrDA.menu,omitempty" plist:"IrDA.menu,omitempty"`
 	// If `true`, enables the PCCard menu extra.
-	PCCardmenu *bool `json:"PCCard.menu,omitempty" plist:"PCCard.menu,omitempty"`
+	PCCardMenu *bool `json:"PCCard.menu,omitempty" plist:"PCCard.menu,omitempty"`
 	// If `true`, enables the PPP menu extra.
-	PPPmenu *bool `json:"PPP.menu,omitempty" plist:"PPP.menu,omitempty"`
+	PPPMenu *bool `json:"PPP.menu,omitempty" plist:"PPP.menu,omitempty"`
 	// If `true`, enables the PPPoE menu extra.
-	PPPoEmenu *bool `json:"PPPoE.menu,omitempty" plist:"PPPoE.menu,omitempty"`
+	PPPoEMenu *bool `json:"PPPoE.menu,omitempty" plist:"PPPoE.menu,omitempty"`
 	// If `true`, enables the Remote Desktop menu extra.
-	RemoteDesktopmenu *bool `json:"RemoteDesktop.menu,omitempty" plist:"RemoteDesktop.menu,omitempty"`
+	RemoteDesktopMenu *bool `json:"RemoteDesktop.menu,omitempty" plist:"RemoteDesktop.menu,omitempty"`
 	// If `true`, enables the Script menu extra.
-	ScriptMenumenu *bool `json:"Script Menu.menu,omitempty" plist:"Script Menu.menu,omitempty"`
+	ScriptMenuMenu *bool `json:"Script Menu.menu,omitempty" plist:"Script Menu.menu,omitempty"`
 	// If `true`, enables the Spaces menu extra.
-	Spacesmenu *bool `json:"Spaces.menu,omitempty" plist:"Spaces.menu,omitempty"`
+	SpacesMenu *bool `json:"Spaces.menu,omitempty" plist:"Spaces.menu,omitempty"`
 	// If `true`, enables the Sync menu extra.
-	Syncmenu *bool `json:"Sync.menu,omitempty" plist:"Sync.menu,omitempty"`
+	SyncMenu *bool `json:"Sync.menu,omitempty" plist:"Sync.menu,omitempty"`
 	// If `true`, enables the Text Input menu extra.
-	TextInputmenu *bool `json:"TextInput.menu,omitempty" plist:"TextInput.menu,omitempty"`
+	TextInputMenu *bool `json:"TextInput.menu,omitempty" plist:"TextInput.menu,omitempty"`
 	// If `true`, enables the TimeMachine menu extra.
-	TimeMachinemenu *bool `json:"TimeMachine.menu,omitempty" plist:"TimeMachine.menu,omitempty"`
+	TimeMachineMenu *bool `json:"TimeMachine.menu,omitempty" plist:"TimeMachine.menu,omitempty"`
 	// If `true`, enables the Universal Access menu extra.
-	UniversalAccessmenu *bool `json:"UniversalAccess.menu,omitempty" plist:"UniversalAccess.menu,omitempty"`
+	UniversalAccessMenu *bool `json:"UniversalAccess.menu,omitempty" plist:"UniversalAccess.menu,omitempty"`
 	// If `true`, enables the User menu extra.
-	Usermenu *bool `json:"User.menu,omitempty" plist:"User.menu,omitempty"`
+	UserMenu *bool `json:"User.menu,omitempty" plist:"User.menu,omitempty"`
 	// If `true`, enables the VPN menu extra.
-	VPNmenu *bool `json:"VPN.menu,omitempty" plist:"VPN.menu,omitempty"`
+	VPNMenu *bool `json:"VPN.menu,omitempty" plist:"VPN.menu,omitempty"`
 	// If `true`, enables the Volume menu extra.
-	Volumemenu *bool `json:"Volume.menu,omitempty" plist:"Volume.menu,omitempty"`
+	VolumeMenu *bool `json:"Volume.menu,omitempty" plist:"Volume.menu,omitempty"`
 	// If `true`, enables the WWAN menu extra.
-	WWANmenu *bool `json:"WWAN.menu,omitempty" plist:"WWAN.menu,omitempty"`
+	WWANMenu *bool `json:"WWAN.menu,omitempty" plist:"WWAN.menu,omitempty"`
 }
 
 func (p *ManagedMenuExtras) PayloadType() string {
@@ -4199,7 +4199,7 @@ type ScriptsItems struct {
 	// The filename for display purposes.
 	Filename string `json:"filename" plist:"filename" required:"true"`
 	// The UTF-8 encoded data object representing the executable script.
-	Filedata []byte `json:"filedata" plist:"filedata" required:"true"`
+	FileData []byte `json:"filedata" plist:"filedata" required:"true"`
 }
 
 // The payload that configures printers.
@@ -4366,9 +4366,9 @@ const (
 type ServerCapabilities string
 
 const (
-	ServerCapabilitiesComapplemdmperUserConnections ServerCapabilities = "com.apple.mdm.per-user-connections"
-	ServerCapabilitiesComapplemdmbootstraptoken     ServerCapabilities = "com.apple.mdm.bootstraptoken"
-	ServerCapabilitiesComapplemdmtoken              ServerCapabilities = "com.apple.mdm.token"
+	ServerCapabilitiesComApplemdmperUserConnections ServerCapabilities = "com.apple.mdm.per-user-connections"
+	ServerCapabilitiesComApplemdmbootstraptoken     ServerCapabilities = "com.apple.mdm.bootstraptoken"
+	ServerCapabilitiesComApplemdmtoken              ServerCapabilities = "com.apple.mdm.token"
 )
 
 // The payload that configures a passcode policy.
@@ -4395,7 +4395,7 @@ type Passcode struct {
 	// If `true`, the system requires alphabetic characters instead of only numeric characters.
 	RequireAlphanumeric *bool `json:"requireAlphanumeric,omitempty" plist:"requireAlphanumeric,omitempty"`
 	// This value defines _N_, where the new passcode must be unique within the last _N_ entries in the passcode history.
-	PinHistory *int64 `json:"pinHistory,omitempty" plist:"pinHistory,omitempty"`
+	PINHistory *int64 `json:"pinHistory,omitempty" plist:"pinHistory,omitempty"`
 	// The maximum grace period, in minutes, to unlock the phone without entering a passcode. The default is `0`, which is no grace period and requires a passcode immediately. On macOS, the system translates this grace period value to screen-saver settings.
 	MaxGracePeriod *int64 `default:"0" json:"maxGracePeriod,omitempty" plist:"maxGracePeriod,omitempty"`
 	// The number of minutes before the system resets the login after the maximum number of unsuccessful login attempts is reached. This key requires setting `maxFailedAttempts`. Available in macOS 10.10 and later.
@@ -4592,7 +4592,7 @@ type ConfiguredAccountsItem struct {
 type ConfiguredAccountsItemType string
 
 const (
-	ConfiguredAccountsItemTypeComappleosxserverdocuments ConfiguredAccountsItemType = "com.apple.osxserver.documents"
+	ConfiguredAccountsItemTypeComAppleosxserverdocuments ConfiguredAccountsItemType = "com.apple.osxserver.documents"
 )
 
 // The payload that configures security preferences.
@@ -4873,7 +4873,7 @@ const (
 // The Subject Alt Name that the device requests for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 type ACMECertificateSubjectAltName struct {
 	// The RFC 822 (email address) string.
-	Rfc822Name *string `json:"rfc822Name,omitempty" plist:"rfc822Name,omitempty"`
+	RFC822Name *string `json:"rfc822Name,omitempty" plist:"rfc822Name,omitempty"`
 	// The DNS name.
 	DNSName *string `json:"dNSName,omitempty" plist:"dNSName,omitempty"`
 	// The Uniform Resource Identifier.
@@ -4923,7 +4923,7 @@ type EnabledForCertsSubjectPublicKeyInfoHashDict struct {
 type EnabledForCertsSubjectPublicKeyInfoHashDictAlgorithm string
 
 const (
-	EnabledForCertsSubjectPublicKeyInfoHashDictAlgorithmSha256 EnabledForCertsSubjectPublicKeyInfoHashDictAlgorithm = "sha256"
+	EnabledForCertsSubjectPublicKeyInfoHashDictAlgorithmSHA256 EnabledForCertsSubjectPublicKeyInfoHashDictAlgorithm = "sha256"
 )
 
 // The payload that configures certificate transparency enforcement.
@@ -4956,7 +4956,7 @@ type DisabledForCertsSubjectPublicKeyInfoHashDict struct {
 type DisabledForCertsSubjectPublicKeyInfoHashDictAlgorithm string
 
 const (
-	DisabledForCertsSubjectPublicKeyInfoHashDictAlgorithmSha256 DisabledForCertsSubjectPublicKeyInfoHashDictAlgorithm = "sha256"
+	DisabledForCertsSubjectPublicKeyInfoHashDictAlgorithmSHA256 DisabledForCertsSubjectPublicKeyInfoHashDictAlgorithm = "sha256"
 )
 
 // The payload that configures the firewall.
@@ -5108,7 +5108,7 @@ type PayloadContent struct {
 	// A preshared secret.
 	Challenge *string `json:"Challenge,omitempty" plist:"Challenge,omitempty"`
 	// The key size, in bits.
-	Keysize *Keysize `default:"1024" json:"Keysize,omitempty" plist:"Keysize,omitempty"`
+	KeySize *KeySize `default:"1024" json:"Keysize,omitempty" plist:"Keysize,omitempty"`
 	// Always `RSA`.
 	KeyType *string `default:"RSA" json:"Key Type,omitempty" plist:"Key Type,omitempty"`
 	// A bitmask indicating the use of the key. Possible values:
@@ -5131,18 +5131,18 @@ type PayloadContent struct {
 }
 
 // The key size, in bits.
-type Keysize int64
+type KeySize int64
 
 const (
-	Keysize1024 Keysize = 1024
-	Keysize2048 Keysize = 2048
-	Keysize4096 Keysize = 4096
+	KeySize1024 KeySize = 1024
+	KeySize2048 KeySize = 2048
+	KeySize4096 KeySize = 4096
 )
 
 // The SCEP payload can specify an optional `SubjectAltName` dictionary that provides values required by the CA for issuing a certificate. You can specify a single string or an array of strings for each key. The values you specify depend on the CA you're using, but might include DNS name, URL, or email values. For an example, see Sample Configuration Profile or Over-the-Air Profile Delivery and Configuration.
 type PayloadContentSubjectAltName struct {
 	// The RFC 822 (email address) string.
-	Rfc822Name *string `json:"rfc822Name,omitempty" plist:"rfc822Name,omitempty"`
+	RFC822Name *string `json:"rfc822Name,omitempty" plist:"rfc822Name,omitempty"`
 	// The DNS name.
 	DNSName *string `json:"dNSName,omitempty" plist:"dNSName,omitempty"`
 	// The Uniform Resource Identifier.
@@ -5487,96 +5487,96 @@ func (p *SystemPreferences) PayloadType() string {
 type EnabledPreferencePanes string
 
 const (
-	EnabledPreferencePanesComappleClassroomSettings                EnabledPreferencePanes = "com.apple.ClassroomSettings"
-	EnabledPreferencePanesComappleLocalization                     EnabledPreferencePanes = "com.apple.Localization"
-	EnabledPreferencePanesComapplepreferencedatetime               EnabledPreferencePanes = "com.apple.preference.datetime"
-	EnabledPreferencePanesComapplepreferencedesktopscreeneffect    EnabledPreferencePanes = "com.apple.preference.desktopscreeneffect"
-	EnabledPreferencePanesComapplepreferencedigihubdiscs           EnabledPreferencePanes = "com.apple.preference.digihub.discs"
-	EnabledPreferencePanesComapplepreferencedisplays               EnabledPreferencePanes = "com.apple.preference.displays"
-	EnabledPreferencePanesComapplepreferencedock                   EnabledPreferencePanes = "com.apple.preference.dock"
-	EnabledPreferencePanesComapplepreferenceenergysaver            EnabledPreferencePanes = "com.apple.preference.energysaver"
-	EnabledPreferencePanesComapplepreferenceexpose                 EnabledPreferencePanes = "com.apple.preference.expose"
-	EnabledPreferencePanesComapplepreferencegeneral                EnabledPreferencePanes = "com.apple.preference.general"
-	EnabledPreferencePanesComapplepreferenceink                    EnabledPreferencePanes = "com.apple.preference.ink"
-	EnabledPreferencePanesComapplepreferencekeyboard               EnabledPreferencePanes = "com.apple.preference.keyboard"
-	EnabledPreferencePanesComapplepreferencemouse                  EnabledPreferencePanes = "com.apple.preference.mouse"
-	EnabledPreferencePanesComapplepreferencenetwork                EnabledPreferencePanes = "com.apple.preference.network"
-	EnabledPreferencePanesComapplepreferencenotifications          EnabledPreferencePanes = "com.apple.preference.notifications"
-	EnabledPreferencePanesComapplepreferenceprintfax               EnabledPreferencePanes = "com.apple.preference.printfax"
-	EnabledPreferencePanesComapplepreferencescreentime             EnabledPreferencePanes = "com.apple.preference.screentime"
-	EnabledPreferencePanesComapplepreferencesecurity               EnabledPreferencePanes = "com.apple.preference.security"
-	EnabledPreferencePanesComapplepreferencesidecar                EnabledPreferencePanes = "com.apple.preference.sidecar"
-	EnabledPreferencePanesComapplepreferencesound                  EnabledPreferencePanes = "com.apple.preference.sound"
-	EnabledPreferencePanesComapplepreferencespeech                 EnabledPreferencePanes = "com.apple.preference.speech"
-	EnabledPreferencePanesComapplepreferencespotlight              EnabledPreferencePanes = "com.apple.preference.spotlight"
-	EnabledPreferencePanesComapplepreferencestartupdisk            EnabledPreferencePanes = "com.apple.preference.startupdisk"
-	EnabledPreferencePanesComapplepreferencetrackpad               EnabledPreferencePanes = "com.apple.preference.trackpad"
-	EnabledPreferencePanesComapplepreferenceuniversalaccess        EnabledPreferencePanes = "com.apple.preference.universalaccess"
-	EnabledPreferencePanesComapplepreferencesAppleIDPrefPane       EnabledPreferencePanes = "com.apple.preferences.AppleIDPrefPane"
-	EnabledPreferencePanesComapplepreferencesappstore              EnabledPreferencePanes = "com.apple.preferences.appstore"
-	EnabledPreferencePanesComapplepreferencesBluetooth             EnabledPreferencePanes = "com.apple.preferences.Bluetooth"
-	EnabledPreferencePanesComapplepreferencesconfigurationprofiles EnabledPreferencePanes = "com.apple.preferences.configurationprofiles"
-	EnabledPreferencePanesComapplepreferencesextensions            EnabledPreferencePanes = "com.apple.preferences.extensions"
-	EnabledPreferencePanesComapplepreferencesFamilySharingPrefPane EnabledPreferencePanes = "com.apple.preferences.FamilySharingPrefPane"
-	EnabledPreferencePanesComapplepreferencesicloud                EnabledPreferencePanes = "com.apple.preferences.icloud"
-	EnabledPreferencePanesComapplepreferencesinternetaccounts      EnabledPreferencePanes = "com.apple.preferences.internetaccounts"
-	EnabledPreferencePanesComapplepreferencesparentalcontrols      EnabledPreferencePanes = "com.apple.preferences.parentalcontrols"
-	EnabledPreferencePanesComapplepreferencespassword              EnabledPreferencePanes = "com.apple.preferences.password"
-	EnabledPreferencePanesComapplepreferencessharing               EnabledPreferencePanes = "com.apple.preferences.sharing"
-	EnabledPreferencePanesComapplepreferencessoftwareupdate        EnabledPreferencePanes = "com.apple.preferences.softwareupdate"
-	EnabledPreferencePanesComapplepreferencesusers                 EnabledPreferencePanes = "com.apple.preferences.users"
-	EnabledPreferencePanesComapplepreferenceswallet                EnabledPreferencePanes = "com.apple.preferences.wallet"
-	EnabledPreferencePanesComappleprefpanelfibrechannel            EnabledPreferencePanes = "com.apple.prefpanel.fibrechannel"
-	EnabledPreferencePanesComappleprefsbackup                      EnabledPreferencePanes = "com.apple.prefs.backup"
-	EnabledPreferencePanesComappleXsan                             EnabledPreferencePanes = "com.apple.Xsan"
+	EnabledPreferencePanesComAppleClassroomSettings                EnabledPreferencePanes = "com.apple.ClassroomSettings"
+	EnabledPreferencePanesComAppleLocalization                     EnabledPreferencePanes = "com.apple.Localization"
+	EnabledPreferencePanesComApplepreferencedatetime               EnabledPreferencePanes = "com.apple.preference.datetime"
+	EnabledPreferencePanesComApplepreferencedesktopscreeneffect    EnabledPreferencePanes = "com.apple.preference.desktopscreeneffect"
+	EnabledPreferencePanesComApplepreferencedigihubdiscs           EnabledPreferencePanes = "com.apple.preference.digihub.discs"
+	EnabledPreferencePanesComApplepreferencedisplays               EnabledPreferencePanes = "com.apple.preference.displays"
+	EnabledPreferencePanesComApplepreferencedock                   EnabledPreferencePanes = "com.apple.preference.dock"
+	EnabledPreferencePanesComApplepreferenceenergysaver            EnabledPreferencePanes = "com.apple.preference.energysaver"
+	EnabledPreferencePanesComApplepreferenceexpose                 EnabledPreferencePanes = "com.apple.preference.expose"
+	EnabledPreferencePanesComApplepreferencegeneral                EnabledPreferencePanes = "com.apple.preference.general"
+	EnabledPreferencePanesComApplepreferenceink                    EnabledPreferencePanes = "com.apple.preference.ink"
+	EnabledPreferencePanesComApplepreferencekeyboard               EnabledPreferencePanes = "com.apple.preference.keyboard"
+	EnabledPreferencePanesComApplepreferencemouse                  EnabledPreferencePanes = "com.apple.preference.mouse"
+	EnabledPreferencePanesComApplepreferencenetwork                EnabledPreferencePanes = "com.apple.preference.network"
+	EnabledPreferencePanesComApplepreferencenotifications          EnabledPreferencePanes = "com.apple.preference.notifications"
+	EnabledPreferencePanesComApplepreferenceprintfax               EnabledPreferencePanes = "com.apple.preference.printfax"
+	EnabledPreferencePanesComApplepreferencescreentime             EnabledPreferencePanes = "com.apple.preference.screentime"
+	EnabledPreferencePanesComApplepreferencesecurity               EnabledPreferencePanes = "com.apple.preference.security"
+	EnabledPreferencePanesComApplepreferencesidecar                EnabledPreferencePanes = "com.apple.preference.sidecar"
+	EnabledPreferencePanesComApplepreferencesound                  EnabledPreferencePanes = "com.apple.preference.sound"
+	EnabledPreferencePanesComApplepreferencespeech                 EnabledPreferencePanes = "com.apple.preference.speech"
+	EnabledPreferencePanesComApplepreferencespotlight              EnabledPreferencePanes = "com.apple.preference.spotlight"
+	EnabledPreferencePanesComApplepreferencestartupdisk            EnabledPreferencePanes = "com.apple.preference.startupdisk"
+	EnabledPreferencePanesComApplepreferencetrackpad               EnabledPreferencePanes = "com.apple.preference.trackpad"
+	EnabledPreferencePanesComApplepreferenceuniversalaccess        EnabledPreferencePanes = "com.apple.preference.universalaccess"
+	EnabledPreferencePanesComApplepreferencesAppleIDPrefPane       EnabledPreferencePanes = "com.apple.preferences.AppleIDPrefPane"
+	EnabledPreferencePanesComApplepreferencesappstore              EnabledPreferencePanes = "com.apple.preferences.appstore"
+	EnabledPreferencePanesComApplepreferencesBluetooth             EnabledPreferencePanes = "com.apple.preferences.Bluetooth"
+	EnabledPreferencePanesComApplepreferencesconfigurationprofiles EnabledPreferencePanes = "com.apple.preferences.configurationprofiles"
+	EnabledPreferencePanesComApplepreferencesextensions            EnabledPreferencePanes = "com.apple.preferences.extensions"
+	EnabledPreferencePanesComApplepreferencesFamilySharingPrefPane EnabledPreferencePanes = "com.apple.preferences.FamilySharingPrefPane"
+	EnabledPreferencePanesComApplepreferencesicloud                EnabledPreferencePanes = "com.apple.preferences.icloud"
+	EnabledPreferencePanesComApplepreferencesinternetaccounts      EnabledPreferencePanes = "com.apple.preferences.internetaccounts"
+	EnabledPreferencePanesComApplepreferencesparentalcontrols      EnabledPreferencePanes = "com.apple.preferences.parentalcontrols"
+	EnabledPreferencePanesComApplepreferencespassword              EnabledPreferencePanes = "com.apple.preferences.password"
+	EnabledPreferencePanesComApplepreferencessharing               EnabledPreferencePanes = "com.apple.preferences.sharing"
+	EnabledPreferencePanesComApplepreferencessoftwareupdate        EnabledPreferencePanes = "com.apple.preferences.softwareupdate"
+	EnabledPreferencePanesComApplepreferencesusers                 EnabledPreferencePanes = "com.apple.preferences.users"
+	EnabledPreferencePanesComApplepreferenceswallet                EnabledPreferencePanes = "com.apple.preferences.wallet"
+	EnabledPreferencePanesComAppleprefpanelfibrechannel            EnabledPreferencePanes = "com.apple.prefpanel.fibrechannel"
+	EnabledPreferencePanesComAppleprefsbackup                      EnabledPreferencePanes = "com.apple.prefs.backup"
+	EnabledPreferencePanesComAppleXsan                             EnabledPreferencePanes = "com.apple.Xsan"
 )
 
 // The list of disabled System Preferences panes.
 type DisabledPreferencePanes string
 
 const (
-	DisabledPreferencePanesComappleClassroomSettings                DisabledPreferencePanes = "com.apple.ClassroomSettings"
-	DisabledPreferencePanesComappleLocalization                     DisabledPreferencePanes = "com.apple.Localization"
-	DisabledPreferencePanesComapplepreferencedatetime               DisabledPreferencePanes = "com.apple.preference.datetime"
-	DisabledPreferencePanesComapplepreferencedesktopscreeneffect    DisabledPreferencePanes = "com.apple.preference.desktopscreeneffect"
-	DisabledPreferencePanesComapplepreferencedigihubdiscs           DisabledPreferencePanes = "com.apple.preference.digihub.discs"
-	DisabledPreferencePanesComapplepreferencedisplays               DisabledPreferencePanes = "com.apple.preference.displays"
-	DisabledPreferencePanesComapplepreferencedock                   DisabledPreferencePanes = "com.apple.preference.dock"
-	DisabledPreferencePanesComapplepreferenceenergysaver            DisabledPreferencePanes = "com.apple.preference.energysaver"
-	DisabledPreferencePanesComapplepreferenceexpose                 DisabledPreferencePanes = "com.apple.preference.expose"
-	DisabledPreferencePanesComapplepreferencegeneral                DisabledPreferencePanes = "com.apple.preference.general"
-	DisabledPreferencePanesComapplepreferenceink                    DisabledPreferencePanes = "com.apple.preference.ink"
-	DisabledPreferencePanesComapplepreferencekeyboard               DisabledPreferencePanes = "com.apple.preference.keyboard"
-	DisabledPreferencePanesComapplepreferencemouse                  DisabledPreferencePanes = "com.apple.preference.mouse"
-	DisabledPreferencePanesComapplepreferencenetwork                DisabledPreferencePanes = "com.apple.preference.network"
-	DisabledPreferencePanesComapplepreferencenotifications          DisabledPreferencePanes = "com.apple.preference.notifications"
-	DisabledPreferencePanesComapplepreferenceprintfax               DisabledPreferencePanes = "com.apple.preference.printfax"
-	DisabledPreferencePanesComapplepreferencescreentime             DisabledPreferencePanes = "com.apple.preference.screentime"
-	DisabledPreferencePanesComapplepreferencesecurity               DisabledPreferencePanes = "com.apple.preference.security"
-	DisabledPreferencePanesComapplepreferencesidecar                DisabledPreferencePanes = "com.apple.preference.sidecar"
-	DisabledPreferencePanesComapplepreferencesound                  DisabledPreferencePanes = "com.apple.preference.sound"
-	DisabledPreferencePanesComapplepreferencespeech                 DisabledPreferencePanes = "com.apple.preference.speech"
-	DisabledPreferencePanesComapplepreferencespotlight              DisabledPreferencePanes = "com.apple.preference.spotlight"
-	DisabledPreferencePanesComapplepreferencestartupdisk            DisabledPreferencePanes = "com.apple.preference.startupdisk"
-	DisabledPreferencePanesComapplepreferencetrackpad               DisabledPreferencePanes = "com.apple.preference.trackpad"
-	DisabledPreferencePanesComapplepreferenceuniversalaccess        DisabledPreferencePanes = "com.apple.preference.universalaccess"
-	DisabledPreferencePanesComapplepreferencesAppleIDPrefPane       DisabledPreferencePanes = "com.apple.preferences.AppleIDPrefPane"
-	DisabledPreferencePanesComapplepreferencesappstore              DisabledPreferencePanes = "com.apple.preferences.appstore"
-	DisabledPreferencePanesComapplepreferencesBluetooth             DisabledPreferencePanes = "com.apple.preferences.Bluetooth"
-	DisabledPreferencePanesComapplepreferencesconfigurationprofiles DisabledPreferencePanes = "com.apple.preferences.configurationprofiles"
-	DisabledPreferencePanesComapplepreferencesextensions            DisabledPreferencePanes = "com.apple.preferences.extensions"
-	DisabledPreferencePanesComapplepreferencesFamilySharingPrefPane DisabledPreferencePanes = "com.apple.preferences.FamilySharingPrefPane"
-	DisabledPreferencePanesComapplepreferencesicloud                DisabledPreferencePanes = "com.apple.preferences.icloud"
-	DisabledPreferencePanesComapplepreferencesinternetaccounts      DisabledPreferencePanes = "com.apple.preferences.internetaccounts"
-	DisabledPreferencePanesComapplepreferencesparentalcontrols      DisabledPreferencePanes = "com.apple.preferences.parentalcontrols"
-	DisabledPreferencePanesComapplepreferencespassword              DisabledPreferencePanes = "com.apple.preferences.password"
-	DisabledPreferencePanesComapplepreferencessharing               DisabledPreferencePanes = "com.apple.preferences.sharing"
-	DisabledPreferencePanesComapplepreferencessoftwareupdate        DisabledPreferencePanes = "com.apple.preferences.softwareupdate"
-	DisabledPreferencePanesComapplepreferencesusers                 DisabledPreferencePanes = "com.apple.preferences.users"
-	DisabledPreferencePanesComapplepreferenceswallet                DisabledPreferencePanes = "com.apple.preferences.wallet"
-	DisabledPreferencePanesComappleprefpanelfibrechannel            DisabledPreferencePanes = "com.apple.prefpanel.fibrechannel"
-	DisabledPreferencePanesComappleprefsbackup                      DisabledPreferencePanes = "com.apple.prefs.backup"
-	DisabledPreferencePanesComappleXsan                             DisabledPreferencePanes = "com.apple.Xsan"
+	DisabledPreferencePanesComAppleClassroomSettings                DisabledPreferencePanes = "com.apple.ClassroomSettings"
+	DisabledPreferencePanesComAppleLocalization                     DisabledPreferencePanes = "com.apple.Localization"
+	DisabledPreferencePanesComApplepreferencedatetime               DisabledPreferencePanes = "com.apple.preference.datetime"
+	DisabledPreferencePanesComApplepreferencedesktopscreeneffect    DisabledPreferencePanes = "com.apple.preference.desktopscreeneffect"
+	DisabledPreferencePanesComApplepreferencedigihubdiscs           DisabledPreferencePanes = "com.apple.preference.digihub.discs"
+	DisabledPreferencePanesComApplepreferencedisplays               DisabledPreferencePanes = "com.apple.preference.displays"
+	DisabledPreferencePanesComApplepreferencedock                   DisabledPreferencePanes = "com.apple.preference.dock"
+	DisabledPreferencePanesComApplepreferenceenergysaver            DisabledPreferencePanes = "com.apple.preference.energysaver"
+	DisabledPreferencePanesComApplepreferenceexpose                 DisabledPreferencePanes = "com.apple.preference.expose"
+	DisabledPreferencePanesComApplepreferencegeneral                DisabledPreferencePanes = "com.apple.preference.general"
+	DisabledPreferencePanesComApplepreferenceink                    DisabledPreferencePanes = "com.apple.preference.ink"
+	DisabledPreferencePanesComApplepreferencekeyboard               DisabledPreferencePanes = "com.apple.preference.keyboard"
+	DisabledPreferencePanesComApplepreferencemouse                  DisabledPreferencePanes = "com.apple.preference.mouse"
+	DisabledPreferencePanesComApplepreferencenetwork                DisabledPreferencePanes = "com.apple.preference.network"
+	DisabledPreferencePanesComApplepreferencenotifications          DisabledPreferencePanes = "com.apple.preference.notifications"
+	DisabledPreferencePanesComApplepreferenceprintfax               DisabledPreferencePanes = "com.apple.preference.printfax"
+	DisabledPreferencePanesComApplepreferencescreentime             DisabledPreferencePanes = "com.apple.preference.screentime"
+	DisabledPreferencePanesComApplepreferencesecurity               DisabledPreferencePanes = "com.apple.preference.security"
+	DisabledPreferencePanesComApplepreferencesidecar                DisabledPreferencePanes = "com.apple.preference.sidecar"
+	DisabledPreferencePanesComApplepreferencesound                  DisabledPreferencePanes = "com.apple.preference.sound"
+	DisabledPreferencePanesComApplepreferencespeech                 DisabledPreferencePanes = "com.apple.preference.speech"
+	DisabledPreferencePanesComApplepreferencespotlight              DisabledPreferencePanes = "com.apple.preference.spotlight"
+	DisabledPreferencePanesComApplepreferencestartupdisk            DisabledPreferencePanes = "com.apple.preference.startupdisk"
+	DisabledPreferencePanesComApplepreferencetrackpad               DisabledPreferencePanes = "com.apple.preference.trackpad"
+	DisabledPreferencePanesComApplepreferenceuniversalaccess        DisabledPreferencePanes = "com.apple.preference.universalaccess"
+	DisabledPreferencePanesComApplepreferencesAppleIDPrefPane       DisabledPreferencePanes = "com.apple.preferences.AppleIDPrefPane"
+	DisabledPreferencePanesComApplepreferencesappstore              DisabledPreferencePanes = "com.apple.preferences.appstore"
+	DisabledPreferencePanesComApplepreferencesBluetooth             DisabledPreferencePanes = "com.apple.preferences.Bluetooth"
+	DisabledPreferencePanesComApplepreferencesconfigurationprofiles DisabledPreferencePanes = "com.apple.preferences.configurationprofiles"
+	DisabledPreferencePanesComApplepreferencesextensions            DisabledPreferencePanes = "com.apple.preferences.extensions"
+	DisabledPreferencePanesComApplepreferencesFamilySharingPrefPane DisabledPreferencePanes = "com.apple.preferences.FamilySharingPrefPane"
+	DisabledPreferencePanesComApplepreferencesicloud                DisabledPreferencePanes = "com.apple.preferences.icloud"
+	DisabledPreferencePanesComApplepreferencesinternetaccounts      DisabledPreferencePanes = "com.apple.preferences.internetaccounts"
+	DisabledPreferencePanesComApplepreferencesparentalcontrols      DisabledPreferencePanes = "com.apple.preferences.parentalcontrols"
+	DisabledPreferencePanesComApplepreferencespassword              DisabledPreferencePanes = "com.apple.preferences.password"
+	DisabledPreferencePanesComApplepreferencessharing               DisabledPreferencePanes = "com.apple.preferences.sharing"
+	DisabledPreferencePanesComApplepreferencessoftwareupdate        DisabledPreferencePanes = "com.apple.preferences.softwareupdate"
+	DisabledPreferencePanesComApplepreferencesusers                 DisabledPreferencePanes = "com.apple.preferences.users"
+	DisabledPreferencePanesComApplepreferenceswallet                DisabledPreferencePanes = "com.apple.preferences.wallet"
+	DisabledPreferencePanesComAppleprefpanelfibrechannel            DisabledPreferencePanes = "com.apple.prefpanel.fibrechannel"
+	DisabledPreferencePanesComAppleprefsbackup                      DisabledPreferencePanes = "com.apple.prefs.backup"
+	DisabledPreferencePanesComAppleXsan                             DisabledPreferencePanes = "com.apple.Xsan"
 )
 
 // The list of disabled System Settings extensions. All other items will be enabled. When `DisabledSystemSettings` is specified, the device ignores `DisabledPreferencePanes` and `EnabledPreferencePanes`.
@@ -5585,51 +5585,51 @@ const (
 type DisabledSystemSettings string
 
 const (
-	DisabledSystemSettingsComappleAccessibilitySettingsextension                  DisabledSystemSettings = "com.apple.Accessibility-Settings.extension"
-	DisabledSystemSettingsComappleAirDropHandoffSettingsextension                 DisabledSystemSettings = "com.apple.AirDrop-Handoff-Settings.extension"
-	DisabledSystemSettingsComappleBatterySettingsextension                        DisabledSystemSettings = "com.apple.Battery-Settings.extension"
-	DisabledSystemSettingsComappleBluetoothSettings                               DisabledSystemSettings = "com.apple.BluetoothSettings"
-	DisabledSystemSettingsComappleCDDVDSettingsextension                          DisabledSystemSettings = "com.apple.CD-DVD-Settings.extension"
-	DisabledSystemSettingsComappleClassKitSettingsextension                       DisabledSystemSettings = "com.apple.ClassKit-Settings.extension"
-	DisabledSystemSettingsComappleClassroomSettingsextension                      DisabledSystemSettings = "com.apple.Classroom-Settings.extension"
-	DisabledSystemSettingsComappleControlCenterSettingsextension                  DisabledSystemSettings = "com.apple.ControlCenter-Settings.extension"
-	DisabledSystemSettingsComappleDateTimeSettingsextension                       DisabledSystemSettings = "com.apple.Date-Time-Settings.extension"
-	DisabledSystemSettingsComappleDesktopSettingsextension                        DisabledSystemSettings = "com.apple.Desktop-Settings.extension"
-	DisabledSystemSettingsComappleDisplaysSettingsextension                       DisabledSystemSettings = "com.apple.Displays-Settings.extension"
-	DisabledSystemSettingsComappleExtensionsPreferences                           DisabledSystemSettings = "com.apple.ExtensionsPreferences"
-	DisabledSystemSettingsComappleFamilySettingsextension                         DisabledSystemSettings = "com.apple.Family-Settings.extension"
-	DisabledSystemSettingsComappleFocusSettingsextension                          DisabledSystemSettings = "com.apple.Focus-Settings.extension"
-	DisabledSystemSettingsComappleGameCenterSettingsextension                     DisabledSystemSettings = "com.apple.Game-Center-Settings.extension"
-	DisabledSystemSettingsComappleGameControllerSettingsextension                 DisabledSystemSettings = "com.apple.Game-Controller-Settings.extension"
-	DisabledSystemSettingsComappleHeadphoneSettings                               DisabledSystemSettings = "com.apple.HeadphoneSettings"
-	DisabledSystemSettingsComappleInternetAccountsSettingsextension               DisabledSystemSettings = "com.apple.Internet-Accounts-Settings.extension"
-	DisabledSystemSettingsComappleKeyboardSettingsextension                       DisabledSystemSettings = "com.apple.Keyboard-Settings.extension"
-	DisabledSystemSettingsComappleLocalizationSettingsextension                   DisabledSystemSettings = "com.apple.Localization-Settings.extension"
-	DisabledSystemSettingsComappleLockScreenSettingsextension                     DisabledSystemSettings = "com.apple.Lock-Screen-Settings.extension"
-	DisabledSystemSettingsComappleLoginItemsSettingsextension                     DisabledSystemSettings = "com.apple.LoginItems-Settings.extension"
-	DisabledSystemSettingsComappleMouseSettingsextension                          DisabledSystemSettings = "com.apple.Mouse-Settings.extension"
-	DisabledSystemSettingsComappleNetworkSettingsextension                        DisabledSystemSettings = "com.apple.Network-Settings.extension"
-	DisabledSystemSettingsComappleNetworkExtensionSettingsUINESettingsUIExtension DisabledSystemSettings = "com.apple.NetworkExtensionSettingsUI.NESettingsUIExtension"
-	DisabledSystemSettingsComappleNotificationsSettingsextension                  DisabledSystemSettings = "com.apple.Notifications-Settings.extension"
-	DisabledSystemSettingsComapplePasswordsSettingsextension                      DisabledSystemSettings = "com.apple.Passwords-Settings.extension"
-	DisabledSystemSettingsComapplePrintScanSettingsextension                      DisabledSystemSettings = "com.apple.Print-Scan-Settings.extension"
-	DisabledSystemSettingsComappleScreenTimeSettingsextension                     DisabledSystemSettings = "com.apple.Screen-Time-Settings.extension"
-	DisabledSystemSettingsComappleScreenSaverSettingsextension                    DisabledSystemSettings = "com.apple.ScreenSaver-Settings.extension"
-	DisabledSystemSettingsComappleSharingSettingsextension                        DisabledSystemSettings = "com.apple.Sharing-Settings.extension"
-	DisabledSystemSettingsComappleSiriSettingsextension                           DisabledSystemSettings = "com.apple.Siri-Settings.extension"
-	DisabledSystemSettingsComappleSoftwareUpdateSettingsextension                 DisabledSystemSettings = "com.apple.Software-Update-Settings.extension"
-	DisabledSystemSettingsComappleSoundSettingsextension                          DisabledSystemSettings = "com.apple.Sound-Settings.extension"
-	DisabledSystemSettingsComappleStartupDiskSettingsextension                    DisabledSystemSettings = "com.apple.Startup-Disk-Settings.extension"
-	DisabledSystemSettingsComappleTimeMachineSettingsextension                    DisabledSystemSettings = "com.apple.Time-Machine-Settings.extension"
-	DisabledSystemSettingsComappleTouchIDSettingsextension                        DisabledSystemSettings = "com.apple.Touch-ID-Settings.extension"
-	DisabledSystemSettingsComappleTrackpadSettingsextension                       DisabledSystemSettings = "com.apple.Trackpad-Settings.extension"
-	DisabledSystemSettingsComappleTransferResetSettingsextension                  DisabledSystemSettings = "com.apple.Transfer-Reset-Settings.extension"
-	DisabledSystemSettingsComappleUsersGroupsSettingsextension                    DisabledSystemSettings = "com.apple.Users-Groups-Settings.extension"
-	DisabledSystemSettingsComappleWalletSettingsExtension                         DisabledSystemSettings = "com.apple.WalletSettingsExtension"
-	DisabledSystemSettingsComappleWallpaperSettingsextension                      DisabledSystemSettings = "com.apple.Wallpaper-Settings.extension"
-	DisabledSystemSettingsComapplesettingsStorage                                 DisabledSystemSettings = "com.apple.settings.Storage"
-	DisabledSystemSettingsComapplesystempreferencesAppleIDSettings                DisabledSystemSettings = "com.apple.systempreferences.AppleIDSettings"
-	DisabledSystemSettingsComapplewifiSettingsExtension                           DisabledSystemSettings = "com.apple.wifi-settings-extension"
+	DisabledSystemSettingsComAppleAccessibilitySettingsextension                  DisabledSystemSettings = "com.apple.Accessibility-Settings.extension"
+	DisabledSystemSettingsComAppleAirDropHandoffSettingsextension                 DisabledSystemSettings = "com.apple.AirDrop-Handoff-Settings.extension"
+	DisabledSystemSettingsComAppleBatterySettingsextension                        DisabledSystemSettings = "com.apple.Battery-Settings.extension"
+	DisabledSystemSettingsComAppleBluetoothSettings                               DisabledSystemSettings = "com.apple.BluetoothSettings"
+	DisabledSystemSettingsComAppleCDDVDSettingsextension                          DisabledSystemSettings = "com.apple.CD-DVD-Settings.extension"
+	DisabledSystemSettingsComAppleClassKitSettingsextension                       DisabledSystemSettings = "com.apple.ClassKit-Settings.extension"
+	DisabledSystemSettingsComAppleClassroomSettingsextension                      DisabledSystemSettings = "com.apple.Classroom-Settings.extension"
+	DisabledSystemSettingsComAppleControlCenterSettingsextension                  DisabledSystemSettings = "com.apple.ControlCenter-Settings.extension"
+	DisabledSystemSettingsComAppleDateTimeSettingsextension                       DisabledSystemSettings = "com.apple.Date-Time-Settings.extension"
+	DisabledSystemSettingsComAppleDesktopSettingsextension                        DisabledSystemSettings = "com.apple.Desktop-Settings.extension"
+	DisabledSystemSettingsComAppleDisplaysSettingsextension                       DisabledSystemSettings = "com.apple.Displays-Settings.extension"
+	DisabledSystemSettingsComAppleExtensionsPreferences                           DisabledSystemSettings = "com.apple.ExtensionsPreferences"
+	DisabledSystemSettingsComAppleFamilySettingsextension                         DisabledSystemSettings = "com.apple.Family-Settings.extension"
+	DisabledSystemSettingsComAppleFocusSettingsextension                          DisabledSystemSettings = "com.apple.Focus-Settings.extension"
+	DisabledSystemSettingsComAppleGameCenterSettingsextension                     DisabledSystemSettings = "com.apple.Game-Center-Settings.extension"
+	DisabledSystemSettingsComAppleGameControllerSettingsextension                 DisabledSystemSettings = "com.apple.Game-Controller-Settings.extension"
+	DisabledSystemSettingsComAppleHeadphoneSettings                               DisabledSystemSettings = "com.apple.HeadphoneSettings"
+	DisabledSystemSettingsComAppleInternetAccountsSettingsextension               DisabledSystemSettings = "com.apple.Internet-Accounts-Settings.extension"
+	DisabledSystemSettingsComAppleKeyboardSettingsextension                       DisabledSystemSettings = "com.apple.Keyboard-Settings.extension"
+	DisabledSystemSettingsComAppleLocalizationSettingsextension                   DisabledSystemSettings = "com.apple.Localization-Settings.extension"
+	DisabledSystemSettingsComAppleLockScreenSettingsextension                     DisabledSystemSettings = "com.apple.Lock-Screen-Settings.extension"
+	DisabledSystemSettingsComAppleLoginItemsSettingsextension                     DisabledSystemSettings = "com.apple.LoginItems-Settings.extension"
+	DisabledSystemSettingsComAppleMouseSettingsextension                          DisabledSystemSettings = "com.apple.Mouse-Settings.extension"
+	DisabledSystemSettingsComAppleNetworkSettingsextension                        DisabledSystemSettings = "com.apple.Network-Settings.extension"
+	DisabledSystemSettingsComAppleNetworkExtensionSettingsUINESettingsUIExtension DisabledSystemSettings = "com.apple.NetworkExtensionSettingsUI.NESettingsUIExtension"
+	DisabledSystemSettingsComAppleNotificationsSettingsextension                  DisabledSystemSettings = "com.apple.Notifications-Settings.extension"
+	DisabledSystemSettingsComApplePasswordsSettingsextension                      DisabledSystemSettings = "com.apple.Passwords-Settings.extension"
+	DisabledSystemSettingsComApplePrintScanSettingsextension                      DisabledSystemSettings = "com.apple.Print-Scan-Settings.extension"
+	DisabledSystemSettingsComAppleScreenTimeSettingsextension                     DisabledSystemSettings = "com.apple.Screen-Time-Settings.extension"
+	DisabledSystemSettingsComAppleScreenSaverSettingsextension                    DisabledSystemSettings = "com.apple.ScreenSaver-Settings.extension"
+	DisabledSystemSettingsComAppleSharingSettingsextension                        DisabledSystemSettings = "com.apple.Sharing-Settings.extension"
+	DisabledSystemSettingsComAppleSiriSettingsextension                           DisabledSystemSettings = "com.apple.Siri-Settings.extension"
+	DisabledSystemSettingsComAppleSoftwareUpdateSettingsextension                 DisabledSystemSettings = "com.apple.Software-Update-Settings.extension"
+	DisabledSystemSettingsComAppleSoundSettingsextension                          DisabledSystemSettings = "com.apple.Sound-Settings.extension"
+	DisabledSystemSettingsComAppleStartupDiskSettingsextension                    DisabledSystemSettings = "com.apple.Startup-Disk-Settings.extension"
+	DisabledSystemSettingsComAppleTimeMachineSettingsextension                    DisabledSystemSettings = "com.apple.Time-Machine-Settings.extension"
+	DisabledSystemSettingsComAppleTouchIDSettingsextension                        DisabledSystemSettings = "com.apple.Touch-ID-Settings.extension"
+	DisabledSystemSettingsComAppleTrackpadSettingsextension                       DisabledSystemSettings = "com.apple.Trackpad-Settings.extension"
+	DisabledSystemSettingsComAppleTransferResetSettingsextension                  DisabledSystemSettings = "com.apple.Transfer-Reset-Settings.extension"
+	DisabledSystemSettingsComAppleUsersGroupsSettingsextension                    DisabledSystemSettings = "com.apple.Users-Groups-Settings.extension"
+	DisabledSystemSettingsComAppleWalletSettingsExtension                         DisabledSystemSettings = "com.apple.WalletSettingsExtension"
+	DisabledSystemSettingsComAppleWallpaperSettingsextension                      DisabledSystemSettings = "com.apple.Wallpaper-Settings.extension"
+	DisabledSystemSettingsComApplesettingsStorage                                 DisabledSystemSettings = "com.apple.settings.Storage"
+	DisabledSystemSettingsComApplesystempreferencesAppleIDSettings                DisabledSystemSettings = "com.apple.systempreferences.AppleIDSettings"
+	DisabledSystemSettingsComApplewifiSettingsExtension                           DisabledSystemSettings = "com.apple.wifi-settings-extension"
 )
 
 // The payload that configures media management.
@@ -5652,19 +5652,19 @@ type LogoutEject struct {
 	// Unused; set to an empty string.
 	AllMedia *string `json:"all-media,omitempty" plist:"all-media,omitempty"`
 	// A media action string or an array of media action strings.
-	Cd *[]Cd `json:"cd,omitempty" plist:"cd,omitempty"`
+	CD *[]CD `json:"cd,omitempty" plist:"cd,omitempty"`
 	// A media action string or an array of media action strings.
-	Dvd *[]Dvd `json:"dvd,omitempty" plist:"dvd,omitempty"`
+	DVD *[]DVD `json:"dvd,omitempty" plist:"dvd,omitempty"`
 	// A media action string or an array of media action strings.
-	Bd *[]Bd `json:"bd,omitempty" plist:"bd,omitempty"`
+	BD *[]BD `json:"bd,omitempty" plist:"bd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankcd *[]Blankcd `json:"blankcd,omitempty" plist:"blankcd,omitempty"`
+	BlankCD *[]BlankCD `json:"blankcd,omitempty" plist:"blankcd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankdvd *[]Blankdvd `json:"blankdvd,omitempty" plist:"blankdvd,omitempty"`
+	BlankDVD *[]BlankDVD `json:"blankdvd,omitempty" plist:"blankdvd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankbd *[]Blankbd `json:"blankbd,omitempty" plist:"blankbd,omitempty"`
+	BlankBD *[]BlankBD `json:"blankbd,omitempty" plist:"blankbd,omitempty"`
 	// A media action string or an array of media action strings.
-	Dvdram *[]Dvdram `json:"dvdram,omitempty" plist:"dvdram,omitempty"`
+	DVDRAM *[]DVDRAM `json:"dvdram,omitempty" plist:"dvdram,omitempty"`
 	// A media action string or an array of media action strings.
 	DiskImage *[]DiskImage `json:"disk-image,omitempty" plist:"disk-image,omitempty"`
 	// A media action string or an array of media action strings.
@@ -5682,13 +5682,13 @@ type LogoutEject struct {
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Cd string
+type CD string
 
 const (
-	CdAuthenticate Cd = "authenticate"
-	CdReadOnly     Cd = "read-only"
-	CdDeny         Cd = "deny"
-	CdEject        Cd = "eject"
+	CDAuthenticate CD = "authenticate"
+	CDReadOnly     CD = "read-only"
+	CDDeny         CD = "deny"
+	CDEject        CD = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5697,13 +5697,13 @@ const (
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Dvd string
+type DVD string
 
 const (
-	DvdAuthenticate Dvd = "authenticate"
-	DvdReadOnly     Dvd = "read-only"
-	DvdDeny         Dvd = "deny"
-	DvdEject        Dvd = "eject"
+	DVDAuthenticate DVD = "authenticate"
+	DVDReadOnly     DVD = "read-only"
+	DVDDeny         DVD = "deny"
+	DVDEject        DVD = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5712,13 +5712,13 @@ const (
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Bd string
+type BD string
 
 const (
-	BdAuthenticate Bd = "authenticate"
-	BdReadOnly     Bd = "read-only"
-	BdDeny         Bd = "deny"
-	BdEject        Bd = "eject"
+	BDAuthenticate BD = "authenticate"
+	BDReadOnly     BD = "read-only"
+	BDDeny         BD = "deny"
+	BDEject        BD = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5727,13 +5727,13 @@ const (
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Blankcd string
+type BlankCD string
 
 const (
-	BlankcdAuthenticate Blankcd = "authenticate"
-	BlankcdReadOnly     Blankcd = "read-only"
-	BlankcdDeny         Blankcd = "deny"
-	BlankcdEject        Blankcd = "eject"
+	BlankCDAuthenticate BlankCD = "authenticate"
+	BlankCDReadOnly     BlankCD = "read-only"
+	BlankCDDeny         BlankCD = "deny"
+	BlankCDEject        BlankCD = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5742,13 +5742,13 @@ const (
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Blankdvd string
+type BlankDVD string
 
 const (
-	BlankdvdAuthenticate Blankdvd = "authenticate"
-	BlankdvdReadOnly     Blankdvd = "read-only"
-	BlankdvdDeny         Blankdvd = "deny"
-	BlankdvdEject        Blankdvd = "eject"
+	BlankDVDAuthenticate BlankDVD = "authenticate"
+	BlankDVDReadOnly     BlankDVD = "read-only"
+	BlankDVDDeny         BlankDVD = "deny"
+	BlankDVDEject        BlankDVD = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5757,13 +5757,13 @@ const (
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Blankbd string
+type BlankBD string
 
 const (
-	BlankbdAuthenticate Blankbd = "authenticate"
-	BlankbdReadOnly     Blankbd = "read-only"
-	BlankbdDeny         Blankbd = "deny"
-	BlankbdEject        Blankbd = "eject"
+	BlankBDAuthenticate BlankBD = "authenticate"
+	BlankBDReadOnly     BlankBD = "read-only"
+	BlankBDDeny         BlankBD = "deny"
+	BlankBDEject        BlankBD = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5772,13 +5772,13 @@ const (
 // * read-only - The media will be mounted read-only. Not valid for unmount-controls.
 // * deny - The media will not be mounted.
 // * eject - The media will not be mounted and it will be ejected if possible. Note that some volumes are not defined as ejectable, so using the deny key may be the best solution. Not valid for unmount-controls.
-type Dvdram string
+type DVDRAM string
 
 const (
-	DvdramAuthenticate Dvdram = "authenticate"
-	DvdramReadOnly     Dvdram = "read-only"
-	DvdramDeny         Dvdram = "deny"
-	DvdramEject        Dvdram = "eject"
+	DVDRAMAuthenticate DVDRAM = "authenticate"
+	DVDRAMReadOnly     DVDRAM = "read-only"
+	DVDRAMDeny         DVDRAM = "deny"
+	DVDRAMEject        DVDRAM = "eject"
 )
 
 // A media action string or an array of media action strings.
@@ -5847,19 +5847,19 @@ type MountControls struct {
 	// Unused; set to an empty string.
 	AllMedia *string `json:"all-media,omitempty" plist:"all-media,omitempty"`
 	// A media action string or an array of media action strings.
-	Cd *[]Cd `json:"cd,omitempty" plist:"cd,omitempty"`
+	CD *[]CD `json:"cd,omitempty" plist:"cd,omitempty"`
 	// A media action string or an array of media action strings.
-	Dvd *[]Dvd `json:"dvd,omitempty" plist:"dvd,omitempty"`
+	DVD *[]DVD `json:"dvd,omitempty" plist:"dvd,omitempty"`
 	// A media action string or an array of media action strings.
-	Bd *[]Bd `json:"bd,omitempty" plist:"bd,omitempty"`
+	BD *[]BD `json:"bd,omitempty" plist:"bd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankcd *[]Blankcd `json:"blankcd,omitempty" plist:"blankcd,omitempty"`
+	BlankCD *[]BlankCD `json:"blankcd,omitempty" plist:"blankcd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankdvd *[]Blankdvd `json:"blankdvd,omitempty" plist:"blankdvd,omitempty"`
+	BlankDVD *[]BlankDVD `json:"blankdvd,omitempty" plist:"blankdvd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankbd *[]Blankbd `json:"blankbd,omitempty" plist:"blankbd,omitempty"`
+	BlankBD *[]BlankBD `json:"blankbd,omitempty" plist:"blankbd,omitempty"`
 	// A media action string or an array of media action strings.
-	Dvdram *[]Dvdram `json:"dvdram,omitempty" plist:"dvdram,omitempty"`
+	DVDRAM *[]DVDRAM `json:"dvdram,omitempty" plist:"dvdram,omitempty"`
 	// A media action string or an array of media action strings.
 	DiskImage *[]DiskImage `json:"disk-image,omitempty" plist:"disk-image,omitempty"`
 	// A media action string or an array of media action strings.
@@ -5876,19 +5876,19 @@ type UnmountControls struct {
 	// Unused; set to an empty string.
 	AllMedia *string `json:"all-media,omitempty" plist:"all-media,omitempty"`
 	// A media action string or an array of media action strings.
-	Cd *[]Cd `json:"cd,omitempty" plist:"cd,omitempty"`
+	CD *[]CD `json:"cd,omitempty" plist:"cd,omitempty"`
 	// A media action string or an array of media action strings.
-	Dvd *[]Dvd `json:"dvd,omitempty" plist:"dvd,omitempty"`
+	DVD *[]DVD `json:"dvd,omitempty" plist:"dvd,omitempty"`
 	// A media action string or an array of media action strings.
-	Bd *[]Bd `json:"bd,omitempty" plist:"bd,omitempty"`
+	BD *[]BD `json:"bd,omitempty" plist:"bd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankcd *[]Blankcd `json:"blankcd,omitempty" plist:"blankcd,omitempty"`
+	BlankCD *[]BlankCD `json:"blankcd,omitempty" plist:"blankcd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankdvd *[]Blankdvd `json:"blankdvd,omitempty" plist:"blankdvd,omitempty"`
+	BlankDVD *[]BlankDVD `json:"blankdvd,omitempty" plist:"blankdvd,omitempty"`
 	// A media action string or an array of media action strings.
-	Blankbd *[]Blankbd `json:"blankbd,omitempty" plist:"blankbd,omitempty"`
+	BlankBD *[]BlankBD `json:"blankbd,omitempty" plist:"blankbd,omitempty"`
 	// A media action string or an array of media action strings.
-	Dvdram *[]Dvdram `json:"dvdram,omitempty" plist:"dvdram,omitempty"`
+	DVDRAM *[]DVDRAM `json:"dvdram,omitempty" plist:"dvdram,omitempty"`
 	// A media action string or an array of media action strings.
 	DiskImage *[]DiskImage `json:"disk-image,omitempty" plist:"disk-image,omitempty"`
 	// A media action string or an array of media action strings.
@@ -7704,7 +7704,7 @@ type SetupModes string
 
 const (
 	SetupModesSystem      SetupModes = "System"
-	SetupModesLoginwindow SetupModes = "Loginwindow"
+	SetupModesLoginWindow SetupModes = "Loginwindow"
 )
 
 // The payload that configures the Xsan preferences that define the volumes that automatically mount at startup.

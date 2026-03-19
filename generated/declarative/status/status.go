@@ -57,7 +57,7 @@ var StatusItemType = map[string]any{
 // A status report of the client's Calendar accounts.
 type StatusAccountListCalDAV struct {
 	// A list of status values for the Calendar accounts.
-	Accountlistcaldav []*AccountlistcaldavStatusValue `json:"account.list.caldav" required:"true"`
+	AccountListCalDAV []*AccountListCalDAVStatusValue `json:"account.list.caldav" required:"true"`
 }
 
 func (p *StatusAccountListCalDAV) StatusItemType() string {
@@ -65,7 +65,7 @@ func (p *StatusAccountListCalDAV) StatusItemType() string {
 }
 
 // A status report of the client's Calendar account details.
-type AccountlistcaldavStatusValue struct {
+type AccountListCalDAVStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -89,7 +89,7 @@ type AccountlistcaldavStatusValue struct {
 // A status report of the client's Contacts accounts.
 type StatusAccountListCardDAV struct {
 	// A list of status values for the Contacts accounts.
-	Accountlistcarddav []*AccountlistcarddavStatusValue `json:"account.list.carddav" required:"true"`
+	AccountListCardDAV []*AccountListCardDAVStatusValue `json:"account.list.carddav" required:"true"`
 }
 
 func (p *StatusAccountListCardDAV) StatusItemType() string {
@@ -97,7 +97,7 @@ func (p *StatusAccountListCardDAV) StatusItemType() string {
 }
 
 // A status report of the client's Contacts account details.
-type AccountlistcarddavStatusValue struct {
+type AccountListCardDAVStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -117,7 +117,7 @@ type AccountlistcarddavStatusValue struct {
 // A status report of the client's Exchange accounts.
 type StatusAccountListExchange struct {
 	// A list of status values for the Exchange accounts.
-	Accountlistexchange []*AccountlistexchangeStatusValue `json:"account.list.exchange" required:"true"`
+	AccountListExchange []*AccountListExchangeStatusValue `json:"account.list.exchange" required:"true"`
 }
 
 func (p *StatusAccountListExchange) StatusItemType() string {
@@ -125,7 +125,7 @@ func (p *StatusAccountListExchange) StatusItemType() string {
 }
 
 // A status report of the client's Exchange account details.
-type AccountlistexchangeStatusValue struct {
+type AccountListExchangeStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -155,7 +155,7 @@ type AccountlistexchangeStatusValue struct {
 // A status report of the client's Google accounts.
 type StatusAccountListGoogle struct {
 	// A list of status values for the Google accounts.
-	Accountlistgoogle []*AccountlistgoogleStatusValue `json:"account.list.google" required:"true"`
+	AccountListGoogle []*AccountListGoogleStatusValue `json:"account.list.google" required:"true"`
 }
 
 func (p *StatusAccountListGoogle) StatusItemType() string {
@@ -163,7 +163,7 @@ func (p *StatusAccountListGoogle) StatusItemType() string {
 }
 
 // A status report of the client's Google account details.
-type AccountlistgoogleStatusValue struct {
+type AccountListGoogleStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -187,7 +187,7 @@ type AccountlistgoogleStatusValue struct {
 // A status report of the client's Lightweight Directory Access Protocol (LDAP) accounts.
 type StatusAccountListLDAP struct {
 	// A list of status values for the LDAP accounts.
-	Accountlistldap []*AccountlistldapStatusValue `json:"account.list.ldap" required:"true"`
+	AccountListLDAP []*AccountListLDAPStatusValue `json:"account.list.ldap" required:"true"`
 }
 
 func (p *StatusAccountListLDAP) StatusItemType() string {
@@ -195,7 +195,7 @@ func (p *StatusAccountListLDAP) StatusItemType() string {
 }
 
 // A status report of the client's LDAP account details.
-type AccountlistldapStatusValue struct {
+type AccountListLDAPStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -217,7 +217,7 @@ type AccountlistldapStatusValue struct {
 // A status report of the client's incoming Mail accounts.
 type StatusAccountListMailIncoming struct {
 	// A list of status values for the incoming Mail accounts.
-	Accountlistmailincoming []*AccountlistmailincomingStatusValue `json:"account.list.mail.incoming" required:"true"`
+	AccountListMailIncoming []*AccountListMailIncomingStatusValue `json:"account.list.mail.incoming" required:"true"`
 }
 
 func (p *StatusAccountListMailIncoming) StatusItemType() string {
@@ -225,7 +225,7 @@ func (p *StatusAccountListMailIncoming) StatusItemType() string {
 }
 
 // A status report of the client's incoming Mail account details.
-type AccountlistmailincomingStatusValue struct {
+type AccountListMailIncomingStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -249,7 +249,7 @@ type AccountlistmailincomingStatusValue struct {
 // A status report of the client's outgoing Mail accounts.
 type StatusAccountListMailOutgoing struct {
 	// A list of status values for the outgoing Mail accounts.
-	Accountlistmailoutgoing []*AccountlistmailoutgoingStatusValue `json:"account.list.mail.outgoing" required:"true"`
+	AccountListMailOutgoing []*AccountListMailOutgoingStatusValue `json:"account.list.mail.outgoing" required:"true"`
 }
 
 func (p *StatusAccountListMailOutgoing) StatusItemType() string {
@@ -257,7 +257,7 @@ func (p *StatusAccountListMailOutgoing) StatusItemType() string {
 }
 
 // A status report of the client's outgoing Mail account details.
-type AccountlistmailoutgoingStatusValue struct {
+type AccountListMailOutgoingStatusValue struct {
 	// The unique identifier for the account.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the account is removed and the status item object only contains this key and the `identifier` key.
@@ -277,7 +277,7 @@ type AccountlistmailoutgoingStatusValue struct {
 // A status report of the client's subscribed calendars.
 type StatusAccountListSubscribedCalendar struct {
 	// A list of status values for the subscribed calendars.
-	AccountlistsubscribedCalendar []*AccountlistsubscribedCalendarStatusValue `json:"account.list.subscribed-calendar" required:"true"`
+	AccountListSubscribedCalendar []*AccountListSubscribedCalendarStatusValue `json:"account.list.subscribed-calendar" required:"true"`
 }
 
 func (p *StatusAccountListSubscribedCalendar) StatusItemType() string {
@@ -285,7 +285,7 @@ func (p *StatusAccountListSubscribedCalendar) StatusItemType() string {
 }
 
 // A status report of the client's subscribed calendar details.
-type AccountlistsubscribedCalendarStatusValue struct {
+type AccountListSubscribedCalendarStatusValue struct {
 	// The unique identifier for the subscribed calendar.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the subscribed calendar is removed and the status item object only contains this key and the `identifier` key.
@@ -295,7 +295,7 @@ type AccountlistsubscribedCalendarStatusValue struct {
 	// The name of the subscribed calendar.
 	VisibleName *string `json:"visible-name,omitempty"`
 	// The URL of the subscribed calendar.
-	CalendarUrl *string `json:"calendar-url,omitempty"`
+	CalendarURL *string `json:"calendar-url,omitempty"`
 	// The user name for authenticating with the subscribed calendar.
 	Username *string `json:"username,omitempty"`
 	// A Boolean value that indicates whether the Calendar app displays this subscribed calendar.
@@ -305,7 +305,7 @@ type AccountlistsubscribedCalendarStatusValue struct {
 // The device's declarative managed apps.
 type StatusAppManagedList struct {
 	// An array of dictionaries that describe the device's declarative managed apps.
-	Appmanagedlist []*AppmanagedlistStatusValue `json:"app.managed.list" required:"true"`
+	AppManagedList []*AppManagedListStatusValue `json:"app.managed.list" required:"true"`
 }
 
 func (p *StatusAppManagedList) StatusItemType() string {
@@ -313,7 +313,7 @@ func (p *StatusAppManagedList) StatusItemType() string {
 }
 
 // A dictionary that describes a declarative managed app.
-type AppmanagedlistStatusValue struct {
+type AppManagedListStatusValue struct {
 	// The app's bundle id, which is unique.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the system removed the app and only this key and the `identifier` key are present in the status item object.
@@ -324,7 +324,7 @@ type AppmanagedlistStatusValue struct {
 	Name *string `json:"name,omitempty"`
 	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
 	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
-	ExternalVersionId *int64 `json:"external-version-id,omitempty"`
+	ExternalVersionID *int64 `json:"external-version-id,omitempty"`
 	// The version of the app.
 	Version *string `json:"version,omitempty"`
 	// The short version of the app.
@@ -341,7 +341,7 @@ type AppmanagedlistStatusValue struct {
 	// - `managed`: The app is installed and managed.
 	// - `managed-but-uninstalled`: The app is required, but the system hasn't installed it. The app becomes managed if the system installs it again. If the user removes an optional app, its state is `optional`, not `managed-but-uninstalled`.
 	// - `failed`: The app install failed.
-	State *AppmanagedlistStatusValueState `json:"state,omitempty"`
+	State *AppManagedListStatusValueState `json:"state,omitempty"`
 	// The update status of the app, which has the following possible values:
 	// - `available`: An update is available for the app.
 	// - `prompting-for-update`: The system is displaying a prompt to the user to proceed with app installation.
@@ -354,7 +354,7 @@ type AppmanagedlistStatusValue struct {
 	// The status of app or extension managed configurations. This key is only present when managed configurations are available for the managed app or any of its extensions.
 	ConfigState *ConfigState `json:"config-state,omitempty"`
 	// An array that contains additional details about the app state, including errors.
-	Reasons *[]*AppmanagedlistStatusValueReasonsReasons `json:"reasons,omitempty"`
+	Reasons *[]*AppManagedListStatusValueReasonsReasons `json:"reasons,omitempty"`
 }
 
 // The status of the app, which has the following possible values:
@@ -369,20 +369,20 @@ type AppmanagedlistStatusValue struct {
 // - `managed`: The app is installed and managed.
 // - `managed-but-uninstalled`: The app is required, but the system hasn't installed it. The app becomes managed if the system installs it again. If the user removes an optional app, its state is `optional`, not `managed-but-uninstalled`.
 // - `failed`: The app install failed.
-type AppmanagedlistStatusValueState string
+type AppManagedListStatusValueState string
 
 const (
-	AppmanagedlistStatusValueStateOptional               AppmanagedlistStatusValueState = "optional"
-	AppmanagedlistStatusValueStateQueued                 AppmanagedlistStatusValueState = "queued"
-	AppmanagedlistStatusValueStateNotPresent             AppmanagedlistStatusValueState = "not-present"
-	AppmanagedlistStatusValueStatePromptingForConsent    AppmanagedlistStatusValueState = "prompting-for-consent"
-	AppmanagedlistStatusValueStatePromptingForLogin      AppmanagedlistStatusValueState = "prompting-for-login"
-	AppmanagedlistStatusValueStatePromptingForManagement AppmanagedlistStatusValueState = "prompting-for-management"
-	AppmanagedlistStatusValueStateDownloading            AppmanagedlistStatusValueState = "downloading"
-	AppmanagedlistStatusValueStateInstalling             AppmanagedlistStatusValueState = "installing"
-	AppmanagedlistStatusValueStateManaged                AppmanagedlistStatusValueState = "managed"
-	AppmanagedlistStatusValueStateManagedButUninstalled  AppmanagedlistStatusValueState = "managed-but-uninstalled"
-	AppmanagedlistStatusValueStateFailed                 AppmanagedlistStatusValueState = "failed"
+	AppManagedListStatusValueStateOptional               AppManagedListStatusValueState = "optional"
+	AppManagedListStatusValueStateQueued                 AppManagedListStatusValueState = "queued"
+	AppManagedListStatusValueStateNotPresent             AppManagedListStatusValueState = "not-present"
+	AppManagedListStatusValueStatePromptingForConsent    AppManagedListStatusValueState = "prompting-for-consent"
+	AppManagedListStatusValueStatePromptingForLogin      AppManagedListStatusValueState = "prompting-for-login"
+	AppManagedListStatusValueStatePromptingForManagement AppManagedListStatusValueState = "prompting-for-management"
+	AppManagedListStatusValueStateDownloading            AppManagedListStatusValueState = "downloading"
+	AppManagedListStatusValueStateInstalling             AppManagedListStatusValueState = "installing"
+	AppManagedListStatusValueStateManaged                AppManagedListStatusValueState = "managed"
+	AppManagedListStatusValueStateManagedButUninstalled  AppManagedListStatusValueState = "managed-but-uninstalled"
+	AppManagedListStatusValueStateFailed                 AppManagedListStatusValueState = "failed"
 )
 
 // The update status of the app, which has the following possible values:
@@ -442,7 +442,7 @@ type ManagedConfigurationState struct {
 }
 
 // Information about a status error.
-type AppmanagedlistStatusValueReasonsReasons struct {
+type AppManagedListStatusValueReasonsReasons struct {
 	// A code for the state.
 	Code string `json:"code" required:"true"`
 	// A description of the state.
@@ -454,7 +454,7 @@ type AppmanagedlistStatusValueReasonsReasons struct {
 // A status report of the device's serial number.
 type StatusDeviceSerialNumber struct {
 	// The device's serial number.
-	DeviceidentifierserialNumber string `json:"device.identifier.serial-number" required:"true"`
+	DeviceIdentifierSerialNumber string `json:"device.identifier.serial-number" required:"true"`
 }
 
 func (p *StatusDeviceSerialNumber) StatusItemType() string {
@@ -464,7 +464,7 @@ func (p *StatusDeviceSerialNumber) StatusItemType() string {
 // A status report of the device's UDID.
 type StatusDeviceUDID struct {
 	// The device's UDID. This value is always available on the device channel. This value is only available on user channels whose organization matches that of the device channel.
-	Deviceidentifierudid string `json:"device.identifier.udid" required:"true"`
+	DeviceIdentifierUDID string `json:"device.identifier.udid" required:"true"`
 }
 
 func (p *StatusDeviceUDID) StatusItemType() string {
@@ -474,7 +474,7 @@ func (p *StatusDeviceUDID) StatusItemType() string {
 // A status report of the device's hardware family.
 type StatusDeviceModelFamily struct {
 	// The hardware family of the device, such as `Mac`, `iPhone`, or `iPad`.
-	Devicemodelfamily string `json:"device.model.family" required:"true"`
+	DeviceModelFamily string `json:"device.model.family" required:"true"`
 }
 
 func (p *StatusDeviceModelFamily) StatusItemType() string {
@@ -484,7 +484,7 @@ func (p *StatusDeviceModelFamily) StatusItemType() string {
 // A status report of the device's hardware identifier.
 type StatusDeviceModelIdentifier struct {
 	// A two-part string that specifies the device's model. The first part specifies device's model family, and the second part specifies the model's version. The model's version is a comma-separated number where the first part of the number is the version, and the second part is a variant, such as `MacBookPro15,1` or `iPhone13,2`.
-	Devicemodelidentifier string `json:"device.model.identifier" required:"true"`
+	DeviceModelIdentifier string `json:"device.model.identifier" required:"true"`
 }
 
 func (p *StatusDeviceModelIdentifier) StatusItemType() string {
@@ -494,7 +494,7 @@ func (p *StatusDeviceModelIdentifier) StatusItemType() string {
 // A status report of the device's marketing name.
 type StatusDeviceModelMarketingName struct {
 	// The device's marketing name, such as `iPhone 12`. This value may not always be available.
-	DevicemodelmarketingName string `json:"device.model.marketing-name" required:"true"`
+	DeviceModelMarketingName string `json:"device.model.marketing-name" required:"true"`
 }
 
 func (p *StatusDeviceModelMarketingName) StatusItemType() string {
@@ -504,7 +504,7 @@ func (p *StatusDeviceModelMarketingName) StatusItemType() string {
 // A status report of the device's hardware number.
 type StatusDeviceModelNumber struct {
 	// The device's model number.
-	Devicemodelnumber string `json:"device.model.number" required:"true"`
+	DeviceModelNumber string `json:"device.model.number" required:"true"`
 }
 
 func (p *StatusDeviceModelNumber) StatusItemType() string {
@@ -514,7 +514,7 @@ func (p *StatusDeviceModelNumber) StatusItemType() string {
 // A status report of the device's software build identifier.
 type StatusDeviceOperatingSystemBuildVersion struct {
 	// The operating system's build version on the device, such as `18F132`.
-	DeviceoperatingSystembuildVersion string `json:"device.operating-system.build-version" required:"true"`
+	DeviceOperatingSystemBuildVersion string `json:"device.operating-system.build-version" required:"true"`
 }
 
 func (p *StatusDeviceOperatingSystemBuildVersion) StatusItemType() string {
@@ -524,7 +524,7 @@ func (p *StatusDeviceOperatingSystemBuildVersion) StatusItemType() string {
 // A status report of the device's operating system family.
 type StatusDeviceOperatingSystemFamily struct {
 	// The operating system family in use on the device, such as `macOS` or `iOS`.
-	DeviceoperatingSystemfamily string `json:"device.operating-system.family" required:"true"`
+	DeviceOperatingSystemFamily string `json:"device.operating-system.family" required:"true"`
 }
 
 func (p *StatusDeviceOperatingSystemFamily) StatusItemType() string {
@@ -534,7 +534,7 @@ func (p *StatusDeviceOperatingSystemFamily) StatusItemType() string {
 // A status report of the device's operating system marketing name.
 type StatusDeviceOperatingSystemMarketingName struct {
 	// The operating system's marketing name in use on the device, such as `Catalina`.
-	DeviceoperatingSystemmarketingName string `json:"device.operating-system.marketing-name" required:"true"`
+	DeviceOperatingSystemMarketingName string `json:"device.operating-system.marketing-name" required:"true"`
 }
 
 func (p *StatusDeviceOperatingSystemMarketingName) StatusItemType() string {
@@ -544,7 +544,7 @@ func (p *StatusDeviceOperatingSystemMarketingName) StatusItemType() string {
 // A status report of the device's operating system supplemental build identifier.
 type StatusDeviceOperatingSystemSupplementalBuildVersion struct {
 	// The operating system's build and Background Security Improvement versions in use on the device, for example, `20A123a` or `20B27c`.
-	DeviceoperatingSystemsupplementalbuildVersion string `json:"device.operating-system.supplemental.build-version" required:"true"`
+	DeviceOperatingSystemSupplementalBuildVersion string `json:"device.operating-system.supplemental.build-version" required:"true"`
 }
 
 func (p *StatusDeviceOperatingSystemSupplementalBuildVersion) StatusItemType() string {
@@ -554,7 +554,7 @@ func (p *StatusDeviceOperatingSystemSupplementalBuildVersion) StatusItemType() s
 // A status report of the device's operating system's Background Security Improvement identifier.
 type StatusDeviceOperatingSystemSupplementalExtraVersion struct {
 	// The operating system's Background Security Improvement version in use on the device, for example, `a`.
-	DeviceoperatingSystemsupplementalextraVersion string `json:"device.operating-system.supplemental.extra-version" required:"true"`
+	DeviceOperatingSystemSupplementalExtraVersion string `json:"device.operating-system.supplemental.extra-version" required:"true"`
 }
 
 func (p *StatusDeviceOperatingSystemSupplementalExtraVersion) StatusItemType() string {
@@ -564,7 +564,7 @@ func (p *StatusDeviceOperatingSystemSupplementalExtraVersion) StatusItemType() s
 // A status report of the device's operating system version.
 type StatusDeviceOperatingSystemVersion struct {
 	// The operating system's version in use on the device, such as `15.0`.
-	DeviceoperatingSystemversion string `json:"device.operating-system.version" required:"true"`
+	DeviceOperatingSystemVersion string `json:"device.operating-system.version" required:"true"`
 }
 
 func (p *StatusDeviceOperatingSystemVersion) StatusItemType() string {
@@ -580,7 +580,7 @@ type StatusDeviceBatteryHealth struct {
 	// - `unknown`: The system couldn't determine battery health information.
 	// - `unsupported`: The device doesn't support battery health reporting.
 	// Available in iOS 17 and later on iPhone, iPadOS 18.4 and later on supported iPad models, and macOS 14.4 and later on a Mac with Apple silicon.
-	DevicepowerbatteryHealth DevicepowerbatteryHealth `json:"device.power.battery-health" required:"true"`
+	DevicePowerBatteryHealth DevicePowerBatteryHealth `json:"device.power.battery-health" required:"true"`
 }
 
 func (p *StatusDeviceBatteryHealth) StatusItemType() string {
@@ -594,20 +594,20 @@ func (p *StatusDeviceBatteryHealth) StatusItemType() string {
 // - `unknown`: The system couldn't determine battery health information.
 // - `unsupported`: The device doesn't support battery health reporting.
 // Available in iOS 17 and later on iPhone, iPadOS 18.4 and later on supported iPad models, and macOS 14.4 and later on a Mac with Apple silicon.
-type DevicepowerbatteryHealth string
+type DevicePowerBatteryHealth string
 
 const (
-	DevicepowerbatteryHealthNonGenuine         DevicepowerbatteryHealth = "non-genuine"
-	DevicepowerbatteryHealthNormal             DevicepowerbatteryHealth = "normal"
-	DevicepowerbatteryHealthServiceRecommended DevicepowerbatteryHealth = "service-recommended"
-	DevicepowerbatteryHealthUnknown            DevicepowerbatteryHealth = "unknown"
-	DevicepowerbatteryHealthUnsupported        DevicepowerbatteryHealth = "unsupported"
+	DevicePowerBatteryHealthNonGenuine         DevicePowerBatteryHealth = "non-genuine"
+	DevicePowerBatteryHealthNormal             DevicePowerBatteryHealth = "normal"
+	DevicePowerBatteryHealthServiceRecommended DevicePowerBatteryHealth = "service-recommended"
+	DevicePowerBatteryHealthUnknown            DevicePowerBatteryHealth = "unknown"
+	DevicePowerBatteryHealthUnsupported        DevicePowerBatteryHealth = "unsupported"
 )
 
 // The enabled status of the File Vault.
 type StatusDiskManagementFileVaultEnabled struct {
 	// A Boolean value that specifies the File Vault enabled status on the device.
-	Diskmanagementfilevaultenabled bool `json:"diskmanagement.filevault.enabled" required:"true"`
+	DiskManagementFileVaultEnabled bool `json:"diskmanagement.filevault.enabled" required:"true"`
 }
 
 func (p *StatusDiskManagementFileVaultEnabled) StatusItemType() string {
@@ -617,7 +617,7 @@ func (p *StatusDiskManagementFileVaultEnabled) StatusItemType() string {
 // A status report of the client's protocol capabilities.
 type StatusManagementClientCapabilities struct {
 	// An object that contains the client's protocol capabilities. These typically only change when the device upgrades its software. An implicit status subscription for this status item is always present, so the client always reports changes to the server.
-	ManagementclientCapabilities ManagementclientCapabilities `json:"management.client-capabilities" required:"true"`
+	ManagementClientCapabilities ManagementClientCapabilities `json:"management.client-capabilities" required:"true"`
 }
 
 func (p *StatusManagementClientCapabilities) StatusItemType() string {
@@ -625,7 +625,7 @@ func (p *StatusManagementClientCapabilities) StatusItemType() string {
 }
 
 // An object that contains the client's protocol capabilities. These typically only change when the device upgrades its software. An implicit status subscription for this status item is always present, so the client always reports changes to the server.
-type ManagementclientCapabilities struct {
+type ManagementClientCapabilities struct {
 	// A list of protocol versions that the client supports.
 	SupportedVersions []string `json:"supported-versions" required:"true"`
 	// A set of optional protocol features that the client supports. Each object's key represents a feature, and the property value represents the feature's associated parameters.
@@ -657,7 +657,7 @@ type Declarations struct {
 // A status report of the client's processed declarations.
 type StatusManagementDeclarations struct {
 	// A collection of the client's processed declarations.
-	Managementdeclarations Managementdeclarations `json:"management.declarations" required:"true"`
+	ManagementDeclarations ManagementDeclarations `json:"management.declarations" required:"true"`
 }
 
 func (p *StatusManagementDeclarations) StatusItemType() string {
@@ -665,7 +665,7 @@ func (p *StatusManagementDeclarations) StatusItemType() string {
 }
 
 // A collection of the client's processed declarations.
-type Managementdeclarations struct {
+type ManagementDeclarations struct {
 	// An array of declarations that represent the client's processed activation types.
 	Activations []*Activations `json:"activations" required:"true"`
 	// An array of declarations that represent the client's processed configuration types.
@@ -754,7 +754,7 @@ type Management struct {
 // A status report of the client's MDM-installed apps.
 type StatusMDMApp struct {
 	// The list of apps. The response doesn't include apps that are managed by Declarative Device Management.
-	Mdmapp []*MdmappStatusValue `json:"mdm.app" required:"true"`
+	MDMApp []*MDMAppStatusValue `json:"mdm.app" required:"true"`
 }
 
 func (p *StatusMDMApp) StatusItemType() string {
@@ -762,7 +762,7 @@ func (p *StatusMDMApp) StatusItemType() string {
 }
 
 // A status report that contains details about an MDM-installed app.
-type MdmappStatusValue struct {
+type MDMAppStatusValue struct {
 	// The app's bundle id, which is unique.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the system removed the app and only this key and the `identifier` key are present in the status item object. The device reports an MDM-installed app as removed if management of the app has been transferred to Declarative Device Management.
@@ -771,45 +771,45 @@ type MdmappStatusValue struct {
 	Name *string `json:"name,omitempty"`
 	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
 	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
-	ExternalVersionId *string `json:"external-version-id,omitempty"`
+	ExternalVersionID *string `json:"external-version-id,omitempty"`
 	// The version of the app.
 	Version *string `json:"version,omitempty"`
 	// The short version of the app.
 	ShortVersion *string `json:"short-version,omitempty"`
 	// The status of the app that `ManagedApplicationListCommand` reports.
-	State *MdmappStatusValueState `json:"state,omitempty"`
+	State *MDMAppStatusValueState `json:"state,omitempty"`
 }
 
 // The status of the app that `ManagedApplicationListCommand` reports.
-type MdmappStatusValueState string
+type MDMAppStatusValueState string
 
 const (
-	MdmappStatusValueStateQueued                  MdmappStatusValueState = "queued"
-	MdmappStatusValueStateNeedsRedemption         MdmappStatusValueState = "needs-redemption"
-	MdmappStatusValueStateRedeeming               MdmappStatusValueState = "redeeming"
-	MdmappStatusValueStatePrompting               MdmappStatusValueState = "prompting"
-	MdmappStatusValueStatePromptingForLogin       MdmappStatusValueState = "prompting-for-login"
-	MdmappStatusValueStateValidatingPurchase      MdmappStatusValueState = "validating-purchase"
-	MdmappStatusValueStatePromptingForUpdate      MdmappStatusValueState = "prompting-for-update"
-	MdmappStatusValueStatePromptingForUpdateLogin MdmappStatusValueState = "prompting-for-update-login"
-	MdmappStatusValueStatePromptingForManagement  MdmappStatusValueState = "prompting-for-management"
-	MdmappStatusValueStateValidatingUpdate        MdmappStatusValueState = "validating-update"
-	MdmappStatusValueStateUpdating                MdmappStatusValueState = "updating"
-	MdmappStatusValueStateInstalling              MdmappStatusValueState = "installing"
-	MdmappStatusValueStateManaged                 MdmappStatusValueState = "managed"
-	MdmappStatusValueStateManagedButUninstalled   MdmappStatusValueState = "managed-but-uninstalled"
-	MdmappStatusValueStateUnknown                 MdmappStatusValueState = "unknown"
-	MdmappStatusValueStateUserInstalledApp        MdmappStatusValueState = "user-installed-app"
-	MdmappStatusValueStateUserRejected            MdmappStatusValueState = "user-rejected"
-	MdmappStatusValueStateUpdateRejected          MdmappStatusValueState = "update-rejected"
-	MdmappStatusValueStateManagementRejected      MdmappStatusValueState = "management-rejected"
-	MdmappStatusValueStateFailed                  MdmappStatusValueState = "failed"
+	MDMAppStatusValueStateQueued                  MDMAppStatusValueState = "queued"
+	MDMAppStatusValueStateNeedsRedemption         MDMAppStatusValueState = "needs-redemption"
+	MDMAppStatusValueStateRedeeming               MDMAppStatusValueState = "redeeming"
+	MDMAppStatusValueStatePrompting               MDMAppStatusValueState = "prompting"
+	MDMAppStatusValueStatePromptingForLogin       MDMAppStatusValueState = "prompting-for-login"
+	MDMAppStatusValueStateValidatingPurchase      MDMAppStatusValueState = "validating-purchase"
+	MDMAppStatusValueStatePromptingForUpdate      MDMAppStatusValueState = "prompting-for-update"
+	MDMAppStatusValueStatePromptingForUpdateLogin MDMAppStatusValueState = "prompting-for-update-login"
+	MDMAppStatusValueStatePromptingForManagement  MDMAppStatusValueState = "prompting-for-management"
+	MDMAppStatusValueStateValidatingUpdate        MDMAppStatusValueState = "validating-update"
+	MDMAppStatusValueStateUpdating                MDMAppStatusValueState = "updating"
+	MDMAppStatusValueStateInstalling              MDMAppStatusValueState = "installing"
+	MDMAppStatusValueStateManaged                 MDMAppStatusValueState = "managed"
+	MDMAppStatusValueStateManagedButUninstalled   MDMAppStatusValueState = "managed-but-uninstalled"
+	MDMAppStatusValueStateUnknown                 MDMAppStatusValueState = "unknown"
+	MDMAppStatusValueStateUserInstalledApp        MDMAppStatusValueState = "user-installed-app"
+	MDMAppStatusValueStateUserRejected            MDMAppStatusValueState = "user-rejected"
+	MDMAppStatusValueStateUpdateRejected          MDMAppStatusValueState = "update-rejected"
+	MDMAppStatusValueStateManagementRejected      MDMAppStatusValueState = "management-rejected"
+	MDMAppStatusValueStateFailed                  MDMAppStatusValueState = "failed"
 )
 
 // The client's declarative packages.
 type StatusPackageList struct {
 	// An array of dictionaries that describe the device's declarative packages.
-	Packagelist []*PackagelistStatusValue `json:"package.list" required:"true"`
+	PackageList []*PackageListStatusValue `json:"package.list" required:"true"`
 }
 
 func (p *StatusPackageList) StatusItemType() string {
@@ -817,7 +817,7 @@ func (p *StatusPackageList) StatusItemType() string {
 }
 
 // A dictionary that describes a declarative package.
-type PackagelistStatusValue struct {
+type PackageListStatusValue struct {
 	// The package's unique identifier. This is the package identifier value of the package file.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the system removed the package and only this key and the `identifier` key are present in the status item object.
@@ -836,9 +836,9 @@ type PackagelistStatusValue struct {
 	// - `installing`: The system is installing the package.
 	// - `installed`: The package is installed.
 	// - `failed`: The package install failed.
-	State *PackagelistStatusValueState `json:"state,omitempty"`
+	State *PackageListStatusValueState `json:"state,omitempty"`
 	// An array that contains additional details about the package state, including errors.
-	Reasons *[]*PackagelistStatusValueReasonsReasons `json:"reasons,omitempty"`
+	Reasons *[]*PackageListStatusValueReasonsReasons `json:"reasons,omitempty"`
 }
 
 // The status of the package, which has the following possible values:
@@ -849,20 +849,20 @@ type PackagelistStatusValue struct {
 // - `installing`: The system is installing the package.
 // - `installed`: The package is installed.
 // - `failed`: The package install failed.
-type PackagelistStatusValueState string
+type PackageListStatusValueState string
 
 const (
-	PackagelistStatusValueStateOptional            PackagelistStatusValueState = "optional"
-	PackagelistStatusValueStateQueued              PackagelistStatusValueState = "queued"
-	PackagelistStatusValueStatePromptingForConsent PackagelistStatusValueState = "prompting-for-consent"
-	PackagelistStatusValueStateDownloading         PackagelistStatusValueState = "downloading"
-	PackagelistStatusValueStateInstalling          PackagelistStatusValueState = "installing"
-	PackagelistStatusValueStateInstalled           PackagelistStatusValueState = "installed"
-	PackagelistStatusValueStateFailed              PackagelistStatusValueState = "failed"
+	PackageListStatusValueStateOptional            PackageListStatusValueState = "optional"
+	PackageListStatusValueStateQueued              PackageListStatusValueState = "queued"
+	PackageListStatusValueStatePromptingForConsent PackageListStatusValueState = "prompting-for-consent"
+	PackageListStatusValueStateDownloading         PackageListStatusValueState = "downloading"
+	PackageListStatusValueStateInstalling          PackageListStatusValueState = "installing"
+	PackageListStatusValueStateInstalled           PackageListStatusValueState = "installed"
+	PackageListStatusValueStateFailed              PackageListStatusValueState = "failed"
 )
 
 // Information about a status error.
-type PackagelistStatusValueReasonsReasons struct {
+type PackageListStatusValueReasonsReasons struct {
 	// A code for the state.
 	Code string `json:"code" required:"true"`
 	// A description of the state.
@@ -914,7 +914,7 @@ type UnresolvedGroup struct {
 // A status report of the client's managed certificates.
 type StatusSecurityCertificateList struct {
 	// A list of the device's managed certificates.
-	Securitycertificatelist []*SecuritycertificatelistStatusValue `json:"security.certificate.list" required:"true"`
+	SecurityCertificateList []*SecurityCertificateListStatusValue `json:"security.certificate.list" required:"true"`
 }
 
 func (p *StatusSecurityCertificateList) StatusItemType() string {
@@ -922,7 +922,7 @@ func (p *StatusSecurityCertificateList) StatusItemType() string {
 }
 
 // A status report of a security certificate.
-type SecuritycertificatelistStatusValue struct {
+type SecurityCertificateListStatusValue struct {
 	// The unique identifier of the certificate which the system uses as the primary key.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the system removed the app and only this key and the `identifier` key are present in the status item object.
@@ -940,7 +940,7 @@ type SecuritycertificatelistStatusValue struct {
 // A status report of the device's background task details.
 type StatusServicesBackgroundTask struct {
 	// The background task.
-	ServicesbackgroundTask []*ServicesbackgroundTaskStatusValue `json:"services.background-task" required:"true"`
+	ServicesBackgroundTask []*ServicesBackgroundTaskStatusValue `json:"services.background-task" required:"true"`
 }
 
 func (p *StatusServicesBackgroundTask) StatusItemType() string {
@@ -948,7 +948,7 @@ func (p *StatusServicesBackgroundTask) StatusItemType() string {
 }
 
 // A status report of a background task.
-type ServicesbackgroundTaskStatusValue struct {
+type ServicesBackgroundTaskStatusValue struct {
 	// The background task UUID which the system uses as the primary key.
 	Identifier string `json:"identifier" required:"true"`
 	// If `true`, the background task is removed and the status item object only contains this key and the `identifier` key.
@@ -956,11 +956,11 @@ type ServicesbackgroundTaskStatusValue struct {
 	// For types other than `agent` or `daemon`, this is the code signature designated requirement of the item, if available.
 	CodeSignature *string `json:"code-signature,omitempty"`
 	// The numeric user identifier of the owner of the background task.
-	Uid int64 `json:"uid" required:"true"`
+	UID int64 `json:"uid" required:"true"`
 	// For an `agent` or `daemon`, the path to the `launchd` `plist` file. For other types, the path to the app or the document.
 	Path string `json:"path" required:"true"`
 	// The `SMAppService.Status` enumeration.
-	State ServicesbackgroundTaskStatusValueState `json:"state" required:"true"`
+	State ServicesBackgroundTaskStatusValueState `json:"state" required:"true"`
 	// The daemon, agent, or SFL login item type.
 	Type Type `json:"type" required:"true"`
 	// Details about a `launchd`-based background task, which is only present when the type is `daemon` or `agent`.
@@ -968,13 +968,13 @@ type ServicesbackgroundTaskStatusValue struct {
 }
 
 // The `SMAppService.Status` enumeration.
-type ServicesbackgroundTaskStatusValueState string
+type ServicesBackgroundTaskStatusValueState string
 
 const (
-	ServicesbackgroundTaskStatusValueStateNotRegistered    ServicesbackgroundTaskStatusValueState = "not-registered"
-	ServicesbackgroundTaskStatusValueStateEnabled          ServicesbackgroundTaskStatusValueState = "enabled"
-	ServicesbackgroundTaskStatusValueStateRequiresApproval ServicesbackgroundTaskStatusValueState = "requires-approval"
-	ServicesbackgroundTaskStatusValueStateNotFound         ServicesbackgroundTaskStatusValueState = "not-found"
+	ServicesBackgroundTaskStatusValueStateNotRegistered    ServicesBackgroundTaskStatusValueState = "not-registered"
+	ServicesBackgroundTaskStatusValueStateEnabled          ServicesBackgroundTaskStatusValueState = "enabled"
+	ServicesBackgroundTaskStatusValueStateRequiresApproval ServicesBackgroundTaskStatusValueState = "requires-approval"
+	ServicesBackgroundTaskStatusValueStateNotFound         ServicesBackgroundTaskStatusValueState = "not-found"
 )
 
 // The daemon, agent, or SFL login item type.
@@ -1015,7 +1015,7 @@ type DeviceManagement struct {
 // A status report of the device's enrolled beta program.
 type StatusSoftwareUpdateBetaEnrollment struct {
 	// The device's enrolled beta program name, or an empty string if there's no enrolled beta program.
-	SoftwareupdatebetaEnrollment string `json:"softwareupdate.beta-enrollment" required:"true"`
+	SoftwareUpdateBetaEnrollment string `json:"softwareupdate.beta-enrollment" required:"true"`
 }
 
 func (p *StatusSoftwareUpdateBetaEnrollment) StatusItemType() string {
@@ -1025,7 +1025,7 @@ func (p *StatusSoftwareUpdateBetaEnrollment) StatusItemType() string {
 // A status report of the device's update device ID.
 type StatusSoftwareUpdateDeviceID struct {
 	// The device identifier to use when looking up available software updates via `https://gdmf.apple.com/v2/pmv`.
-	SoftwareupdatedeviceId string `json:"softwareupdate.device-id" required:"true"`
+	SoftwareUpdateDeviceID string `json:"softwareupdate.device-id" required:"true"`
 }
 
 func (p *StatusSoftwareUpdateDeviceID) StatusItemType() string {
@@ -1035,7 +1035,7 @@ func (p *StatusSoftwareUpdateDeviceID) StatusItemType() string {
 // A status report of a software update failure reason.
 type StatusSoftwareUpdateFailureReason struct {
 	// Details about a software update failure.
-	SoftwareupdatefailureReason SoftwareupdatefailureReason `json:"softwareupdate.failure-reason" required:"true"`
+	SoftwareUpdateFailureReason SoftwareUpdateFailureReason `json:"softwareupdate.failure-reason" required:"true"`
 }
 
 func (p *StatusSoftwareUpdateFailureReason) StatusItemType() string {
@@ -1043,7 +1043,7 @@ func (p *StatusSoftwareUpdateFailureReason) StatusItemType() string {
 }
 
 // Details about a software update failure.
-type SoftwareupdatefailureReason struct {
+type SoftwareUpdateFailureReason struct {
 	// The number of times the current software update failed. If there are no failures, or no pending software update, this is `0`.
 	Count int64 `json:"count" required:"true"`
 	// If present, this describes the reason for last software update failure. This key isn't present if there are no failures or no pending software update.
@@ -1055,7 +1055,7 @@ type SoftwareupdatefailureReason struct {
 // A status report of the reason for a pending software update on the device.
 type StatusSoftwareUpdateInstallReason struct {
 	// Details about the reason for a pending software update.
-	SoftwareupdateinstallReason SoftwareupdateinstallReason `json:"softwareupdate.install-reason" required:"true"`
+	SoftwareUpdateInstallReason SoftwareUpdateInstallReason `json:"softwareupdate.install-reason" required:"true"`
 }
 
 func (p *StatusSoftwareUpdateInstallReason) StatusItemType() string {
@@ -1063,11 +1063,11 @@ func (p *StatusSoftwareUpdateInstallReason) StatusItemType() string {
 }
 
 // Details about the reason for a pending software update.
-type SoftwareupdateinstallReason struct {
+type SoftwareUpdateInstallReason struct {
 	// A list of reasons for the pending software update. An empty list indicates that no software update is pending.
 	Reason []Reason `json:"reason" required:"true"`
 	// The identifier of the declaration that caused the software update to occur. This key is present only if the `reason` array contains the `declaration` value.
-	DeclarationId *string `json:"declaration-id,omitempty"`
+	DeclarationID *string `json:"declaration-id,omitempty"`
 }
 
 // A list of reasons for the pending software update. An empty list indicates that no software update is pending.
@@ -1102,7 +1102,7 @@ type StatusSoftwareUpdateInstallState struct {
 	// - `prepared`: The system prepared the software update and it's ready for installation.
 	// - `installing`: The system is installing the software update.
 	// - `failed`: The software update failed.
-	SoftwareupdateinstallState SoftwareupdateinstallState `json:"softwareupdate.install-state" required:"true"`
+	SoftwareUpdateInstallState SoftwareUpdateInstallState `json:"softwareupdate.install-state" required:"true"`
 }
 
 func (p *StatusSoftwareUpdateInstallState) StatusItemType() string {
@@ -1116,20 +1116,20 @@ func (p *StatusSoftwareUpdateInstallState) StatusItemType() string {
 // - `prepared`: The system prepared the software update and it's ready for installation.
 // - `installing`: The system is installing the software update.
 // - `failed`: The software update failed.
-type SoftwareupdateinstallState string
+type SoftwareUpdateInstallState string
 
 const (
-	SoftwareupdateinstallStateNone        SoftwareupdateinstallState = "none"
-	SoftwareupdateinstallStateDownloading SoftwareupdateinstallState = "downloading"
-	SoftwareupdateinstallStatePrepared    SoftwareupdateinstallState = "prepared"
-	SoftwareupdateinstallStateInstalling  SoftwareupdateinstallState = "installing"
-	SoftwareupdateinstallStateFailed      SoftwareupdateinstallState = "failed"
+	SoftwareUpdateInstallStateNone        SoftwareUpdateInstallState = "none"
+	SoftwareUpdateInstallStateDownloading SoftwareUpdateInstallState = "downloading"
+	SoftwareUpdateInstallStatePrepared    SoftwareUpdateInstallState = "prepared"
+	SoftwareUpdateInstallStateInstalling  SoftwareUpdateInstallState = "installing"
+	SoftwareUpdateInstallStateFailed      SoftwareUpdateInstallState = "failed"
 )
 
 // A status report of the pending software update version.
 type StatusSoftwareUpdatePendingVersion struct {
 	// A dictionary that contains the build and OS versions of the software update that's pending on the device.
-	SoftwareupdatependingVersion SoftwareupdatependingVersion `json:"softwareupdate.pending-version" required:"true"`
+	SoftwareUpdatePendingVersion SoftwareUpdatePendingVersion `json:"softwareupdate.pending-version" required:"true"`
 }
 
 func (p *StatusSoftwareUpdatePendingVersion) StatusItemType() string {
@@ -1137,7 +1137,7 @@ func (p *StatusSoftwareUpdatePendingVersion) StatusItemType() string {
 }
 
 // A dictionary that contains the build and OS versions of the software update that's pending on the device.
-type SoftwareupdatependingVersion struct {
+type SoftwareUpdatePendingVersion struct {
 	// The OS version of the pending software update, including any Background Security Improvement version. This string is empty if no update is pending.
 	OsVersion string `json:"os-version" required:"true"`
 	// The build version of the pending software update, including any Background Security Improvement version. This string is empty if no update is pending.
@@ -1166,7 +1166,7 @@ type Details struct{}
 // A test status item for an array.
 type StatusTestArrayValue struct {
 	// The test status item array value.
-	TestarrayValue []*TestarrayValueStatusValue `json:"test.array-value" required:"true"`
+	TestArrayValue []*TestArrayValueStatusValue `json:"test.array-value" required:"true"`
 }
 
 func (p *StatusTestArrayValue) StatusItemType() string {
@@ -1174,7 +1174,7 @@ func (p *StatusTestArrayValue) StatusItemType() string {
 }
 
 // A status value for the test status item array.
-type TestarrayValueStatusValue struct {
+type TestArrayValueStatusValue struct {
 	// The value of the first sub-key.
 	Key1 string `json:"key1" required:"true"`
 	// The value of the second sub-key.
@@ -1184,7 +1184,7 @@ type TestarrayValueStatusValue struct {
 // A test status item for a Boolean value.
 type StatusTestBooleanValue struct {
 	// The test status Boolean value.
-	TestbooleanValue bool `json:"test.boolean-value" required:"true"`
+	TestBooleanValue bool `json:"test.boolean-value" required:"true"`
 }
 
 func (p *StatusTestBooleanValue) StatusItemType() string {
@@ -1194,7 +1194,7 @@ func (p *StatusTestBooleanValue) StatusItemType() string {
 // A test status item for a dictionary.
 type StatusTestDictionaryValue struct {
 	// The test status dictionary value.
-	TestdictionaryValue TestdictionaryValue `json:"test.dictionary-value" required:"true"`
+	TestDictionaryValue TestDictionaryValue `json:"test.dictionary-value" required:"true"`
 }
 
 func (p *StatusTestDictionaryValue) StatusItemType() string {
@@ -1202,7 +1202,7 @@ func (p *StatusTestDictionaryValue) StatusItemType() string {
 }
 
 // The test status dictionary value.
-type TestdictionaryValue struct {
+type TestDictionaryValue struct {
 	// The value of the first sub-key.
 	Key1 string `json:"key1" required:"true"`
 	// The value of the second sub-key.
@@ -1212,7 +1212,7 @@ type TestdictionaryValue struct {
 // A test status item for an error.
 type StatusTestErrorValue struct {
 	// The test status error value.
-	TesterrorValue string `json:"test.error-value" required:"true"`
+	TestErrorValue string `json:"test.error-value" required:"true"`
 }
 
 func (p *StatusTestErrorValue) StatusItemType() string {
@@ -1222,7 +1222,7 @@ func (p *StatusTestErrorValue) StatusItemType() string {
 // A test status item for an integer.
 type StatusTestIntegerValue struct {
 	// The test status integer value.
-	TestintegerValue int64 `json:"test.integer-value" required:"true"`
+	TestIntegerValue int64 `json:"test.integer-value" required:"true"`
 }
 
 func (p *StatusTestIntegerValue) StatusItemType() string {
@@ -1232,7 +1232,7 @@ func (p *StatusTestIntegerValue) StatusItemType() string {
 // A test status item for a real value.
 type StatusTestRealValue struct {
 	// The test status real value.
-	TestrealValue float64 `json:"test.real-value" required:"true"`
+	TestRealValue float64 `json:"test.real-value" required:"true"`
 }
 
 func (p *StatusTestRealValue) StatusItemType() string {
@@ -1242,7 +1242,7 @@ func (p *StatusTestRealValue) StatusItemType() string {
 // A test status item for a string.
 type StatusTestStringValue struct {
 	// The test status string value.
-	TeststringValue string `json:"test.string-value" required:"true"`
+	TestStringValue string `json:"test.string-value" required:"true"`
 }
 
 func (p *StatusTestStringValue) StatusItemType() string {
