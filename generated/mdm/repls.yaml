@@ -14,3 +14,187 @@
     - "struct"
     - "field"
     - "const"
+
+# fix Comapple prefix (from com.apple.* dotted paths where dots aren't split characters)
+"^(.*)[cC]omapple(.*)$":
+  repl: "${1}ComApple${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# fix cachedaccounts smashed word
+"^(.*)[cC]achedaccounts(.*)$":
+  repl: "${1}CachedAccounts${2}"
+  types:
+    - "field"
+
+# fix media type identifiers
+"^Blankbd(.*)$":
+  repl: "BlankBD${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^Blankcd(.*)$":
+  repl: "BlankCD${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^Blankdvd(.*)$":
+  repl: "BlankDVD${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^Dvdram(.*)$":
+  repl: "DVDRAM${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^Bd(.*)$":
+  repl: "BD${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^Cd(.*)$":
+  repl: "CD${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^Dvd(.*)$":
+  repl: "DVD${1}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# fix smashed compound words (from dotted/smashed source keys)
+"^(.*)Dblclickbehavior(.*)$":
+  repl: "${1}DblClickBehavior${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^(.*)Eventtype(.*)$":
+  repl: "${1}EventType${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^(.*)Wakepoweron(.*)$":
+  repl: "${1}WakePowerOn${2}"
+  types:
+    - "const"
+"^(.*)Poweron(.*)$":
+  repl: "${1}PowerOn${2}"
+  types:
+    - "const"
+"^(.*)Autohide(.*)$":
+  repl: "${1}AutoHide${2}"
+  types:
+    - "field"
+"^(.*)Tilesize(.*)$":
+  repl: "${1}TileSize${2}"
+  types:
+    - "field"
+"^(.*)Showindicators(.*)$":
+  repl: "${1}ShowIndicators${2}"
+  types:
+    - "field"
+"^(.*)Showrecents(.*)$":
+  repl: "${1}ShowRecents${2}"
+  types:
+    - "field"
+"^(.*)Windowtabbing(.*)$":
+  repl: "${1}WindowTabbing${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^(.*)Loginwindow(.*)$":
+  repl: "${1}LoginWindow${2}"
+  types:
+    - "field"
+    - "const"
+"^(.*)Wakeon(.*)$":
+  repl: "${1}WakeOn${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Dictationand(.*)$":
+  repl: "${1}DictationAnd${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Filedata$":
+  repl: "${1}FileData"
+  types:
+    - "field"
+"^(.*)Keysize(.*)$":
+  repl: "${1}KeySize${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# fix menu suffix (from Key.menu dotted paths)
+"^(.+)menu$":
+  repl: "${1}Menu"
+  types:
+    - "field"
+
+# fix acronym casing (Go convention: acronyms should be all-caps)
+"^(.*)Apns(.*)$":
+  repl: "${1}APNs${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^(.*)Apn([^a-z].*|)$":
+  repl: "${1}APN${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Url(.*)$":
+  repl: "${1}URL${2}"
+  types:
+    - "field"
+    - "const"
+"^(.*)Sha([0-9].*)$":
+  repl: "${1}SHA${2}"
+  types:
+    - "const"
+"^(.*)Rfc(.*)$":
+  repl: "${1}RFC${2}"
+  types:
+    - "field"
+"^(.*)Pin([^n].*|)$":
+  repl: "${1}PIN${2}"
+  types:
+    - "field"
+"^(.*)Guid(.*)$":
+  repl: "${1}GUID${2}"
+  types:
+    - "field"
+"^(.*)Id([A-Z].*|)$":
+  repl: "${1}ID${2}"
+  types:
+    - "field"
+    - "const"
+
+# fix AcPower → ACPower (commands)
+"^AcPower(.*)$":
+  repl: "ACPower${1}"
+  types:
+    - "field"
+
+# fix Notsupported → NotSupported (commands)
+"^(.*)Notsupported(.*)$":
+  repl: "${1}NotSupported${2}"
+  types:
+    - "const"

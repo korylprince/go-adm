@@ -1,0 +1,9 @@
+# fix smashed com.apple.* const values
+"^(.*)Comapplemaid(.*)$":
+  repl: "${1}ComAppleMaid${2}"
+  types:
+    - "const"
+"^(.*)Comapplewatchpairing(.*)$":
+  repl: "${1}ComAppleWatchPairing${2}"
+  types:
+    - "const"

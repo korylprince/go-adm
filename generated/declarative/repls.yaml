@@ -1,0 +1,257 @@
+# fix smashed status item identifiers (from dotted paths where dots aren't split characters)
+
+# account list status items
+"^(.*)Accountlistcaldav(.*)$":
+  repl: "${1}AccountListCalDAV${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Accountlistcarddav(.*)$":
+  repl: "${1}AccountListCardDAV${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Accountlistexchange(.*)$":
+  repl: "${1}AccountListExchange${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Accountlistgoogle(.*)$":
+  repl: "${1}AccountListGoogle${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Accountlistldap(.*)$":
+  repl: "${1}AccountListLDAP${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Accountlistmailincoming(.*)$":
+  repl: "${1}AccountListMailIncoming${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Accountlistmailoutgoing(.*)$":
+  repl: "${1}AccountListMailOutgoing${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)AccountlistsubscribedCalendar(.*)$":
+  repl: "${1}AccountListSubscribedCalendar${2}"
+  types:
+    - "field"
+    - "struct"
+
+# app managed list
+"^(.*)Appmanagedlist(.*)$":
+  repl: "${1}AppManagedList${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# device identifiers
+"^(.*)Deviceidentifierserial(.*)$":
+  repl: "${1}DeviceIdentifierSerial${2}"
+  types:
+    - "field"
+"^(.*)Deviceidentifierudid(.*)$":
+  repl: "${1}DeviceIdentifierUDID${2}"
+  types:
+    - "field"
+
+# device model
+"^(.*)Devicemodelfamily(.*)$":
+  repl: "${1}DeviceModelFamily${2}"
+  types:
+    - "field"
+"^(.*)Devicemodelidentifier(.*)$":
+  repl: "${1}DeviceModelIdentifier${2}"
+  types:
+    - "field"
+"^(.*)Devicemodelmarketing(.*)$":
+  repl: "${1}DeviceModelMarketing${2}"
+  types:
+    - "field"
+"^(.*)Devicemodelnumber(.*)$":
+  repl: "${1}DeviceModelNumber${2}"
+  types:
+    - "field"
+
+# device operating system (must come before System* rules)
+"^(.*)Deviceoperating(.*)$":
+  repl: "${1}DeviceOperating${2}"
+  types:
+    - "field"
+
+# device power
+"^(.*)Devicepowerbattery(.*)$":
+  repl: "${1}DevicePowerBattery${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# disk management
+"^(.*)Diskmanagementfilevaultenabled(.*)$":
+  repl: "${1}DiskManagementFileVaultEnabled${2}"
+  types:
+    - "field"
+
+# management
+"^(.*)Managementclient(.*)$":
+  repl: "${1}ManagementClient${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Managementdeclarations(.*)$":
+  repl: "${1}ManagementDeclarations${2}"
+  types:
+    - "field"
+    - "struct"
+
+# MDM app
+"^(.*)Mdmapp(.*)$":
+  repl: "${1}MDMApp${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# package list
+"^(.*)Packagelist(.*)$":
+  repl: "${1}PackageList${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# security certificate list
+"^(.*)Securitycertificatelist(.*)$":
+  repl: "${1}SecurityCertificateList${2}"
+  types:
+    - "field"
+    - "struct"
+
+# services background
+"^(.*)Servicesbackground(.*)$":
+  repl: "${1}ServicesBackground${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+
+# software update (specific patterns to preserve inner word boundaries)
+"^(.*)SoftwareupdatebetaEnrollment(.*)$":
+  repl: "${1}SoftwareUpdateBetaEnrollment${2}"
+  types:
+    - "field"
+"^(.*)Softwareupdatedevice(.*)$":
+  repl: "${1}SoftwareUpdateDevice${2}"
+  types:
+    - "field"
+"^(.*)Softwareupdatefailure(.*)$":
+  repl: "${1}SoftwareUpdateFailure${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Softwareupdateinstall(.*)$":
+  repl: "${1}SoftwareUpdateInstall${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^(.*)Softwareupdatepending(.*)$":
+  repl: "${1}SoftwareUpdatePending${2}"
+  types:
+    - "field"
+    - "struct"
+
+# test status items
+"^(.*)Testarray(.*)$":
+  repl: "${1}TestArray${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Testboolean(.*)$":
+  repl: "${1}TestBoolean${2}"
+  types:
+    - "field"
+"^(.*)Testdictionary(.*)$":
+  repl: "${1}TestDictionary${2}"
+  types:
+    - "field"
+    - "struct"
+"^(.*)Testerror(.*)$":
+  repl: "${1}TestError${2}"
+  types:
+    - "field"
+"^(.*)Testinteger(.*)$":
+  repl: "${1}TestInteger${2}"
+  types:
+    - "field"
+"^(.*)Testreal(.*)$":
+  repl: "${1}TestReal${2}"
+  types:
+    - "field"
+"^(.*)Teststring(.*)$":
+  repl: "${1}TestString${2}"
+  types:
+    - "field"
+
+# inner word boundaries in device.operating-system.* status items
+"^(.*)Systemsupplementalbuild(.*)$":
+  repl: "${1}SystemSupplementalBuild${2}"
+  types:
+    - "field"
+"^(.*)Systemsupplementalextra(.*)$":
+  repl: "${1}SystemSupplementalExtra${2}"
+  types:
+    - "field"
+"^(.*)Systembuild(.*)$":
+  repl: "${1}SystemBuild${2}"
+  types:
+    - "field"
+"^(.*)Systemfamily(.*)$":
+  repl: "${1}SystemFamily${2}"
+  types:
+    - "field"
+"^(.*)Systemmarketing(.*)$":
+  repl: "${1}SystemMarketing${2}"
+  types:
+    - "field"
+"^(.*)Systemversion(.*)$":
+  repl: "${1}SystemVersion${2}"
+  types:
+    - "field"
+
+# fix compound words
+"^(.*)Nameand(.*)$":
+  repl: "${1}NameAnd${2}"
+  types:
+    - "field"
+    - "struct"
+    - "const"
+"^(.*)Keysize(.*)$":
+  repl: "${1}KeySize${2}"
+  types:
+    - "field"
+    - "struct"
+
+# fix acronym casing
+"^(.*)Rfc(.*)$":
+  repl: "${1}RFC${2}"
+  types:
+    - "field"
+"^(.*)Url(.*)$":
+  repl: "${1}URL${2}"
+  types:
+    - "field"
+"^(.*)Uid(.*)$":
+  repl: "${1}UID${2}"
+  types:
+    - "field"
+"^(.*)Id([A-Z].*|)$":
+  repl: "${1}ID${2}"
+  types:
+    - "field"

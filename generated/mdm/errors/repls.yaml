@@ -1,0 +1,21 @@
+# fix smashed com.apple.* const values
+"^(.*)Comapplewatchpairingtokenmissing(.*)$":
+  repl: "${1}ComAppleWatchPairingTokenMissing${2}"
+  types:
+    - "const"
+"^(.*)Comapplepssorequired(.*)$":
+  repl: "${1}ComApplePSSORequired${2}"
+  types:
+    - "const"
+"^(.*)Comapplesoftwareupdaterequired(.*)$":
+  repl: "${1}ComAppleSoftwareUpdateRequired${2}"
+  types:
+    - "const"
+"^(.*)Comappleunrecognizeddevice(.*)$":
+  repl: "${1}ComAppleUnrecognizedDevice${2}"
+  types:
+    - "const"
+"^(.*)ComapplewellKnownfailed(.*)$":
+  repl: "${1}ComAppleWellKnownFailed${2}"
+  types:
+    - "const"

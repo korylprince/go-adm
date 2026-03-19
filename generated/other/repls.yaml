@@ -1,0 +1,9 @@
+# fix acronym casing
+"^(.*)Sha([0-9].*)$":
+  repl: "${1}SHA${2}"
+  types:
+    - "field"
+"^(.*)Url(.*)$":
+  repl: "${1}URL${2}"
+  types:
+    - "field"
