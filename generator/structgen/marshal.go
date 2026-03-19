@@ -85,7 +85,7 @@ func GenerateFromFiles(fileNames []string, pkg string, reps replace.Replacements
 	f.HeaderComment(srcStr + ": " + strings.Join(baseFileNames, ", "))
 
 	file := schema.NewFile(schemas)
-	opts = append([]EncodeOption{WithSchemaEncoderOption(schema.WithTags(tags))}, opts...)
+	opts = append([]EncodeOption{WithReplacements(reps), WithSchemaEncoderOption(schema.WithTags(tags))}, opts...)
 	NewEncoder(f, opts...).Encode(file)
 	if err := f.Render(out); err != nil {
 		return fmt.Errorf("could not render code: %w", err)
@@ -132,7 +132,7 @@ func GenerateFromGit(repoURL, commit, path, pkg string, reps replace.Replacement
 	f.HeaderComment(fmt.Sprintf("generated from %s:%s/%s", repoURL, hash, path))
 
 	file := schema.NewFile(schemas)
-	opts = append([]EncodeOption{WithSchemaEncoderOption(schema.WithTags(tags))}, opts...)
+	opts = append([]EncodeOption{WithReplacements(reps), WithSchemaEncoderOption(schema.WithTags(tags))}, opts...)
 	NewEncoder(f, opts...).Encode(file)
 	if err := f.Render(out); err != nil {
 		return fmt.Errorf("could not render code: %w", err)
