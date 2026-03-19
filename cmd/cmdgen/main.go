@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	commands "github.com/korylprince/go-adm/generator/commands"
 	"github.com/korylprince/go-adm/utils/replace"
@@ -25,6 +26,7 @@ func checkFlags() error {
 	flCommit := flag.String("commit", "", "git commit")
 	flOut := flag.String("out", ".", "output directory. Leave empty for stdout")
 	flRepl := flag.String("repl", "", "path to replacements file")
+	flTags := flag.String("tags", "json,plist", "comma-separated struct tag names to generate")
 	flReqDef := flag.Bool("reqdef", false, "generate required and default struct tags")
 	flag.Parse()
 
@@ -54,6 +56,18 @@ func checkFlags() error {
 	var opts []commands.EncodeOption
 	if *flReqDef {
 		opts = append(opts, commands.WithRequiredDefault())
+	}
+
+	if *flTags != "" {
+		var tags []string
+		for _, tag := range strings.Split(*flTags, ",") {
+			tag = strings.TrimSpace(tag)
+			if tag == "" {
+				continue
+			}
+			tags = append(tags, tag)
+		}
+		opts = append(opts, commands.WithTags(tags))
 	}
 
 	if err = commands.GenerateFromGit(*flRepo, *flCommit, *flPath, repl, *flOut, opts...); err != nil {
