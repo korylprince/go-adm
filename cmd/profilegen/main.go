@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	profiles "github.com/korylprince/go-adm/profiles/gen"
-	"github.com/korylprince/go-adm/replace"
+	profiles "github.com/korylprince/go-adm/generator/profiles"
+	"github.com/korylprince/go-adm/utils/replace"
 )
 
 func printHelp() {

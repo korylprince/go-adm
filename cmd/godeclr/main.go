@@ -8,8 +8,8 @@ import (
 	"sort"
 
 	"github.com/google/uuid"
-	"github.com/korylprince/go-adm/declarative"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/declarative"
+	"github.com/korylprince/go-adm/utils/tagutil"
 )
 
 func main() {

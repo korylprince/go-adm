@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/korylprince/go-adm/git"
-	"github.com/korylprince/go-adm/replace"
-	"github.com/korylprince/go-adm/text"
+	"github.com/korylprince/go-adm/utils/git"
+	"github.com/korylprince/go-adm/utils/replace"
+	"github.com/korylprince/go-adm/utils/text"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 	"golang.org/x/text/cases"

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/korylprince/go-adm/declarative"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/declarative"
+	"github.com/korylprince/go-adm/utils/tagutil"
 )
 
 func TestFullFields(t *testing.T) {

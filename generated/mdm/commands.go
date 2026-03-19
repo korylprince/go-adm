@@ -1,14 +1,14 @@
-//go:generate /bin/bash -c "cmdgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../GENERATE_SHA)\" -reqdef"
+//go:generate /bin/bash -c "cmdgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../../GENERATE_SHA)\" -reqdef"
 
-package commands
+package mdm
 
 import (
 	"errors"
 	"fmt"
 	"reflect"
 
-	"github.com/korylprince/go-adm/commands/commands"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/mdm/commands"
+	"github.com/korylprince/go-adm/utils/tagutil"
 	"github.com/micromdm/plist"
 )
 
@@ -108,7 +108,7 @@ func (c *Command) MarshalPlist(indent string) ([]byte, error) {
 	return c.MarshalIndentPlist("")
 }
 
-func NewFromType(typ, cmdUUID string) (*Command, error) {
+func NewCommandFromType(typ, cmdUUID string) (*Command, error) {
 	payload, ok := commands.CommandMap[typ]
 	if !ok {
 		return nil, ErrUnknownRequestType

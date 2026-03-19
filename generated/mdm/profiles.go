@@ -1,6 +1,6 @@
-//go:generate /bin/bash -c "profilegen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../GENERATE_SHA)\" -repl ./repls.yaml -reqdef"
+//go:generate /bin/bash -c "profilegen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../../GENERATE_SHA)\" -repl ./repls.yaml -reqdef"
 
-package profiles
+package mdm
 
 import (
 	"errors"
@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/korylprince/go-adm/profiles/profiles"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/mdm/profiles"
+	"github.com/korylprince/go-adm/utils/tagutil"
 	"github.com/micromdm/plist"
 )
 
@@ -167,7 +167,7 @@ func (p *Profile) MarshalPlist() ([]byte, error) {
 }
 
 // NewFromType creates a new Profile with a single payload of the given PayloadType.
-func NewFromType(typ, profileUUID, payloadUUID string) (*Profile, error) {
+func NewProfileFromType(typ, profileUUID, payloadUUID string) (*Profile, error) {
 	payload, ok := profiles.PayloadMap[typ]
 	if !ok {
 		return nil, ErrUnknownPayloadType

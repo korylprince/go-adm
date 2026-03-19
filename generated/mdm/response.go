@@ -1,4 +1,4 @@
-package commands
+package mdm
 
 import (
 	"fmt"

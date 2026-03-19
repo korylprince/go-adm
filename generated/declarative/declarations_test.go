@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/korylprince/go-adm/declarative"
+	"github.com/korylprince/go-adm/generated/declarative"
 )
 
 func TestNewFromType(t *testing.T) {

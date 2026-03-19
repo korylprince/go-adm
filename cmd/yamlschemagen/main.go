@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/korylprince/go-adm/replace"
+	"github.com/korylprince/go-adm/utils/replace"
 	yamlschema "github.com/korylprince/go-adm/yamlschema"
 )
 

@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	declarations "github.com/korylprince/go-adm/declarative/gen"
-	"github.com/korylprince/go-adm/replace"
+	declarations "github.com/korylprince/go-adm/generator/declarative"
+	"github.com/korylprince/go-adm/utils/replace"
 )
 
 func printHelp() {

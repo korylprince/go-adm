@@ -1,4 +1,4 @@
-//go:generate /bin/bash -c "declgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../GENERATE_SHA)\" -reqdef"
+//go:generate /bin/bash -c "declgen -repo 'https://github.com/apple/device-management.git' -commit \"$(cat ../../GENERATE_SHA)\" -reqdef"
 
 package declarative
 
@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/korylprince/go-adm/declarative/declarations/activations"
-	"github.com/korylprince/go-adm/declarative/declarations/assets"
-	"github.com/korylprince/go-adm/declarative/declarations/configurations"
-	"github.com/korylprince/go-adm/declarative/declarations/management"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/declarative/declarations/activations"
+	"github.com/korylprince/go-adm/generated/declarative/declarations/assets"
+	"github.com/korylprince/go-adm/generated/declarative/declarations/configurations"
+	"github.com/korylprince/go-adm/generated/declarative/declarations/management"
+	"github.com/korylprince/go-adm/utils/tagutil"
 )
 
 var ErrUnknownDeclarationType = errors.New("unknown declaration type")

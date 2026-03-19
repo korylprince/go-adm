@@ -7,9 +7,9 @@ import (
 	"sort"
 
 	"github.com/google/uuid"
-	"github.com/korylprince/go-adm/profiles"
-	genprofiles "github.com/korylprince/go-adm/profiles/profiles"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/mdm"
+	genprofiles "github.com/korylprince/go-adm/generated/mdm/profiles"
+	"github.com/korylprince/go-adm/utils/tagutil"
 	"github.com/micromdm/plist"
 )
 
@@ -59,7 +59,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	profile, err := profiles.NewFromType(*flType, *flProfileUUID, *flPayloadUUID)
+	profile, err := mdm.NewProfileFromType(*flType, *flProfileUUID, *flPayloadUUID)
 	if err != nil {
 		fmt.Println("could not generate profile:", err)
 		os.Exit(1)

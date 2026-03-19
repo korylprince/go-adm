@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/korylprince/go-adm/replace"
-	"github.com/korylprince/go-adm/text"
+	"github.com/korylprince/go-adm/utils/replace"
+	"github.com/korylprince/go-adm/utils/text"
 )
 
 // Encoder encodes a File to Go types

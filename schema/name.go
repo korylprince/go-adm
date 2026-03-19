@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/korylprince/go-adm/text"
+	"github.com/korylprince/go-adm/utils/text"
 )
 
 type payloadKey struct {

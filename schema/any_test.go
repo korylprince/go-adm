@@ -321,9 +321,9 @@ func TestIsANY(t *testing.T) {
 // Test that IsMap and IsStruct work correctly for all patterns
 func TestIsMapIsStruct(t *testing.T) {
 	tests := []struct {
-		name     string
-		key      *schema.PayloadKey
-		wantMap  bool
+		name      string
+		key       *schema.PayloadKey
+		wantMap   bool
 		wantStruc bool
 	}{
 		{

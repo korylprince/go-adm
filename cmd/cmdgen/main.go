@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	commands "github.com/korylprince/go-adm/commands/gen"
-	"github.com/korylprince/go-adm/replace"
+	commands "github.com/korylprince/go-adm/generator/commands"
+	"github.com/korylprince/go-adm/utils/replace"
 )
 
 func printHelp() {

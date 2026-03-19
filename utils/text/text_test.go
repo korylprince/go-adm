@@ -3,7 +3,7 @@ package text_test
 import (
 	"testing"
 
-	"github.com/korylprince/go-adm/text"
+	"github.com/korylprince/go-adm/utils/text"
 )
 
 var nameTests = map[string]string{

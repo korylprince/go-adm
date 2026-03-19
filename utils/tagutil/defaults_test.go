@@ -3,8 +3,8 @@ package tagutil_test
 import (
 	"testing"
 
-	"github.com/korylprince/go-adm/declarative"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/declarative"
+	"github.com/korylprince/go-adm/utils/tagutil"
 )
 
 type EnumInt int64

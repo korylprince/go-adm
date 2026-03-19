@@ -10,9 +10,9 @@ import (
 
 	"github.com/dave/jennifer/jen"
 	"github.com/go-git/go-billy/v5/util"
-	"github.com/korylprince/go-adm/git"
-	"github.com/korylprince/go-adm/replace"
 	"github.com/korylprince/go-adm/schema"
+	"github.com/korylprince/go-adm/utils/git"
+	"github.com/korylprince/go-adm/utils/replace"
 )
 
 type EncodeOption func(*Encoder)

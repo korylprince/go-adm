@@ -7,9 +7,9 @@ import (
 	"sort"
 
 	"github.com/google/uuid"
-	"github.com/korylprince/go-adm/commands"
-	gencommands "github.com/korylprince/go-adm/commands/commands"
-	"github.com/korylprince/go-adm/tagutil"
+	"github.com/korylprince/go-adm/generated/mdm"
+	gencommands "github.com/korylprince/go-adm/generated/mdm/commands"
+	"github.com/korylprince/go-adm/utils/tagutil"
 	"github.com/micromdm/plist"
 )
 
@@ -53,7 +53,7 @@ func main() {
 		fmt.Printf("unsupported command type %s. Use -types to see all supported types\n", *flType)
 	}
 
-	cmd, err := commands.NewFromType(*flType, *flUUID)
+	cmd, err := mdm.NewCommandFromType(*flType, *flUUID)
 	if err != nil {
 		fmt.Println("could not generate command:", err)
 		os.Exit(1)
