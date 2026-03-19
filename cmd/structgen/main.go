@@ -7,13 +7,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/korylprince/go-adm/replace"
+	structgen "github.com/korylprince/go-adm/generator/structgen"
 	"github.com/korylprince/go-adm/schema"
+	"github.com/korylprince/go-adm/utils/replace"
 )
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [flags] <yamlFile> [yamlFile [...]]:\nFlags:\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [flags] [yamlFile [yamlFile [...]]]\n\nGenerate Go structs from YAML schema files.\nEither provide local YAML files as arguments or use -repo/-commit/-path to fetch from a git repository.\n\nFlags:\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 	var (
@@ -22,14 +23,11 @@ func main() {
 		flPkg    = flag.String("pkg", "yamlschema", "Go package name")
 		flTags   = flag.String("tags", "json,plist", "tag names to include, comma separated")
 		flReqDef = flag.Bool("reqdef", false, "generate required and default struct tags")
+		flRepo   = flag.String("repo", "", "git repository URL")
+		flCommit = flag.String("commit", "", "git commit")
+		flPath   = flag.String("path", "", "path within git repository to YAML schema directory")
 	)
 	flag.Parse()
-
-	if len(flag.Args()) < 1 {
-		fmt.Fprintf(flag.CommandLine.Output(), "no yamlFile names provided\n")
-		flag.Usage()
-		os.Exit(1)
-	}
 
 	var err error
 
@@ -52,12 +50,29 @@ func main() {
 	}
 	defer f.Close()
 
-	var encOpts []EncodeOption
+	tags := strings.Split(*flTags, ",")
+
+	var encOpts []structgen.EncodeOption
 	if *flReqDef {
-		encOpts = append(encOpts, WithSchemaEncoderOption(schema.WithRequiredDefault()))
+		encOpts = append(encOpts, structgen.WithSchemaEncoderOption(schema.WithRequiredDefault()))
 	}
 
-	err = GenerateFromFiles(flag.Args(), *flPkg, repl, strings.Split(*flTags, ","), f, encOpts...)
+	if *flRepo != "" {
+		if *flCommit == "" {
+			log.Fatal("-commit must be specified when using -repo")
+		}
+		if *flPath == "" {
+			log.Fatal("-path must be specified when using -repo")
+		}
+		err = structgen.GenerateFromGit(*flRepo, *flCommit, *flPath, *flPkg, repl, tags, f, encOpts...)
+	} else {
+		if len(flag.Args()) < 1 {
+			fmt.Fprintf(flag.CommandLine.Output(), "no yamlFile names provided\n")
+			flag.Usage()
+			os.Exit(1)
+		}
+		err = structgen.GenerateFromFiles(flag.Args(), *flPkg, repl, tags, f, encOpts...)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
