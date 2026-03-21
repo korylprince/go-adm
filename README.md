@@ -1,3 +1,5 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/korylprince/go-adm.svg)](https://pkg.go.dev/github.com/korylprince/go-adm)
+
 # About
 
 This repo contains a WIP Go parser and generator for [Apple's Device Management schemas](https://github.com/apple/device-management).
