@@ -59,6 +59,43 @@ structgen \
   -out checkin.gen.go
 ```
 
+## Replacements (`-repl`)
+
+Apple's schema names do not always map cleanly to idiomatic Go identifiers. In
+practice that means generated names can have smashed words or non-Go acronym
+casing like `Url`, `Id`, or `Comapple`.
+
+The generator commands accept `-repl <file>` to apply regex-based renames while
+generating code. Replacements can target generated `field`, `struct`, and
+`const` names.
+
+Example `repls.yaml`:
+
+```yaml
+"^(.*)Url(.*)$":
+  repl: "${1}URL${2}"
+  types:
+    - "field"
+    - "const"
+
+"^(.*)Id([A-Z].*|)$":
+  repl: "${1}ID${2}"
+  types:
+    - "field"
+    - "const"
+```
+
+Use it by passing `-repl` to a generator:
+
+```bash
+profilegen -repo "https://github.com/apple/device-management.git" -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" -repl ./repls.yaml -out ./profiles
+cmdgen     -repo "https://github.com/apple/device-management.git" -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" -repl ./repls.yaml -out ./commands
+declgen    -repo "https://github.com/apple/device-management.git" -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" -repl ./repls.yaml -out ./declarations
+structgen  -repo "https://github.com/apple/device-management.git" -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" -path "mdm/checkin" -pkg checkin -repl ./repls.yaml -out checkin.gen.go
+```
+
+This repo includes replacement files under `generated/` and `schema/` for code generated in this repo. You can use those as a starting point for your own replacements.
+
 ## Tools
 
 go-adm ships with **code generators** that produce Go source from Apple's schemas, and **runtime tools** that generate payloads (plist/JSON) from the generated types.
