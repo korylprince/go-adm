@@ -4,7 +4,9 @@ This repo contains a WIP Go parser and generator for [Apple's Device Management 
 
 All of Apple's device management schemas (e.g. commands, profiles, declarative management, etc) are themselves described by [Apple's Device Management *root schema*](https://github.com/apple/device-management/blob/release/docs/schema.yaml).
 
-## Current Features
+This repo contains code generated from from all of the schemas in Apple's repo, but generator tools are also included to allow you to generate your own Go code from the schemas that doesn't depend on this repo.
+
+## Tools
 
 ### [yamlschema](https://pkg.go.dev/github.com/korylprince/go-adm/yamlschema)
 
