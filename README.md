@@ -2,58 +2,98 @@
 
 # About
 
-This repo contains a WIP Go parser and generator for [Apple's Device Management schemas](https://github.com/apple/device-management).
+go-adm is a Go code generator and parser for [Apple's Device Management schemas](https://github.com/apple/device-management). It can generate Go structs for MDM commands, configuration profiles, and Declarative Device Management (DDM) declarations directly from Apple's schema repository.
 
-All of Apple's device management schemas (e.g. commands, profiles, declarative management, etc) are themselves described by [Apple's Device Management *root schema*](https://github.com/apple/device-management/blob/release/docs/schema.yaml).
+This repo includes pre-generated Go types for all of Apple's schemas, but the generator tools are also provided so you can generate your own Go code independently of this repo.
 
-This repo contains code generated from from all of the schemas in Apple's repo, but generator tools are also included to allow you to generate your own Go code from the schemas that doesn't depend on this repo.
+## Quick Start
+
+Install the generator you need:
+
+```bash
+go install github.com/korylprince/go-adm/cmd/profilegen@latest
+go install github.com/korylprince/go-adm/cmd/cmdgen@latest
+go install github.com/korylprince/go-adm/cmd/declgen@latest
+go install github.com/korylprince/go-adm/cmd/structgen@latest
+```
+
+### Generate profile types
+
+```bash
+profilegen \
+  -repo "https://github.com/apple/device-management.git" \
+  -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" \
+  -out ./profiles \
+  -reqdef
+```
+
+### Generate command types
+
+```bash
+cmdgen \
+  -repo "https://github.com/apple/device-management.git" \
+  -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" \
+  -out ./commands \
+  -reqdef
+```
+
+### Generate DDM declaration types
+
+```bash
+declgen \
+  -repo "https://github.com/apple/device-management.git" \
+  -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" \
+  -out ./declarations \
+  -reqdef
+```
+
+### Generate generic structs from specific schema files
+
+```bash
+structgen \
+  -repo "https://github.com/apple/device-management.git" \
+  -commit "f878dea98fb88293a3686e44bcfb891f8e78f98f" \
+  -path "mdm/checkin" \
+  -pkg checkin \
+  -reqdef \
+  -out checkin.gen.go
+```
 
 ## Tools
 
-### [yamlschema](https://pkg.go.dev/github.com/korylprince/go-adm/yamlschema)
+go-adm ships with **code generators** that produce Go source from Apple's schemas, and **runtime tools** that generate payloads (plist/JSON) from the generated types.
 
-yamlschema is a Go package that contains a YAML Schema (YAML version of [JSON Schema](https://json-schema.org/)) parser. It's a generic parser in theory, but only tested on the *root schema*.
+See [cmd/README.md](cmd/README.md) for full flag reference for every tool.
 
-### yamlschemagen
+### Packages
 
-`yamlschemagen` is a tool to generate Go structs for the *root schema*, from a file path or directly from a git repo.
+* [**yamlschema**](https://pkg.go.dev/github.com/korylprince/go-adm/yamlschema) — YAML Schema ([JSON Schema](https://json-schema.org/) in YAML) parser. Generic in theory, tested on Apple's *root schema*.
 
-### [schema](https://pkg.go.dev/github.com/korylprince/go-adm/schema)
+* [**schema**](https://pkg.go.dev/github.com/korylprince/go-adm/schema) — Parser for Apple's device management schemas (commands, profiles, declarations). Parses every schema in [Apple's repo](https://github.com/apple/device-management) into a [Schema AST](https://pkg.go.dev/github.com/korylprince/go-adm/schema#Schema).
 
-schema is a Go package that contains a parser (built in part by `yamlschemagen`) for Apple's device management schemas (e.g. commands, profiles, declarative management, etc). It is capable of parsing every schema in [Apple's Device Management repo](https://github.com/apple/device-management) into a [Schema AST](https://pkg.go.dev/github.com/korylprince/go-adm/schema#Schema).
+### Code Generators
 
-### structgen
+| Tool | Description |
+|------|-------------|
+| `profilegen` | Generate Go profile payload structs from Apple's repo |
+| `cmdgen` | Generate Go command request/response structs from Apple's repo |
+| `declgen` | Generate Go DDM declaration structs from Apple's repo |
+| `structgen` | Generate Go structs from arbitrary YAML schema files |
+| `yamlschemagen` | Generate Go structs for the root schema |
 
-`structgen` is a tool to generate Go structs from one or more YAML schema files. It uses the schema parser and supports replacements and required/default struct tags.
+### Runtime Tools
 
-### profilegen
+| Tool | Description |
+|------|-------------|
+| `goprofile` | Output an MDM configuration profile (plist) |
+| `gocmd` | Output an MDM command (plist) |
+| `godeclr` | Output a DDM declaration (JSON) |
 
-`profilegen` generates Go profile payload types from [Apple's device management git repo](https://github.com/apple/device-management). It produces struct and map definitions for all MDM configuration profile payload types.
+# Future Work
 
-### cmdgen
-
-`cmdgen` generates Go command types from [Apple's device management git repo](https://github.com/apple/device-management). It produces struct definitions for all MDM command request and response types.
-
-### declgen
-
-`declgen` generates Go declaration types for Declarative Device Management (DDM) from [Apple's device management git repo](https://github.com/apple/device-management). It produces struct definitions for activations, assets, configurations, and management declarations.
-
-### goprofile
-
-`goprofile` is a runtime tool that generates MDM configuration profiles as Go code. It can list all supported payload types or generate a profile with a specific payload type in plist format.
-
-### gocmd
-
-`gocmd` is a runtime tool that generates MDM commands as Go code. It can list all supported command types or generate a command with a specific type in plist format.
-
-### godeclr
-
-`godeclr` is a runtime tool that generates DDM declarations as Go code. It can list all supported declaration types or generate a declaration with a specific type in JSON format.
-
-## TODO
-
-* Write schema validators for commands, profiles, and declarative management schemas
+Eventually I'd like to write schema-based validation tools for profiles, commands, declarations, etc. Pull requests are welcome!
 
 # YAML Fork
 
-This project currently uses [a fork](https://github.com/korylprince/go-yaml) of [github.com/goccy/go-yaml](https://github.com/goccy/go-yaml), since the upstream project [can't currently parse Apple's schema files due to recursive aliases](https://github.com/goccy/go-yaml/pull/360). If/when the PR is merged, this project will revert to the upstream repo.
+This project currently uses [a fork](https://github.com/korylprince/go-yaml) of [github.com/goccy/go-yaml](https://github.com/goccy/go-yaml).
+I submitted [a PR to the upstream](https://github.com/goccy/go-yaml/pull/360) to support recursive yaml that Apple uses. Ultimately, the upstream implemented recursive yaml their own way that was incompatible with Apple's usage. Eventually I'd like to switch back to the upstream, but the fork works for now.

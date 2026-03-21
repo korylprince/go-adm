@@ -1,8 +1,15 @@
-// package schema implements a minimal [JSON Schema] library that parses the schema as YAML.
-// The goal of this package is to be able to parse Apple's [YAML MDM and Declarative Device Management Schema] into a Go struct Abstract Syntax Tree
+// Package yamlschema implements a minimal [JSON Schema] parser that reads the schema as YAML.
+//
+// It parses a YAML-encoded JSON Schema into a [Schema] AST and can generate Go
+// structs from it. The primary use case is parsing Apple's
+// [device management root schema], but the parser is generic enough for other
+// YAML-encoded JSON Schemas.
+//
+// Use [New] or [NewFromFile] to parse a schema, and [GenerateFromFile] or
+// [GenerateFromGit] to generate Go code directly.
 //
 // [JSON Schema]: https://json-schema.org/
-// [YAML MDM and Declarative Device Management Schema]: https://github.com/apple/device-management/blob/release/docs/schema.yaml
+// [device management root schema]: https://github.com/apple/device-management/blob/release/docs/schema.yaml
 package schema
 
 import (
