@@ -114,7 +114,16 @@ func NewFile(schemas []*Schema, opts ...FileOption) *File {
 				Content: strings.Join(content, "\n"),
 			}
 
-			if key.IsStruct() {
+			isStruct, isMap := key.IsStruct(), key.IsMap()
+			// We only get here with no payload keys when includeEmptyPayloadKeys
+			// is set, which means the schema declares no keys at all -- an empty
+			// document, such as a command that takes no arguments. That is not a
+			// free-form dictionary, so override IsMap and keep the empty struct.
+			if len(s.PayloadKeys) == 0 {
+				isStruct, isMap = true, false
+			}
+
+			if isStruct {
 				strct := &Struct{
 					Schema: s,
 					Source: SourcePayloadKeys,
@@ -125,7 +134,7 @@ func NewFile(schemas []*Schema, opts ...FileOption) *File {
 				types = append(types, strct)
 			}
 
-			if key.IsMap() {
+			if isMap {
 				m := &Map{
 					Schema: s,
 					Source: SourcePayloadKeys,
@@ -146,7 +155,14 @@ func NewFile(schemas []*Schema, opts ...FileOption) *File {
 				Type:    PayloadKeyTypeDictionary,
 			}
 
-			if key.IsStruct() {
+			// see the payload key comment above: an empty response is an empty
+			// document, not a free-form dictionary
+			isStruct, isMap := key.IsStruct(), key.IsMap()
+			if len(s.ResponseKeys) == 0 {
+				isStruct, isMap = true, false
+			}
+
+			if isStruct {
 				strct := &Struct{
 					Schema: s,
 					Source: SourceResponseKeys,
@@ -157,7 +173,7 @@ func NewFile(schemas []*Schema, opts ...FileOption) *File {
 				types = append(types, strct)
 			}
 
-			if key.IsMap() {
+			if isMap {
 				m := &Map{
 					Schema: s,
 					Source: SourceResponseKeys,

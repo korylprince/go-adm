@@ -1,17 +1,10 @@
 package gen
 
 import (
-	"bytes"
-	"fmt"
-	"io/fs"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/go-git/go-billy/v5/util"
 	"github.com/korylprince/go-adm/schema"
-	"github.com/korylprince/go-adm/utils/git"
 	"github.com/korylprince/go-adm/utils/replace"
 )
 
@@ -35,12 +28,34 @@ func WithRequiredDefault() EncodeOption {
 	}
 }
 
+// WithNamerOptions passes naming options through to the schema encoder.
+// See schema.WithNameOverrides and schema.WithFullyQualifiedNames.
+func WithNamerOptions(opts ...schema.NamerOption) EncodeOption {
+	return func(e *Encoder) {
+		e.namerOpts = append(e.namerOpts, opts...)
+	}
+}
+
+// WithStatusItemTypes renders the given dotted status item identifiers as a
+// StatusItemTypes slice.
+//
+// The nested status tree turns each dotted identifier into a path of Go fields,
+// which leaves no generated value holding the identifier itself -- and it is the
+// identifier, not the path, that appears on the wire.
+func WithStatusItemTypes(itemTypes []string) EncodeOption {
+	return func(e *Encoder) {
+		e.statusItemTypes = itemTypes
+	}
+}
+
 type Encoder struct {
-	f          *jen.File
-	reps       replace.Replacements
-	tags       []string
-	reqDefTags bool
-	enc        *schema.Encoder
+	f               *jen.File
+	reps            replace.Replacements
+	tags            []string
+	reqDefTags      bool
+	namerOpts       []schema.NamerOption
+	statusItemTypes []string
+	enc             *schema.Encoder
 }
 
 func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
@@ -54,6 +69,9 @@ func NewEncoder(f *jen.File, opts ...EncodeOption) *Encoder {
 	}
 	if e.reqDefTags {
 		sOpts = append(sOpts, schema.WithRequiredDefault())
+	}
+	if len(e.namerOpts) > 0 {
+		sOpts = append(sOpts, schema.WithNamerOptions(e.namerOpts...))
 	}
 	e.enc = schema.NewEncoder(f, sOpts...)
 	return e
@@ -107,8 +125,44 @@ func statusItemType(typ schema.Type) string {
 	return ""
 }
 
+// statusItemTypesDoc explains the generated StatusItemTypes slice in the output
+// itself, since the identifiers no longer appear anywhere else as values.
+const statusItemTypesDoc = `StatusItemTypes lists every DDM status item these types can represent, by
+Apple's dotted status item identifier.
+
+Generated from the statusitemtype of each schema under declarative/status/.
+Each identifier corresponds to a field reachable from StatusItems -- the field's
+doc comment names the item it carries.
+
+These are the identifiers the protocol uses as string values: the items named by
+a status subscription, a status report's Errors[].StatusItem, and the client's
+management.client-capabilities.supported-payloads.status-items.`
+
+// docComment prefixes each line of doc with "//".
+//
+// text.DocComment drops blank lines, which is right for Apple's content but
+// wrong here: godoc needs a bare "//" between paragraphs to keep them apart.
+func docComment(doc string) string {
+	var lines []string
+	for _, line := range strings.Split(strings.TrimSpace(doc), "\n") {
+		lines = append(lines, strings.TrimRight("// "+strings.TrimSpace(line), " "))
+	}
+	return strings.Join(lines, "\n")
+}
+
 func (e *Encoder) Encode(file *schema.File) {
 	e.enc.RegisterFile(file)
+
+	// render the list of known status item identifiers
+	if len(e.statusItemTypes) > 0 {
+		e.f.Comment(docComment(statusItemTypesDoc))
+		e.f.Var().Id("StatusItemTypes").Op("=").Index().String().ValuesFunc(func(g *jen.Group) {
+			for _, itemType := range e.statusItemTypes {
+				g.Line().Lit(itemType)
+			}
+			g.Line()
+		})
+	}
 	// render DeclarationType -> struct map
 	var decls []schema.Type
 	for _, typ := range file.Types {
@@ -211,90 +265,4 @@ func (e *Encoder) Encode(file *schema.File) {
 			}
 		}
 	}
-}
-
-// GenerateFromGit generates Go types from the declarative schema at the git repo/commit/path using the optional replacements
-// and outputs it at the given directory
-func GenerateFromGit(repoURL, commit, path string, reps replace.Replacements, output string, opts ...EncodeOption) error {
-	repo, err := git.New(repoURL, commit)
-	if err != nil {
-		return fmt.Errorf("could not check out repository: %w", err)
-	}
-
-	hash, err := repo.Hash()
-	if err != nil {
-		return fmt.Errorf("could not get hash: %w", err)
-	}
-
-	type file struct {
-		path string
-		s    *schema.Schema
-	}
-
-	var files []*file
-	if err = util.Walk(repo, path, func(filePath string, info fs.FileInfo, _ error) error {
-		if !strings.HasSuffix(info.Name(), ".yaml") {
-			return nil
-		}
-
-		buf, err := util.ReadFile(repo, filePath)
-		if err != nil {
-			return fmt.Errorf("could not read %s: %w", filePath, err)
-		}
-
-		s, err := schema.New(buf)
-		if err != nil {
-			return fmt.Errorf("could not parse %s: %w", filePath, err)
-		}
-
-		// get relative directory
-		rel, err := filepath.Rel(path, filePath)
-		if err != nil {
-			return fmt.Errorf("could not get relative path for %s: %w", filePath, err)
-		}
-		dir, _ := filepath.Split(rel)
-
-		files = append(files, &file{
-			path: dir,
-			s:    s,
-		})
-
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	schemaMap := make(map[string][]*schema.Schema)
-	for _, f := range files {
-		schemaMap[f.path] = append(schemaMap[f.path], f.s)
-	}
-
-	for dir, schemas := range schemaMap {
-		fn := filepath.Base(dir)
-
-		f := jen.NewFile(fn)
-		f.HeaderComment("DO NOT EDIT")
-		f.HeaderComment(fmt.Sprintf("generated from %s:%s/%s", repoURL, hash, filepath.Join(path, dir)))
-
-		f.Const().Id("DeviceManagementGenerateHash").Op("=").Lit(hash)
-
-		file := schema.NewFile(schemas)
-		encOpts := append([]EncodeOption{WithReplacements(reps)}, opts...)
-		NewEncoder(f, encOpts...).Encode(file)
-
-		buf := new(bytes.Buffer)
-		if err = f.Render(buf); err != nil {
-			return fmt.Errorf("could not render code: %w", err)
-		}
-
-		if err = os.MkdirAll(filepath.Join(output, dir), 0755); err != nil {
-			return fmt.Errorf("could not create output directory %s: %w", filepath.Join(".", dir), err)
-		}
-
-		if err = os.WriteFile(filepath.Join(output, dir, fn+".go"), buf.Bytes(), 0644); err != nil {
-			return fmt.Errorf("could not create write %s: %w", filepath.Join(output, dir, fn+".go"), err)
-		}
-	}
-
-	return nil
 }

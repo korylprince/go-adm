@@ -1,0 +1,41 @@
+{
+  "StatusItems": {
+    "account": {
+      "list": {
+        "caldav": [
+          {
+            "identifier": "com.example.calendar",
+            "declaration-identifier": "com.example.caldav-config",
+            "visible-name": "Example Calendar",
+            "hostname": "calendar.example.com",
+            "port": 443,
+            "username": "user@example.com",
+            "are-calendars-enabled": true,
+            "are-reminders-enabled": false
+          },
+          {
+            "identifier": "com.example.old-calendar",
+            "_removed": true
+          }
+        ]
+      }
+    },
+    "test": {
+      "array-value": [
+        {
+          "key1": "value1",
+          "key2": "value2"
+        }
+      ],
+      "boolean-value": true,
+      "dictionary-value": {
+        "key1": "value1"
+      },
+      "integer-value": 42,
+      "real-value": 1.5,
+      "string-value": "example"
+    }
+  },
+  "Errors": [],
+  "FullReport": false
+}

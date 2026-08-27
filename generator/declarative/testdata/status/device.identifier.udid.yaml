@@ -1,0 +1,10 @@
+title: Device Identifier UDID
+description: The device's UDID.
+payload:
+  statusitemtype: device.identifier.udid
+payloadkeys:
+- key: device.identifier.udid
+  title: UDID
+  type: <string>
+  presence: required
+  content: The device's UDID.

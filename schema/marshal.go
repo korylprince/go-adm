@@ -17,6 +17,7 @@ type Encoder struct {
 	reps       replace.Replacements
 	tags       []string
 	reqDefTags bool
+	namerOpts  []NamerOption
 }
 
 type EncodeOption func(*Encoder)
@@ -40,6 +41,14 @@ func WithTags(tags []string) EncodeOption {
 func WithRequiredDefault() EncodeOption {
 	return func(e *Encoder) {
 		e.reqDefTags = true
+	}
+}
+
+// WithNamerOptions passes options through to the GlobalNamer built by
+// RegisterFile. See WithNameOverrides.
+func WithNamerOptions(opts ...NamerOption) EncodeOption {
+	return func(e *Encoder) {
+		e.namerOpts = append(e.namerOpts, opts...)
 	}
 }
 
@@ -81,10 +90,21 @@ func (e *Encoder) MapValueType(key *PayloadKey) jen.Code {
 			return jen.Id(e.Name(key, replace.Field))
 		}
 		// nested map (ANY subkey within an ANY subkey)
-		return jen.Map(jen.String()).Add(e.MapValueType(key.SubKeys[0]))
+		return jen.Map(jen.String()).Add(e.mapValueType(key))
 	default:
 		panic(fmt.Errorf("ANY <dictionary>: unknown value type: %s", key.Type))
 	}
+}
+
+// mapValueType returns the Go type for the value side of the map generated from
+// a free-form dictionary key. A dictionary with no subkeys at all declares no
+// shape for its values, so they are untyped; otherwise the ANY subkey describes
+// them.
+func (e *Encoder) mapValueType(key *PayloadKey) jen.Code {
+	if len(key.SubKeys) == 0 {
+		return jen.Any()
+	}
+	return e.MapValueType(key.SubKeys[0])
 }
 
 // get the type of struct field based on the PayloadKey
@@ -121,7 +141,7 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 		if key.IsStruct() {
 			typ = jen.Id(e.Name(key, replace.Field))
 		} else {
-			typ = jen.Map(jen.String()).Add(e.MapValueType(key.SubKeys[0]))
+			typ = jen.Map(jen.String()).Add(e.mapValueType(key))
 		}
 	case PayloadKeyTypeAny:
 		typ = jen.Any()
@@ -179,7 +199,7 @@ func (e *Encoder) fieldTags(fld *StructField) map[string]string {
 }
 
 func (e *Encoder) RegisterFile(f *File) {
-	e.namer = NewGlobalNamer(f, e.reps)
+	e.namer = NewGlobalNamer(f, e.reps, e.namerOpts...)
 }
 
 func (e *Encoder) Encode(f *File) {
@@ -333,5 +353,5 @@ func (e *Encoder) EncodeMap(m *Map) {
 	e.f.Type().
 		Id(mapName).
 		Map(jen.String()).
-		Add(e.MapValueType(m.Key.SubKeys[0]))
+		Add(e.mapValueType(m.Key))
 }

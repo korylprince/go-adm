@@ -37,7 +37,7 @@ cmdgen \
   -reqdef
 ```
 
-### Generate DDM declaration types
+### Generate DDM declaration and status types
 
 ```bash
 declgen \
@@ -46,6 +46,21 @@ declgen \
   -out ./declarations \
   -reqdef
 ```
+
+`declgen` can also read schemas from a local checkout instead of cloning, and
+emit everything into a single package of your choosing rather than a package per
+directory:
+
+```bash
+declgen \
+  -path ./device-management/declarative/status \
+  -path ./device-management/declarative/protocol \
+  -pkg status \
+  -reqdef \
+  -out status.gen.go
+```
+
+`-path` is repeatable, and positional arguments name individual YAML files.
 
 ### Generate generic structs from specific schema files
 
@@ -58,6 +73,55 @@ structgen \
   -reqdef \
   -out checkin.gen.go
 ```
+
+## DDM status reports
+
+Apple defines each DDM status item in its own schema file, keyed by a **dotted**
+`statusitemtype` such as `device.model.family`. A status report from a device
+does not use those dotted keys — it nests them:
+
+```json
+{
+  "StatusItems": {
+    "device": {
+      "model": { "family": "Mac" },
+      "operating-system": { "version": "15.3.1" }
+    }
+  },
+  "Errors": [],
+  "FullReport": true
+}
+```
+
+`declgen` splits the dotted paths into that nested shape, so
+[`generated/declarative/status`](https://pkg.go.dev/github.com/korylprince/go-adm/generated/declarative/status)
+parses a whole report:
+
+```go
+var report status.StatusReport
+if err := json.Unmarshal(body, &report); err != nil {
+    return err
+}
+family := report.StatusItems.Device.Model.Family // *string, nil if not reported
+```
+
+Every status item is a pointer with `omitempty`, because reports are
+**incremental** — any subset of items may be present. Each generated field
+records its dotted identifier in a doc comment, which is the form that appears
+in status subscriptions and in `Errors[].StatusItem`.
+
+Two further things the types deliberately don't express, from Apple's protocol:
+
+* `FullReport: false` means array-valued items carry only *changes*. A server
+  must merge them rather than replace.
+* `_removed: true` marks a deleted array element, in which case only `_removed`
+  and `identifier` are populated.
+
+Status items the generated code doesn't know about — ones Apple added after the
+pinned schema commit — are dropped on decode. Regenerate against a newer commit
+to pick them up, or use
+[`protocol.StatusReport`](https://pkg.go.dev/github.com/korylprince/go-adm/generated/declarative/protocol#StatusReport),
+whose `StatusItems` is a `map[string]any` and so is lossless but untyped.
 
 ## Replacements (`-repl`)
 
@@ -114,7 +178,7 @@ See [cmd/README.md](cmd/README.md) for full flag reference for every tool.
 |------|-------------|
 | `profilegen` | Generate Go profile payload structs from Apple's repo |
 | `cmdgen` | Generate Go command request/response structs from Apple's repo |
-| `declgen` | Generate Go DDM declaration structs from Apple's repo |
+| `declgen` | Generate Go DDM declaration and status report structs, from Apple's repo or a local checkout |
 | `structgen` | Generate Go structs from arbitrary YAML schema files |
 | `yamlschemagen` | Generate Go structs for the root schema |
 

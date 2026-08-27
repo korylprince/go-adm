@@ -64,15 +64,12 @@ type Management struct {
 // Status sent by the client.
 type StatusReport struct {
 	// The status items for this report.
-	StatusItems StatusItems `json:"StatusItems" required:"true"`
+	StatusItems map[string]any `json:"StatusItems" required:"true"`
 	// An array of errors for this status report.
 	Errors []*Errors `json:"Errors" required:"true"`
 	// The system sets this to `true` to indicate that the status report contains the full set of current status, and is not an incremental report. A full status report includes the full set of items in any status array item, not just the changes. Servers use this to replace their entire status for the device, rather than do an incremental update to the existing status. The system sets this to `true` when sending a "safety sync" status report, which is typically sent every 24 hours or so.
 	FullReport *bool `json:"FullReport,omitempty"`
 }
-
-// The status items for this report.
-type StatusItems struct{}
 
 // Error information for a status item that cannot be returned.
 type Errors struct {
@@ -89,17 +86,11 @@ type Reasons struct {
 	// The description for this error.
 	Description *string `json:"Description,omitempty"`
 	// A dictionary that contains further details about this error.
-	Details *Details `json:"Details,omitempty"`
+	Details *map[string]any `json:"Details,omitempty"`
 }
-
-// A dictionary that contains further details about this error.
-type Details struct{}
 
 // The server's synchronization tokens.
 type TokensResponse struct {
 	// A dictionary of synchronization tokens that describes the state of different types of data on the server. The client uses these tokens to determine which endpoints it needs to use to fetch new or updated data on the server.
-	SyncTokens SyncTokens `json:"SyncTokens" required:"true"`
+	SyncTokens map[string]any `json:"SyncTokens" required:"true"`
 }
-
-// A dictionary of synchronization tokens that describes the state of different types of data on the server. The client uses these tokens to determine which endpoints it needs to use to fetch new or updated data on the server.
-type SyncTokens struct{}

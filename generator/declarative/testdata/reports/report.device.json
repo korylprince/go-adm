@@ -1,0 +1,126 @@
+{
+  "StatusItems": {
+    "device": {
+      "identifier": {
+        "serial-number": "X0X0X0X0X0X0",
+        "udid": "00000000-0000-0000-0000-000000000000"
+      },
+      "model": {
+        "family": "Mac",
+        "identifier": "Mac15,3",
+        "marketing-name": "MacBook Pro (14-inch, Nov 2023)",
+        "number": "MTL73XX/A"
+      },
+      "operating-system": {
+        "build-version": "24D70",
+        "family": "macOS",
+        "marketing-name": "Sequoia",
+        "version": "15.3.1",
+        "supplemental": {
+          "build-version": "24D70a",
+          "extra-version": "(a)"
+        }
+      },
+      "power": {
+        "battery-health": "normal"
+      }
+    },
+    "diskmanagement": {
+      "filevault": {
+        "enabled": true
+      }
+    },
+    "passcode": {
+      "is-compliant": true,
+      "is-present": true
+    },
+    "security": {
+      "certificate": {
+        "list": [
+          {
+            "identifier": "com.example.cert",
+            "declaration-identifier": "com.example.credential",
+            "subject-summary": "Example Device Identity",
+            "is-identity": true,
+            "data": "REVSLUVOQ09ERUQtWDUwOQ=="
+          }
+        ]
+      }
+    },
+    "softwareupdate": {
+      "beta-enrollment": "",
+      "device-id": "J514sAP",
+      "install-state": "none",
+      "pending-version": {
+        "os-version": "",
+        "build-version": ""
+      }
+    },
+    "management": {
+      "declarations": {
+        "activations": [
+          {
+            "identifier": "com.example.activation",
+            "server-token": "0000000000000001",
+            "active": true,
+            "valid": "valid"
+          }
+        ],
+        "configurations": [
+          {
+            "identifier": "com.example.config",
+            "server-token": "0000000000000002",
+            "active": true,
+            "valid": "valid"
+          }
+        ],
+        "assets": [],
+        "management": []
+      },
+      "client-capabilities": {
+        "supported-versions": [
+          "1.0.0"
+        ],
+        "supported-features": {
+          "declarative-device-management": true
+        },
+        "supported-payloads": {
+          "declarations": {
+            "activations": [
+              "com.apple.activation.simple"
+            ],
+            "configurations": [
+              "com.apple.configuration.management.status-subscriptions"
+            ],
+            "assets": [],
+            "management": [
+              "com.apple.management.organization-info"
+            ]
+          },
+          "status-items": [
+            "device.identifier.serial-number",
+            "device.identifier.udid",
+            "device.model.family",
+            "management.declarations",
+            "passcode.is-present"
+          ]
+        }
+      }
+    }
+  },
+  "Errors": [
+    {
+      "StatusItem": "test.error-value",
+      "Reasons": [
+        {
+          "Code": "Error.StatusItemNotAvailable",
+          "Description": "The status item is not available.",
+          "Details": {
+            "StatusItem": "test.error-value"
+          }
+        }
+      ]
+    }
+  ],
+  "FullReport": true
+}

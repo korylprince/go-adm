@@ -1,0 +1,10 @@
+title: Device Model Family
+description: The hardware family of the device.
+payload:
+  statusitemtype: device.model.family
+payloadkeys:
+- key: device.model.family
+  title: Model Family
+  type: <string>
+  presence: required
+  content: The hardware family of the device, such as `Mac`, `iPhone`, or `iPad`.

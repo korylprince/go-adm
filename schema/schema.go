@@ -66,15 +66,32 @@ func (s *Schema) Iter(f func(parents []*PayloadKey, key *PayloadKey)) {
 	}
 }
 
+// isFreeForm returns if the dictionary key declares no fixed shape, and so
+// should be rendered as a map rather than a struct.
+//
+// Apple spells this two ways. Usually the dictionary carries an explicit ANY
+// subkey (see management.declarations.yaml's `details`), but sometimes the
+// subkeys are simply omitted (declarative/protocol/statusreport.yaml's
+// `StatusItems` and `Details`, declarationbase.yaml's `Payload`). Both mean
+// "arbitrary keys"; rendering the second as an empty struct would silently
+// discard the entire contents on unmarshal.
+//
+// Note this is about a *dictionary key* with no subkeys, not a *schema* with no
+// payload keys at all -- the latter is a genuinely empty document, and NewFile
+// keeps rendering it as an empty struct.
+func (key *PayloadKey) isFreeForm() bool {
+	if len(key.SubKeys) == 0 {
+		return true
+	}
+	return key.SubKeys[0].IsANY()
+}
+
 // IsStruct returns if the PayloadKey should be rendered as a struct
 func (key *PayloadKey) IsStruct() bool {
 	if key.Type != PayloadKeyTypeDictionary {
 		return false
 	}
-	if len(key.SubKeys) > 0 && key.SubKeys[0].IsANY() {
-		return false
-	}
-	return true
+	return !key.isFreeForm()
 }
 
 // IsMap returns if the PayloadKey should be rendered as a map
@@ -82,10 +99,7 @@ func (key *PayloadKey) IsMap() bool {
 	if key.Type != PayloadKeyTypeDictionary {
 		return false
 	}
-	if len(key.SubKeys) > 0 && key.SubKeys[0].IsANY() {
-		return true
-	}
-	return false
+	return key.isFreeForm()
 }
 
 // IsEnum returns if the PayloadKey should be rendered as an enum

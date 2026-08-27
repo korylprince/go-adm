@@ -1,0 +1,10 @@
+title: Passcode Is Present
+description: Whether a passcode is present on the device.
+payload:
+  statusitemtype: passcode.is-present
+payloadkeys:
+- key: passcode.is-present
+  title: Is Present
+  type: <boolean>
+  presence: required
+  content: If `true`, a passcode is present on the device.

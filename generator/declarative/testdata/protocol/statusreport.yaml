@@ -1,0 +1,31 @@
+title: Status Report
+description: Status sent by the client.
+payload:
+  requesttype: StatusReport
+payloadkeys:
+- key: StatusItems
+  title: Status Items
+  type: <dictionary>
+  presence: required
+  content: The status items for this report.
+- key: Errors
+  title: Errors
+  type: <array>
+  presence: required
+  content: An array of errors for this status report.
+  subkeys:
+  - key: _Errors
+    title: Error
+    type: <dictionary>
+    content: Error information for a status item that cannot be returned.
+    subkeys:
+    - key: StatusItem
+      title: Status Item
+      type: <string>
+      presence: required
+      content: The status item that this error pertains to.
+- key: FullReport
+  title: Full Report
+  type: <boolean>
+  presence: optional
+  content: Whether this report contains the full set of current status.
