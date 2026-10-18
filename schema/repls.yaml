@@ -6,6 +6,8 @@
 #     - "field"
 #     - "struct"
 #     - "const"
+#   # optional: apply at most once per name, e.g. for a prefix rule
+#   once: true
 
 # fix common suffixs
 "^(.*)type$":

@@ -149,6 +149,38 @@ Example `repls.yaml`:
     - "const"
 ```
 
+Rules normally repeat until the name stops changing, so a rule such as
+`^(.*)Url(.*)$` fixes every occurrence in a name. This is close to `sed`: a
+rule behaves like a substitution, and we feed its output back into the script
+until nothing changes. `sed 's/^/Acme/'` applies once per line by default;
+`once: true` gives one rule that same one-shot behavior while the rest of the
+script keeps running.
+
+`once` limits applications, not matches. An unanchored rule like `Url` is like
+adding `/g` to sed: it replaces every match in that one application. An
+anchored rule like `^(.*)Url(.*)$` handles one occurrence per application, so
+`once` lets it replace only one occurrence total.
+
+Set `once: true` for rules that should apply at most once per name, such as a
+namespace prefix or suffix. Repeated rules are applied first, then the `once`
+rules, then the repeated rules again, so ordinary rules still process the
+result of a `once` rule:
+
+```yaml
+"^":
+  repl: "Acme"
+  types:
+    - "struct"
+  once: true
+
+"^(.*)Caldav(.*)$":
+  repl: "${1}CalDAV${2}"
+  types:
+    - "struct"
+```
+
+A struct named `CaldavThing` becomes `AcmeCalDAVThing`.
+
 Use it by passing `-repl` to a generator:
 
 ```bash

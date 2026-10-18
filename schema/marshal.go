@@ -64,6 +64,18 @@ func (e *Encoder) normalizeName(name string, typ replace.ReplacementType) string
 	return e.reps.Replace(text.NormalizeName(name), typ)
 }
 
+// normalizeNameBase normalizes a name with only the repeated replacements.
+// Callers use it for parts of an identifier that will be finalized later.
+func (e *Encoder) normalizeNameBase(name string, typ replace.ReplacementType) string {
+	return e.reps.ReplaceRepeated(text.NormalizeName(name), typ)
+}
+
+// normalizeNameFinal applies the Once replacements and then normalizes the
+// final identifier.
+func (e *Encoder) normalizeNameFinal(name string, typ replace.ReplacementType) string {
+	return e.reps.ReplaceRepeated(e.reps.ReplaceOnce(name, typ), typ)
+}
+
 // Name returns a normalized and globally unique name for the given key and type
 func (e *Encoder) Name(key *PayloadKey, typ replace.ReplacementType) string {
 	return e.normalizeName(e.namer.KeyName(key), typ)
@@ -223,8 +235,11 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 		e.f.Comment(text.DocComment(enum.Key.Content))
 	}
 
-	// get enum name
-	enumName := e.Name(enum.Key, replace.Const)
+	// Build the enum name from the pre-Once name so constant names can apply
+	// Once replacements to the complete constant identifier exactly once.
+	rawEnumName := e.namer.KeyName(enum.Key)
+	enumBase := e.normalizeNameBase(rawEnumName, replace.Const)
+	enumName := e.normalizeNameFinal(enumBase, replace.Const)
 
 	// if enum is defined by array with enum subkey
 	enumKey := enum.Key
@@ -253,7 +268,10 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 		for _, v := range enumKey.Rangelist {
 			switch enumKey.Type {
 			case PayloadKeyTypeString:
-				constName := e.normalizeName(enumName+text.NormalizeName(v.String()), replace.Const)
+				constName := e.normalizeNameFinal(
+					e.normalizeNameBase(enumBase+text.NormalizeName(v.String()), replace.Const),
+					replace.Const,
+				)
 				g.Id(constName).
 					Id(enumName).
 					Op("=").
@@ -262,7 +280,10 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 				// replace negative sign with "Neg"
 				val := strconv.Itoa(int(v.Int64()))
 				val = strings.Replace(val, "-", "Neg", 1)
-				constName := e.normalizeName(enumName+val, replace.Const)
+				constName := e.normalizeNameFinal(
+					e.normalizeNameBase(enumBase+val, replace.Const),
+					replace.Const,
+				)
 				g.Id(constName).
 					Id(enumName).
 					Op("=").
@@ -271,7 +292,10 @@ func (e *Encoder) EncodeEnum(enum *Enum) {
 				// replace negative sign with "Neg"
 				val := strconv.FormatFloat(float64(v.Float64()), 'f', -1, 64)
 				val = strings.Replace(val, "-", "Neg", 1)
-				constName := e.normalizeName(enumName+val, replace.Const)
+				constName := e.normalizeNameFinal(
+					e.normalizeNameBase(enumBase+val, replace.Const),
+					replace.Const,
+				)
 				g.Id(constName).
 					Id(enumName).
 					Op("=").
