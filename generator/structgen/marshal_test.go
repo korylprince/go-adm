@@ -93,6 +93,41 @@ payloadkeys:
 	}
 }
 
+// Type references must use the same replacement type as the declaration. A
+// prefix rule scoped to structs previously left nested field types unprefixed.
+func TestGenerateOncePrefixOnNestedStruct(t *testing.T) {
+	path := write(t, "nested.yaml", `
+title: Nested Schema
+payloadkeys:
+- key: TokenParameters
+  type: <dictionary>
+  presence: optional
+  subkeys:
+  - key: SecurityToken
+    type: <string>
+    presence: optional
+`)
+
+	reps := replace.Replacements{
+		{Match: "^", Replacement: "Gen", Types: []string{"struct"}, Once: true},
+	}
+
+	buf := new(strings.Builder)
+	if err := structgen.GenerateFromFiles([]string{path}, "test", reps, []string{"json"}, buf); err != nil {
+		t.Fatal(err)
+	}
+	src := buf.String()
+
+	for _, want := range []string{
+		"type GenTokenParameters struct",
+		"TokenParameters *GenTokenParameters",
+	} {
+		if !strings.Contains(src, want) {
+			t.Errorf("expected %q in output:\n%s", want, src)
+		}
+	}
+}
+
 // The ordinary case, to show the map handling didn't displace it.
 func TestGenerateTopLevelStruct(t *testing.T) {
 	path := write(t, "normal.yaml", `

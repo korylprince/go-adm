@@ -99,7 +99,7 @@ func (e *Encoder) MapValueType(key *PayloadKey) jen.Code {
 		return code
 	case PayloadKeyTypeDictionary:
 		if key.IsStruct() {
-			return jen.Id(e.Name(key, replace.Field))
+			return jen.Id(e.Name(key, replace.Struct))
 		}
 		// nested map (ANY subkey within an ANY subkey)
 		return jen.Map(jen.String()).Add(e.mapValueType(key))
@@ -151,7 +151,7 @@ func (e *Encoder) fieldType(key *PayloadKey) jen.Code {
 		}
 	case PayloadKeyTypeDictionary:
 		if key.IsStruct() {
-			typ = jen.Id(e.Name(key, replace.Field))
+			typ = jen.Id(e.Name(key, replace.Struct))
 		} else {
 			typ = jen.Map(jen.String()).Add(e.mapValueType(key))
 		}
