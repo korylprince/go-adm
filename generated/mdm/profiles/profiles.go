@@ -50,7 +50,7 @@ var PayloadMap = map[string]any{
 	"com.apple.declarations":                                 Declarations{},
 	"com.apple.desktop":                                      Desktop{},
 	"com.apple.dnsProxy.managed":                             DNSProxy{},
-	"com.apple.dnsSettings.managed":                          DNSSettings1{},
+	"com.apple.dnsSettings.managed":                          DNSSettings{},
 	"com.apple.dock":                                         Dock{},
 	"com.apple.domains":                                      Domains{},
 	"com.apple.eas.account":                                  ExchangeActiveSync{},
@@ -88,7 +88,7 @@ var PayloadMap = map[string]any{
 	"com.apple.preference.users":                             UserPreferences{},
 	"com.apple.profileRemovalPassword":                       ProfileRemovalPassword{},
 	"com.apple.proxy.http.global":                            GlobalHTTPProxy{},
-	"com.apple.relay.managed":                                Relay1{},
+	"com.apple.relay.managed":                                Relay{},
 	"com.apple.screensaver":                                  Screensaver{},
 	"com.apple.screensaver.user":                             ScreensaverUser{},
 	"com.apple.secondactiveethernet.managed":                 Net8021XSecondActiveEthernet{},
@@ -124,7 +124,7 @@ var PayloadMap = map[string]any{
 	"com.apple.thirdethernet.managed":                        Net8021XThirdEthernet{},
 	"com.apple.tvremote":                                     TVRemote{},
 	"com.apple.universalaccess":                              Accessibility{},
-	"com.apple.vpn.managed":                                  VPN1{},
+	"com.apple.vpn.managed":                                  VPN{},
 	"com.apple.vpn.managed.applayer":                         AppLayerVPN{},
 	"com.apple.vpn.managed.appmapping":                       AppToAppLayerVPNMapping{},
 	"com.apple.webClip.managed":                              WebClip{},
@@ -2439,7 +2439,7 @@ func (p *DNSProxy) PayloadType() string {
 }
 
 // The payload that configures encrypted DNS settings.
-type DNSSettings1 struct {
+type DNSSettings struct {
 	*CommonPayloadKeys
 	// A dictionary that defines a configuration for an encrypted DNS server.
 	DNSSettings DNSSettingsDNSSettings `json:"DNSSettings" plist:"DNSSettings" required:"true"`
@@ -2449,7 +2449,7 @@ type DNSSettings1 struct {
 	ProhibitDisablement *bool `json:"ProhibitDisablement,omitempty" plist:"ProhibitDisablement,omitempty"`
 }
 
-func (p *DNSSettings1) PayloadType() string {
+func (p *DNSSettings) PayloadType() string {
 	return "com.apple.dnsSettings.managed"
 }
 
@@ -4667,7 +4667,7 @@ const (
 )
 
 // The payload that configures relay settings.
-type Relay1 struct {
+type Relay struct {
 	*CommonPayloadKeys
 	// An array of dictionaries that describe one or more relay servers that the system can chain together.
 	Relays []*RelaysRelay `json:"Relays" plist:"Relays" required:"true"`
@@ -4689,7 +4689,7 @@ type Relay1 struct {
 	AllowDNSFailover *bool `json:"AllowDNSFailover,omitempty" plist:"AllowDNSFailover,omitempty"`
 }
 
-func (p *Relay1) PayloadType() string {
+func (p *Relay) PayloadType() string {
 	return "com.apple.relay.managed"
 }
 
@@ -6080,7 +6080,7 @@ type MatchToolsItem struct {
 }
 
 // The payload that configures a VPN.
-type VPN1 struct {
+type VPN struct {
 	*CommonPayloadKeys
 	// The type of the VPN, which defines which settings are appropriate for this VPN payload.
 	// If the type is `VPN` or `TransparentProxy`, then the system requires a value for `VPNSubType`.
@@ -6121,7 +6121,7 @@ type VPN1 struct {
 	TransparentProxy *TransparentProxy `json:"TransparentProxy,omitempty" plist:"TransparentProxy,omitempty"`
 }
 
-func (p *VPN1) PayloadType() string {
+func (p *VPN) PayloadType() string {
 	return "com.apple.vpn.managed"
 }
 

@@ -175,7 +175,7 @@ type TokenParameters struct {
 
 // Gets the return-to-service configuration from the server.
 // Check-in protocol send ReturnToService request.
-type ReturnToService1 struct {
+type ReturnToService struct {
 	// The message type, which requires a value of `ReturnToService`.
 	MessageType ReturnToServiceMessageType `json:"MessageType" plist:"MessageType" required:"true"`
 	// The device's UDID (unique device identifier). The system requires this value if the enrollment type is a device enrollment.

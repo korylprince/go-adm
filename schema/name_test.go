@@ -98,6 +98,36 @@ func rootStructKey(file *schema.File, s *schema.Schema) *schema.PayloadKey {
 	return nil
 }
 
+func TestGlobalNamerRootKeyKeepsItsName(t *testing.T) {
+	// A schema whose title is also the name of one of its response keys: the
+	// root and the nested key both want "ReturnToService". The root has no
+	// longer name to fall back on, so it has to keep the short one and the
+	// nested key has to take the qualified name.
+	s := &schema.Schema{
+		Title: "Return To Service",
+		PayloadKeys: []*schema.PayloadKey{
+			{Key: "UDID", Type: schema.PayloadKeyTypeString},
+		},
+		ResponseKeys: []*schema.PayloadKey{
+			structKey("ReturnToService"),
+		},
+	}
+
+	file := schema.NewFile([]*schema.Schema{s})
+	gn := schema.NewGlobalNamer(file, nil)
+
+	root := rootStructKey(file, s)
+	if root == nil {
+		t.Fatal("could not find root struct key")
+	}
+	if have := gn.KeyName(root); have != "ReturnToService" {
+		t.Errorf("root name: have: %s, want: ReturnToService", have)
+	}
+	if have := gn.KeyName(s.ResponseKeys[0]); have != "ReturnToServiceReturnToService" {
+		t.Errorf("nested key name: have: %s, want: ReturnToServiceReturnToService", have)
+	}
+}
+
 func TestGlobalNamerNameOverrides(t *testing.T) {
 	// Two schemas each holding a "Model" key. Left alone the namer would give
 	// one of them the bare name "Model" and prefix the other, and which one
