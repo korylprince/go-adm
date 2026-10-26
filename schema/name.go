@@ -252,7 +252,9 @@ func NewGlobalNamer(file *File, reps replace.Replacements, opts ...NamerOption) 
 		}
 		rawName := fqName(key)
 		resolved := resolveName(rawName, key.repTyp)
-		if rootCounts[resolved] != 1 || fixed[resolved] > 0 {
+		// names holds only the fixed names assigned so far, including any
+		// numbered ones, so a root yields to every one of them
+		if rootCounts[resolved] != 1 || names[resolved] > 0 {
 			continue
 		}
 		key.name = rawName

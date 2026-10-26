@@ -128,6 +128,35 @@ func TestGlobalNamerRootKeyKeepsItsName(t *testing.T) {
 	}
 }
 
+func TestGlobalNamerRootKeyYieldsToNumberedFixedName(t *testing.T) {
+	// A fully qualified schema whose title is also the name of one of its
+	// keys: the root and the nested key both qualify to "Host", so the nested
+	// key gets the numbered fixed name "Host2". A second schema titled "Host2"
+	// must not reserve that name for its root.
+	s1 := &schema.Schema{
+		Title:       "Host",
+		PayloadKeys: []*schema.PayloadKey{structKey("Host")},
+	}
+	s2 := &schema.Schema{
+		Title:       "Host2",
+		PayloadKeys: []*schema.PayloadKey{{Key: "UDID", Type: schema.PayloadKeyTypeString}},
+	}
+
+	file := schema.NewFile([]*schema.Schema{s1, s2})
+	gn := schema.NewGlobalNamer(file, nil, schema.WithFullyQualifiedNames(s1))
+
+	if have := gn.KeyName(s1.PayloadKeys[0]); have != "Host2" {
+		t.Errorf("nested key name: have: %s, want: Host2", have)
+	}
+	root := rootStructKey(file, s2)
+	if root == nil {
+		t.Fatal("could not find root struct key")
+	}
+	if have := gn.KeyName(root); have != "Host21" {
+		t.Errorf("root name: have: %s, want: Host21", have)
+	}
+}
+
 func TestGlobalNamerNameOverrides(t *testing.T) {
 	// Two schemas each holding a "Model" key. Left alone the namer would give
 	// one of them the bare name "Model" and prefix the other, and which one
