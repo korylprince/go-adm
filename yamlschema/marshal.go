@@ -140,11 +140,17 @@ func (e *Encoder) normalizeNameBase(name string, typ replace.ReplacementType) st
 	return e.reps.ReplaceRepeated(text.NormalizeName(name), typ)
 }
 
-// normalizeNameFinal applies the Once replacements and then normalizes the
-// final identifier. Multiple types are allowed because an enum type or
-// constant is assembled from parts with different types.
-func (e *Encoder) normalizeNameFinal(name string, typs ...replace.ReplacementType) string {
-	return e.reps.ReplaceRepeated(e.reps.ReplaceOnce(name, typs...), typs...)
+// normalizeNameFinal finalizes an identifier assembled from parts: it
+// normalizes the whole identifier with the repeated replacements for typ,
+// applies the Once replacements for any of onceTyps, then normalizes the
+// result again. The scopes are separate because an enum type or constant is
+// assembled from parts with different types: Once rules for any part's type
+// apply to the complete identifier, but the repeated replacements use only
+// the identifier's own type.
+func (e *Encoder) normalizeNameFinal(name string, typ replace.ReplacementType, onceTyps ...replace.ReplacementType) string {
+	name = e.reps.ReplaceRepeated(name, typ)
+	name = e.reps.ReplaceOnce(name, onceTyps...)
+	return e.reps.ReplaceRepeated(name, typ)
 }
 
 func schemaType(s *Schema) jen.Code {
@@ -195,11 +201,11 @@ func (e *Encoder) Encode(s *Schema) {
 			if len(enum.Enum) == 0 {
 				return
 			}
+			// constants are built from the normalized pre-Once name so Once
+			// rules land on each complete identifier exactly once
 			enumBase := e.normalizeNameBase(parentName, replace.Struct) + e.normalizeNameBase(name, replace.Field)
-			enumName := enumBase
-			if e.reps.HasOnce() {
-				enumName = e.normalizeNameFinal(enumBase, replace.Struct, replace.Field)
-			}
+			enumBase = e.reps.ReplaceRepeated(enumBase, replace.Struct)
+			enumName := e.normalizeNameFinal(enumBase, replace.Struct, replace.Struct, replace.Field)
 			enumMap[enum] = enumName
 
 			// render type definition
@@ -211,10 +217,8 @@ func (e *Encoder) Encode(s *Schema) {
 			// render enum values
 			consts := make([]jen.Code, len(enum.Enum))
 			for idx, v := range enum.Enum {
-				constName := enumBase + e.normalizeNameBase(v, replace.Const)
-				if e.reps.HasOnce() {
-					constName = e.normalizeNameFinal(constName, replace.Struct, replace.Field, replace.Const)
-				}
+				constName := e.normalizeNameFinal(enumBase+e.normalizeNameBase(v, replace.Const),
+					replace.Const, replace.Struct, replace.Field, replace.Const)
 				consts[idx] = jen.Id(constName).Id(enumName).Op("=").Lit(v)
 			}
 			e.f.Const().Defs(consts...)
