@@ -6092,7 +6092,7 @@ type VPN struct {
 	// - Juniper SSL: `net.juniper.sslvpn`
 	// - F5 SSL: `com.f5.F5-Edge-Client.vpnplugin`
 	// - SonicWALL Mobile Connect: `com.sonicwall.SonicWALL-SSLVPN.vpnplugin`
-	// - “Aruba VIA: `com.arubanetworks.aruba-via.vpnplugin`
+	// - ``Aruba VIA: `com.arubanetworks.aruba-via.vpnplugin`
 	// If the configuration targets a VPN solution that uses a network extension provider, then this field contains the bundle identifier of the app that contains the provider. Contact the VPN solution vendor for the value of the identifier.
 	// If `VPNType` is `IKEv2`, then the `VPNSubType` field is optional and reserved for future use. If it's specified, it needs to contain an empty string.
 	// Not available in watchOS.
@@ -6173,7 +6173,7 @@ type VPNVPN struct {
 	DisconnectOnIdleTimer *int64 `json:"DisconnectOnIdleTimer,omitempty" plist:"DisconnectOnIdleTimer,omitempty"`
 	// The type of VPN service. If the value is `app-proxy`, the service tunnels traffic at the app level. If the value is `packet-tunnel`, the service tunnels traffic at the IP layer. Not available in watchOS.
 	ProviderType *VPNProviderType `default:"packet-tunnel" json:"ProviderType,omitempty" plist:"ProviderType,omitempty"`
-	// If `1“, routes all traffic through the VPN, with some exclusions. Several of the exclusions can be controlled with the `ExcludeLocalNetworks`, `ExcludeCellularServices`, `ExcludeAPNs` and `ExcludeDeviceCommunication` properties. The following traffic is always excluded from the tunnel:
+	// If `1``, routes all traffic through the VPN, with some exclusions. Several of the exclusions can be controlled with the `ExcludeLocalNetworks`, `ExcludeCellularServices`, `ExcludeAPNs` and `ExcludeDeviceCommunication` properties. The following traffic is always excluded from the tunnel:
 	// - Traffic necessary for connecting and maintaining the device's network connection, such as DHCP.
 	// - Traffic necessary for connecting to captive networks.
 	// - Certain cellular services traffic that is not routable over the internet and is instead directly routed to the cellular network. See the ExcludeCellularServices property for more details.
