@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	structgen "github.com/korylprince/go-adm/generator/structgen"
+	"github.com/korylprince/go-adm/utils/replace"
 )
 
 // write drops a schema into a temp file for GenerateFromFiles to read.
@@ -48,6 +49,82 @@ payloadkeys:
 
 	if want := "type AnyDictionarySchema map[string]any"; !strings.Contains(src, want) {
 		t.Errorf("expected %q in output:\n%s", want, src)
+	}
+}
+
+// Once replacements apply to the final enum type and constant identifiers,
+// not once per component, and ordinary rules still process the result.
+func TestGenerateOncePrefixOnEnum(t *testing.T) {
+	path := write(t, "enum.yaml", `
+title: Enum Schema
+payloadkeys:
+- key: Mode
+  type: <string>
+  presence: required
+  rangelist:
+  - Caldav
+  - Carddav
+`)
+
+	reps := replace.Replacements{
+		{Match: "^", Replacement: "Bar", Types: []string{"struct", "const"}, Once: true},
+		{Match: "$", Replacement: "Info", Types: []string{"struct", "const"}, Once: true},
+		{Match: `^(.*)Caldav(.*)$`, Replacement: "${1}CalDAV${2}", Types: []string{"struct", "const", "field"}},
+	}
+
+	buf := new(strings.Builder)
+	if err := structgen.GenerateFromFiles([]string{path}, "test", reps, []string{"json"}, buf); err != nil {
+		t.Fatal(err)
+	}
+	src := buf.String()
+
+	for _, want := range []string{
+		"type BarEnumSchemaInfo struct",
+		"type BarModeInfo string",
+		"BarModeCalDAVInfo",
+		"BarModeCarddavInfo",
+	} {
+		if !strings.Contains(src, want) {
+			t.Errorf("expected %q in output:\n%s", want, src)
+		}
+	}
+	if strings.Contains(src, "BarBar") || strings.Contains(src, "InfoInfo") {
+		t.Errorf("expected prefix and suffix once, got output:\n%s", src)
+	}
+}
+
+// Type references must use the same replacement type as the declaration. A
+// prefix rule scoped to structs previously left nested field types unprefixed.
+func TestGenerateOncePrefixOnNestedStruct(t *testing.T) {
+	path := write(t, "nested.yaml", `
+title: Nested Schema
+payloadkeys:
+- key: TokenParameters
+  type: <dictionary>
+  presence: optional
+  subkeys:
+  - key: SecurityToken
+    type: <string>
+    presence: optional
+`)
+
+	reps := replace.Replacements{
+		{Match: "^", Replacement: "Gen", Types: []string{"struct"}, Once: true},
+	}
+
+	buf := new(strings.Builder)
+	if err := structgen.GenerateFromFiles([]string{path}, "test", reps, []string{"json"}, buf); err != nil {
+		t.Fatal(err)
+	}
+	src := buf.String()
+
+	for _, want := range []string{
+		"type GenTokenParameters struct",
+		"TokenParameters *GenTokenParameters",
+	} {
+		if !strings.Contains(src, want) {
+			t.Errorf("expected %q in output:\n%s", want, src)
+		}
 	}
 }
 
