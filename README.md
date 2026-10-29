@@ -222,6 +222,14 @@ See [cmd/README.md](cmd/README.md) for full flag reference for every tool.
 | `gocmd` | Output an MDM command (plist) |
 | `godeclr` | Output a DDM declaration (JSON) |
 
+# Regenerating Code
+
+Run `./generate.sh` with the Go version used by the `check-generated` CI job
+(currently Go 1.27.x). Go formatter changes can affect generated comments even
+when the schemas and generator logic are unchanged. In particular, Go 1.27
+preserves paired backticks in struct field comments that older versions
+converted to curly quotes.
+
 # Future Work
 
 Eventually I'd like to write schema-based validation tools for profiles, commands, declarations, etc. Pull requests are welcome!

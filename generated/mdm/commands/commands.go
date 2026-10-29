@@ -1672,13 +1672,13 @@ type QueryResponses struct {
 	IsCloudBackupEnabled *bool `json:"IsCloudBackupEnabled" plist:"IsCloudBackupEnabled"`
 	// An array of the directory GUIDs of the logged-in managed users. If one of these users is currently logged in to the console, the `CurrentConsoleManagedUser` key returns the GUID of that user. Requires the Device Information access right. Available in macOS 10.11 and later.
 	ActiveManagedUsers *[]string `json:"ActiveManagedUsers" plist:"ActiveManagedUsers"`
-	// The contents of “OSUpdateSettings-dictionary“. Requires the Device Information access right. Available in macOS 10.11 and later.
+	// The contents of ``OSUpdateSettings-dictionary``. Requires the Device Information access right. Available in macOS 10.11 and later.
 	OSUpdateSettings *OSUpdateSettings `json:"OSUpdateSettings" plist:"OSUpdateSettings"`
 	// The local host name from Bonjour. Available in macOS 10.11 and later.
 	LocalHostName *string `json:"LocalHostName" plist:"LocalHostName"`
 	// The host name. Available in macOS 10.11 and later.
 	HostName *string `json:"HostName" plist:"HostName"`
-	// The contents of “AutoSetupAdminAccountsItem“, which Setup Assistant automatically creates during DEP enrollment. Requires the Device Information access right. Available in macOS 10.11 and later.
+	// The contents of ``AutoSetupAdminAccountsItem``, which Setup Assistant automatically creates during DEP enrollment. Requires the Device Information access right. Available in macOS 10.11 and later.
 	AutoSetupAdminAccounts *[]*AutoSetupAdminAccountsItem `json:"AutoSetupAdminAccounts" plist:"AutoSetupAdminAccounts"`
 	// If `true`, the device has enabled System Integrity Protection. Requires the Device Information access right. Available in macOS 10.12 and later.
 	SystemIntegrityProtectionEnabled *bool `json:"SystemIntegrityProtectionEnabled" plist:"SystemIntegrityProtectionEnabled"`
@@ -1752,7 +1752,7 @@ type QueryResponses struct {
 	CurrentMCC *string `json:"CurrentMCC" plist:"CurrentMCC"`
 	// The current mobile network code (MNC). Requires the Network Information access right. Available as of iOS 4 and deprecated in iOS 16.
 	CurrentMNC *string `json:"CurrentMNC" plist:"CurrentMNC"`
-	// The contents of “ServiceSubscriptionProperty“. Requires the Network Information access right.
+	// The contents of ``ServiceSubscriptionProperty``. Requires the Network Information access right.
 	ServiceSubscriptions *[]*ServiceSubscriptionProperty `json:"ServiceSubscriptions" plist:"ServiceSubscriptions"`
 	// If `true`, the `EraseDeviceCommand` requires a PIN. Available in macOS 11 and later.
 	PINRequiredForEraseDevice *bool `json:"PINRequiredForEraseDevice" plist:"PINRequiredForEraseDevice"`
@@ -1774,7 +1774,7 @@ type QueryResponses struct {
 	// - `1.2.840.113635.100.8.10.2` sepOS version: This is the version of the operating system running on the Secure Enclave when the attestation is generated. Typically this matches the version of the main operating system.
 	// - `1.2.840.113635.100.8.11.1` Freshness code: This is the freshness code. See the `DeviceAttestationNonce`. This may not match the requested freshness code if a cached attestation was returned.
 	// The following OIDs were introduced in iOS 17.2, iPadOS 17.2, tvOS 17.2, watchOS 10.2, visionOS 1.l0, and macOS 14.2:
-	// - `1.2.840.113635.100.8.9.4` Software Update Device ID: This is an identifier of the device model. It is expected to match the `SoftwareUpdateDeviceID` in the `DeviceInformation“ response. This is the device identifier to use when looking up available OS updates through <https://gdmf.apple.com/v2/pmv>.
+	// - `1.2.840.113635.100.8.9.4` Software Update Device ID: This is an identifier of the device model. It is expected to match the `SoftwareUpdateDeviceID` in the `DeviceInformation`` response. This is the device identifier to use when looking up available OS updates through <https://gdmf.apple.com/v2/pmv>.
 	// - `1.2.840.113635.100.8.10.1` OS Version: This is the version of iOS, iPadOS or tvOS running on the device when the attestation is generated.
 	// - `1.2.840.113635.100.8.10.3` LLB Version: This is the version of the Low Level Bootloader firmware running on the device when the attestation is generated. For more information about the boot process, see the documentation of the boot process in the Apple Platform Security guide.
 	// The following OIDs were introduced in macOS 14.2:
