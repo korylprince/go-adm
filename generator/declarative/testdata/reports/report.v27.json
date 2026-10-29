@@ -1,0 +1,92 @@
+{
+  "StatusItems": {
+    "content-cache": {
+      "info": {
+        "cache-free": 10737418240,
+        "cache-limit": 0,
+        "cache-status": "OK",
+        "cache-used": 5368709120,
+        "max-cache-pressure-last-hour": 0.15,
+        "personal-cache-free": 2147483648,
+        "personal-cache-limit": 0,
+        "personal-cache-used": 1073741824
+      },
+      "parents": [
+        {
+          "identifier": "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+          "address": "192.168.1.10",
+          "port": 51194,
+          "healthy": true,
+          "version": "2.0"
+        }
+      ],
+      "peers": [
+        {
+          "identifier": "B2C3D4E5-F6A7-8901-BCDE-F01234567891",
+          "address": "192.168.1.20",
+          "port": 51194,
+          "friendly": true,
+          "healthy": true,
+          "version": "2.0"
+        }
+      ],
+      "status": {
+        "server-guid": "C3D4E5F6-A7B8-9012-CDEF-012345678912",
+        "activated": true,
+        "active": true,
+        "cache-status": "OK",
+        "private-addresses": [
+          "192.168.1.5"
+        ],
+        "public-address": "203.0.113.5",
+        "port": 51194,
+        "registration-status": 1,
+        "startup-status": "OK",
+        "tetherator-status": 0,
+        "sending-reports": false,
+        "version": "2.0"
+      }
+    },
+    "device": {
+      "system": {
+        "health": {
+          "Camera": "ok",
+          "Display": "ok",
+          "FaceID": "ok"
+        }
+      }
+    },
+    "enhanced-logging": {
+      "applecare-token": "ABC123DEF456",
+      "noninteractive-eligibility": true,
+      "status": "collecting",
+      "timestamp": "2025-05-15T10:30:00Z"
+    },
+    "mdm": {
+      "enrollment-type": "supervised",
+      "is-awaiting-configuration": false,
+      "is-return-to-service": false,
+      "is-shared-ipad": false,
+      "push-magic": "3B5D81A2-9F4E-4B7C-A8D6-1E2F3A4B5C6D",
+      "push-token": "4A8B3F2E1D9C7B6A5E4D3C2B1A0F9E8D7C6B5A4E3D2C1B0A"
+    },
+    "migration-assistant": {
+      "report": {
+        "completed-data-size": 53687091200,
+        "completed-file-count": 125000,
+        "completion-time": "2025-05-15T14:30:00Z",
+        "source-user": "user",
+        "start-time": "2025-05-15T12:00:00Z",
+        "target-user": "user",
+        "total-data-size": 53687091200,
+        "total-file-count": 125000
+      },
+      "state": "completed"
+    },
+    "security": {
+      "lockdown-mode": false
+    }
+  },
+  "Errors": [],
+  "FullReport": false
+}

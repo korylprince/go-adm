@@ -1,11 +1,11 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/mdm/commands/commands
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/mdm/commands/commands
 
 package commands
 
 import "time"
 
-const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
+const DeviceManagementGenerateHash = "9e7fdbe23990b2551c4b29b39bc8b0de956805eb"
 
 var CommandMap = map[string]any{
 	"AccountConfiguration":            AccountConfigurationCommand{},
@@ -13,6 +13,7 @@ var CommandMap = map[string]any{
 	"ActiveNSExtensions":              ActiveNSExtensionsCommand{},
 	"ApplyRedemptionCode":             ApplyRedemptionCodeCommand{},
 	"AvailableOSUpdates":              AvailableOSUpdatesCommand{},
+	"CancelEnhancedLogCollection":     CancelEnhancedLogCollectionCommand{},
 	"CertificateList":                 CertificateListCommand{},
 	"ClearActivationLockBypassCode":   ClearActivationLockBypassCodeCommand{},
 	"ClearPasscode":                   ClearPasscodeCommand{},
@@ -67,6 +68,7 @@ var CommandMap = map[string]any{
 	"Settings":                        SettingsCommand{},
 	"ShutDownDevice":                  ShutDownDeviceCommand{},
 	"StopMirroring":                   StopMirroringCommand{},
+	"TriggerEnhancedLogCollection":    TriggerEnhancedLogCollectionCommand{},
 	"UnlockUserAccount":               UnlockUserAccountCommand{},
 	"UserConfigured":                  UserConfiguredCommand{},
 	"UserList":                        UserListCommand{},
@@ -80,6 +82,7 @@ var ResponseMap = map[string]any{
 	"ActiveNSExtensions":              ActiveNSExtensionsCommandResponse{},
 	"ApplyRedemptionCode":             ApplyRedemptionCodeCommandResponse{},
 	"AvailableOSUpdates":              AvailableOSUpdatesCommandResponse{},
+	"CancelEnhancedLogCollection":     CancelEnhancedLogCollectionCommandResponse{},
 	"CertificateList":                 CertificateListCommandResponse{},
 	"ClearActivationLockBypassCode":   ClearActivationLockBypassCodeCommandResponse{},
 	"ClearPasscode":                   ClearPasscodeCommandResponse{},
@@ -134,6 +137,7 @@ var ResponseMap = map[string]any{
 	"Settings":                        SettingsCommandResponse{},
 	"ShutDownDevice":                  ShutDownDeviceCommandResponse{},
 	"StopMirroring":                   StopMirroringCommandResponse{},
+	"TriggerEnhancedLogCollection":    TriggerEnhancedLogCollectionCommandResponse{},
 	"UnlockUserAccount":               UnlockUserAccountCommandResponse{},
 	"UserConfigured":                  UserConfiguredCommandResponse{},
 	"UserList":                        UserListCommandResponse{},
@@ -143,25 +147,24 @@ var ResponseMap = map[string]any{
 }
 
 // Create and configure a local administrator account on a device.
-// When a macOS (v10.11 and later) device is configured via DEP to enroll in an MDM server and the DEP profile has the await_device_configuration flag set to true, the AccountConfiguration command can be sent to the device to have it create the local administrator account (thereby skipping the page to create this account in Setup Assistant). This command can only be sent to a macOS device that is in the AwaitingConfiguration state.
+// When a macOS (v10.11 and later) device is configured via ADE to enroll in an MDM server and the ADE profile has the await_device_configuration flag set to true, the AccountConfiguration command can be sent to the device to have it create the local administrator account (thereby skipping the page to create this account in Setup Assistant). This command can only be sent to a macOS device that is in the AwaitingConfiguration state.
 type AccountConfigurationCommand struct {
 	// If `true`, Setup Assistant skips the user interface for setting up primary accounts and disables autologin. If `true`, you must specify a value for `AutoSetupAdminAccounts`.
 	SkipPrimarySetupAccountCreation *bool `json:"SkipPrimarySetupAccountCreation,omitempty" plist:"SkipPrimarySetupAccountCreation,omitempty"`
 	// If `true`, Setup Assistant creates the primary accounts as regular users, and you must specify a value for `AutoSetupAdminAccounts`.
 	SetPrimarySetupAccountAsRegularUser *bool `json:"SetPrimarySetupAccountAsRegularUser,omitempty" plist:"SetPrimarySetupAccountAsRegularUser,omitempty"`
-	// The full name for the primary account. If present, Setup Assistant uses this value to prefill the Full Name field. However, Setup Assistant ignores this value if `DontAutoPopulatePrimaryAccountInfo` is `true`. This value is available in macOS 10.15 and later.
+	// The full name for the primary account. If present, Setup Assistant uses this value to prefill the Full Name field. However, Setup Assistant ignores this value if `DontAutoPopulatePrimaryAccountInfo` is `true`.
 	PrimaryAccountFullName *string `json:"PrimaryAccountFullName,omitempty" plist:"PrimaryAccountFullName,omitempty"`
-	// The account name for the primary account. If present, Setup Assistant uses this value to prefill the User Name field. However, Setup Assistant ignores this value if `DontAutoPopulatePrimaryAccountInfo` is `true`. This value is available in macOS 10.15 and later.
+	// The account name for the primary account. If present, Setup Assistant uses this value to prefill the User Name field. However, Setup Assistant ignores this value if `DontAutoPopulatePrimaryAccountInfo` is `true`.
 	PrimaryAccountUserName *string `json:"PrimaryAccountUserName,omitempty" plist:"PrimaryAccountUserName,omitempty"`
-	// If `true`, Setup Assistant ignores the primary account information and requires the user to enter that information. If `false`, Setup Assistant prefills the Full Name field with `PrimaryAccountFullName` and the User Name field with `PrimaryAccountUserName`. This value is available in macOS 10.15 and later.
+	// If `true`, Setup Assistant ignores the primary account information and requires the user to enter that information. If `false`, Setup Assistant prefills the Full Name field with `PrimaryAccountFullName` and the User Name field with `PrimaryAccountUserName`.
 	DontAutoPopulatePrimaryAccountInfo *bool `json:"DontAutoPopulatePrimaryAccountInfo,omitempty" plist:"DontAutoPopulatePrimaryAccountInfo,omitempty"`
 	// If `true`, and you provide values for `PrimaryAccountFullName` or `PrimaryAccountUserName`, Setup Assistant disables editing for the corresponding fields. `DontAutoPopulatePrimaryAccountInfo` must also be 0 (or missing).
 	// If the user's password is also available from authentication through ConfigurationURL, Setup Assistant automatically creates the primary account with that information and skips showing the user interface to view or edit these fields.
-	// This value is available in macOS 10.15 and later.
 	LockPrimaryAccountInfo *bool `json:"LockPrimaryAccountInfo,omitempty" plist:"LockPrimaryAccountInfo,omitempty"`
 	// A dictionary that describes the administrator account to create with Setup Assistant, which uses the first element and ignores additional elements.
 	AutoSetupAdminAccounts *[]*AutoSetupAdminAccountItem `json:"AutoSetupAdminAccounts,omitempty" plist:"AutoSetupAdminAccounts,omitempty"`
-	// If present, this is the short name of the local account to manage, which can also be the account that results from setting `AutoSetupAdminAccounts` to `true`. Otherwise, only the local account that Setup Assistant creates is a managed account. This value is available in macOS 11 and later.
+	// If present, this is the short name of the local account to manage, which can also be the account that results from setting `AutoSetupAdminAccounts` to `true`. Otherwise, only the local account that Setup Assistant creates is a managed account.
 	ManagedLocalUserShortName *string `json:"ManagedLocalUserShortName,omitempty" plist:"ManagedLocalUserShortName,omitempty"`
 }
 
@@ -181,7 +184,7 @@ type AutoSetupAdminAccountItem struct {
 	ShortName string `json:"shortName" plist:"shortName" required:"true"`
 	// The full name of the user, which defaults to `shortName` if not specified.
 	FullName *string `json:"fullName,omitempty" plist:"fullName,omitempty"`
-	// Data that contains the pre-created salted PBKDF2 SHA512 password hash for the account.
+	// Data that contains the pre-created salted PBKDF2 SHA512 `PasswordHash` for the account.
 	PasswordHash *[]byte `json:"passwordHash,omitempty" plist:"passwordHash,omitempty"`
 	// If `true`, this sets the account attribute to make the account hidden in the Login Window and Users & Groups.
 	Hidden *bool `json:"hidden,omitempty" plist:"hidden,omitempty"`
@@ -281,17 +284,14 @@ type InstallEnterpriseApplicationCommand struct {
 	PinningRevocationCheckRequired *bool `json:"PinningRevocationCheckRequired,omitempty" plist:"PinningRevocationCheckRequired,omitempty"`
 	// If `true`, install the app as a managed app. Otherwise, the system installs the app as unmanaged. If you reinstall a manged app and omit this value or set it to `false`, the app becomes unmanaged.
 	// For manifest-based installs, if `true`, the system only considers apps installed in `/Applications` as managed. In macOS 11 through 13, the system requires that the `pkg` only contains a single signed app.
-	// Available in macOS 11 and later.
 	InstallAsManaged *bool `json:"InstallAsManaged,omitempty" plist:"InstallAsManaged,omitempty"`
 	// The management flags. The possible values are:
-	// - `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
-	// Available in macOS 11 and later.
+	// * `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
 	ManagementFlags *InstallEnterpriseApplicationCommandManagementFlags `json:"ManagementFlags,omitempty" plist:"ManagementFlags,omitempty"`
-	// A dictionary that contains the initial configuration of the app, if you choose to provide it. Available in macOS 11 and later.
+	// A dictionary that contains the initial configuration of the app, if you choose to provide it.
 	Configuration *map[string]any `json:"Configuration,omitempty" plist:"Configuration,omitempty"`
 	// The change management state. This value doesn't work with the user enrollments. The only possible value is:
-	// - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
-	// Available in macOS 11 and later.
+	// * `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 	ChangeManagementState *InstallEnterpriseApplicationCommandChangeManagementState `json:"ChangeManagementState,omitempty" plist:"ChangeManagementState,omitempty"`
 	// If `true`, the app is an iOS app that can run on a Mac with Apple silicon in macOS 11 and later.
 	IOSApp *bool `json:"iOSApp,omitempty" plist:"iOSApp,omitempty"`
@@ -308,8 +308,7 @@ func (p *InstallEnterpriseApplicationCommandResponse) ResponseRequestType() stri
 }
 
 // The management flags. The possible values are:
-// - `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
-// Available in macOS 11 and later.
+// * `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
 type InstallEnterpriseApplicationCommandManagementFlags int64
 
 const (
@@ -317,8 +316,7 @@ const (
 )
 
 // The change management state. This value doesn't work with the user enrollments. The only possible value is:
-// - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
-// Available in macOS 11 and later.
+// * `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 type InstallEnterpriseApplicationCommandChangeManagementState string
 
 const (
@@ -331,28 +329,26 @@ type InstallApplicationCommand struct {
 	ITunesStoreID *int64 `json:"iTunesStoreID,omitempty" plist:"iTunesStoreID,omitempty"`
 	// The app's bundle identifier.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifier *string `json:"Identifier,omitempty" plist:"Identifier,omitempty"`
 	// A dictionary that contains the app installation options.
 	Options *Options `json:"Options,omitempty" plist:"Options,omitempty"`
-	// The URL of the app manifest, which needs to begin with `https:`. The manifest is returned as a property list that uses the `ManifestURL` format.
+	// The URL of the app manifest, which needs to begin with `https:`. The server returns the manifest as a property list that uses the `ManifestURL` format.
 	ManifestURL *string `json:"ManifestURL,omitempty" plist:"ManifestURL,omitempty"`
 	// A bitwise OR of the management flags. The possible values are:
 	// - `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
 	// - `4`: Prevent backup of app data.
 	// - `5`: Both `1` and `4`.
-	// Available in iOS 5 and later, macOS 11 and later, and tvOS 10.2 and later.
 	ManagementFlags *InstallApplicationCommandManagementFlags `json:"ManagementFlags,omitempty" plist:"ManagementFlags,omitempty"`
-	// A dictionary that contains the initial configuration of the app, if you choose to provide it. Available in iOS 7 and later, macOS 11 and later, and tvOS 10.2 and later.
+	// A dictionary that contains the initial configuration of the app, if you choose to provide it.
 	Configuration *map[string]any `json:"Configuration,omitempty" plist:"Configuration,omitempty"`
-	// A dictionary that contains the initial attributes of the app, if you choose to provide it. Available in iOS 7 and later, and tvOS 10.2 and later.
+	// A dictionary that contains the initial attributes of the app, if you choose to provide it.
 	Attributes *InstallApplicationCommandAttributes `json:"Attributes,omitempty" plist:"Attributes,omitempty"`
-	// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13, or any type of account driven enrollment. Available in iOS 9 and later, macOS 11 and later, and tvOS 10.2 and later. The only possible value is:
-	// - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
+	// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13, or any type of account driven enrollment. The only possible value is:
+	// * `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 	ChangeManagementState *InstallApplicationCommandChangeManagementState `json:"ChangeManagementState,omitempty" plist:"ChangeManagementState,omitempty"`
 	// If `true`, install the app as a managed app. Otherwise, the system installs the app as unmanaged. If you reinstall a manged app and omit this value or set it to `false`, the app becomes unmanaged.
 	// For manifest-based installs, if `true`, the system only considers apps installed in `/Applications` as managed. In macOS 11 through 13, the system requires that the `pkg` only contains a single signed app.
-	// Available in macOS 11 and later.
 	InstallAsManaged *bool `json:"InstallAsManaged,omitempty" plist:"InstallAsManaged,omitempty"`
 	// If `true`, the app is an iOS app that can run on a Mac with Apple silicon in macOS 11 and later.
 	IOSApp *bool `json:"iOSApp,omitempty" plist:"iOSApp,omitempty"`
@@ -365,7 +361,7 @@ func (p *InstallApplicationCommand) RequestType() string {
 type InstallApplicationCommandResponse struct {
 	// The app's bundle identifier, if the user accepted the request.
 	// > Note:
-	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone that the watch is paired to.
+	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with.
 	Identifier *string `json:"Identifier,omitempty" plist:"Identifier,omitempty"`
 	// The app's installation state, if the user accepted the request. If this value is `NeedsRedemption`, the server needs to send a redemption code to complete the app installation.
 	State *InstallApplicationCommandState `json:"State,omitempty" plist:"State,omitempty"`
@@ -401,7 +397,6 @@ const (
 // - `1`: If `InstallAsManaged` is `true`, remove the app upon removal of the MDM profile.
 // - `4`: Prevent backup of app data.
 // - `5`: Both `1` and `4`.
-// Available in iOS 5 and later, macOS 11 and later, and tvOS 10.2 and later.
 type InstallApplicationCommandManagementFlags int64
 
 const (
@@ -410,27 +405,25 @@ const (
 	InstallApplicationCommandManagementFlags5 InstallApplicationCommandManagementFlags = 5
 )
 
-// A dictionary that contains the initial attributes of the app, if you choose to provide it. Available in iOS 7 and later, and tvOS 10.2 and later.
+// A dictionary that contains the initial attributes of the app, if you choose to provide it.
 type InstallApplicationCommandAttributes struct {
-	// A per-app VPN unique identifier for this app. Available in iOS 7 and later.
+	// A per-app VPN unique identifier for this app.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
-	// The content filter UUID for this app. Available in iOS 16 and later.
+	// The content filter UUID for this app.
 	ContentFilterUUID *string `json:"ContentFilterUUID,omitempty" plist:"ContentFilterUUID,omitempty"`
-	// The DNS proxy UUID for this app. Available in iOS 16 and later.
+	// The DNS proxy UUID for this app.
 	DNSProxyUUID *string `json:"DNSProxyUUID,omitempty" plist:"DNSProxyUUID,omitempty"`
-	// The relay UUID for this app. Available in iOS 17 and later.
+	// The relay UUID for this app.
 	RelayUUID *string `json:"RelayUUID,omitempty" plist:"RelayUUID,omitempty"`
-	// An array that contains the associated domains to add to this app. Available in iOS 13 and later.
+	// An array that contains the associated domains to add to this app.
 	AssociatedDomains *[]string `json:"AssociatedDomains,omitempty" plist:"AssociatedDomains,omitempty"`
-	// If `true`, perform claimed site association verification directly at the domain instead of on Apple's servers. Only set this to `true` for domains that can't access the internet. Available in iOS 14 and later.
+	// If `true`, perform claimed site association verification directly at the domain instead of on Apple's servers. Only set this to `true` for domains that can't access the internet.
 	AssociatedDomainsEnableDirectDownloads *bool `json:"AssociatedDomainsEnableDirectDownloads,omitempty" plist:"AssociatedDomainsEnableDirectDownloads,omitempty"`
-	// If `false`, this app isn't removable while it's a managed app. Available in iOS 14 and later, and tvOS 14 and later.
+	// If `false`, this app isn't removable while it's a managed app.
 	Removable *bool `json:"Removable,omitempty" plist:"Removable,omitempty"`
 	// If `true`, Tap to Pay on iPhone requires users to use Face ID or a passcode to unlock their device after every transaction that requires a customer's card PIN. If `false`, the user can configure this setting on their device.
-	// Available in iOS 16.4 and later.
 	TapToPayScreenLock *bool `json:"TapToPayScreenLock,omitempty" plist:"TapToPayScreenLock,omitempty"`
 	// The data network name (DNN) or app category. For DNN, the value is `DNN:name`, where `name` is the carrier-provided DNN name. For app category, the value is `AppCategory:category`, where `category` is a carrier-provided string like "Enterprise1".
-	// Available in iOS 17 and later.
 	CellularSliceUUID *string `json:"CellularSliceUUID,omitempty" plist:"CellularSliceUUID,omitempty"`
 	// If `false`, the system prevents the user from hiding the app. It doesn't affect the user's ability to leave it in the App Library, while removing it from the Home Screen.
 	Hideable *bool `json:"Hideable,omitempty" plist:"Hideable,omitempty"`
@@ -438,8 +431,8 @@ type InstallApplicationCommandAttributes struct {
 	Lockable *bool `json:"Lockable,omitempty" plist:"Lockable,omitempty"`
 }
 
-// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13, or any type of account driven enrollment. Available in iOS 9 and later, macOS 11 and later, and tvOS 10.2 and later. The only possible value is:
-// - `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
+// The change management state. This value doesn't work with the user enrollment feature introduced in iOS 13, or any type of account driven enrollment. The only possible value is:
+// * `Managed`: Take management of the app if the user installed it already and `InstallAsManaged` is `true`.
 type InstallApplicationCommandChangeManagementState string
 
 const (
@@ -490,11 +483,11 @@ const (
 
 // Get a list of the installed apps on a device.
 type InstalledApplicationListCommand struct {
-	// An array of app identifiers. Provide this value to limit the response to only include these apps. This value is available in iOS 7 and later, macOS 10.15 and later, tvOS 10.2 and later, visionOS 1.1 and later, and watchOS 10 and later.
+	// An array of app identifiers. Provide this value to limit the response to only include these apps.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifiers *[]string `json:"Identifiers,omitempty" plist:"Identifiers,omitempty"`
-	// If `true`, only get a list of managed apps, excluding ones that Declarative Device Management is managing. This value is available in iOS 7 and later, macOS 10.15 and later, and tvOS 10.2 and later.
+	// If `true`, only get a list of managed apps, excluding ones that Declarative Device Management is managing.
 	// > Note:
 	// > If the enrollment type is a user enrollment, the system always considers this key as set to `true` and only returns managed apps, excluding ones that Declarative Device Management is managing.
 	ManagedAppsOnly *bool `json:"ManagedAppsOnly,omitempty" plist:"ManagedAppsOnly,omitempty"`
@@ -545,14 +538,14 @@ const (
 type InstalledApplicationListItem struct {
 	// The app's identifier. This key is always be present on iOS and tvOS, but may be missing on macOS.
 	// > Note:
-	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired.
+	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with.
 	Identifier *string `json:"Identifier,omitempty" plist:"Identifier,omitempty"`
-	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
+	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and books metadata for organizations`.
 	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
 	// > Note:
 	// > A newer version of an app might not be available for installation on the device for a variety of reasons. A common reason is that the device's operating system version or hardware is incompatible with the available version of the app.
 	ExternalVersionIdentifier *int64 `json:"ExternalVersionIdentifier,omitempty" plist:"ExternalVersionIdentifier,omitempty"`
-	// The marketplace hosted application's distributor ID. This value is available in iOS 17.4 and later.
+	// The marketplace hosted application's distributor ID.
 	DistributorIdentifier *string `json:"DistributorIdentifier,omitempty" plist:"DistributorIdentifier,omitempty"`
 	// The app's version.
 	Version *string `json:"Version,omitempty" plist:"Version,omitempty"`
@@ -560,21 +553,23 @@ type InstalledApplicationListItem struct {
 	ShortVersion *string `json:"ShortVersion,omitempty" plist:"ShortVersion,omitempty"`
 	// The app's name.
 	Name *string `json:"Name,omitempty" plist:"Name,omitempty"`
-	// The app's static bundle size, in bytes. This value is expensive to calculate. Starting in iOS 26, macOS 26, tvOS 26, watchOS 26, and visionOS 26 it isn't present in the response unless it is included in the `Items` request key. This value is available in iOS 5 and later, and macOS 10.7 and later, tvOS 10.2 and later, watchOS 10 and later, and visionOS 1.1 and later.
+	// The app's path.
+	Path *string `json:"Path,omitempty" plist:"Path,omitempty"`
+	// The app's static bundle size, in bytes. This value is expensive to calculate. Starting in iOS 26, macOS 26, tvOS 26, watchOS 26, and visionOS 26 it isn't present in the response unless it's included in the `Items` request key.
 	BundleSize *int64 `json:"BundleSize,omitempty" plist:"BundleSize,omitempty"`
-	// The size of the app's file system in bytes, including the Documents, Library, and other directories. This value is expensive to calculate. Starting in iOS 26, tvOS 26, watchOS 26, and visionOS 26 it isn't present in the response unless it is included in the `Items` request key. This value is available in iOS 5 and later, tvOS 10.2 and later, watchOS 10 and later, and visionOS 1.1 and later.
+	// The size of the app's file system in bytes, including the Documents, Library, and other directories. This value is expensive to calculate. Starting in iOS 26, tvOS 26, watchOS 26, and visionOS 26 it isn't present in the response unless it's included in the `Items` request key.
 	DynamicSize *int64 `json:"DynamicSize,omitempty" plist:"DynamicSize,omitempty"`
-	// If `true`, the app is valid and can run on the device. If the app is enterprise-distributed and unvalidated, it won't be able to run until validation has occurred. This value is available in iOS 9.2 and later, and tvOS 10.2 and later.
+	// If `true`, the app is valid and can run on the device. If the app is enterprise-distributed and unvalidated, it won't be able to run until validation has occurred.
 	IsValidated *bool `json:"IsValidated,omitempty" plist:"IsValidated,omitempty"`
 	// If `true`, the app is downloading. If `false`, it's already installed.
 	Installing *bool `json:"Installing,omitempty" plist:"Installing,omitempty"`
-	// If `true`, the app came from the App Store and can participate in store features. For device-based Volume Purchase Program (VPP) apps, this value is `false`. This value is available in iOS 11.3 and later, and tvOS 11.3 and later.
+	// If `true`, the app came from the App Store and can participate in store features. For device-based Volume Purchase Program (VPP) apps, this value is `false`.
 	AppStoreVendable *bool `json:"AppStoreVendable,omitempty" plist:"AppStoreVendable,omitempty"`
-	// If `true`, installing the app didn't require an Apple Account. This value is available in iOS 11.3 and later, and tvOS 11.3 and later.
+	// If `true`, installing the app didn't require an Apple Account.
 	DeviceBasedVPP *bool `json:"DeviceBasedVPP,omitempty" plist:"DeviceBasedVPP,omitempty"`
-	// If `true`, the app is part of the Apple Beta Software Program. This value is available in iOS 11.3 and later, and tvOS 11.3 and later.
+	// If `true`, the app is part of the Apple Beta Software Program.
 	BetaApp *bool `json:"BetaApp,omitempty" plist:"BetaApp,omitempty"`
-	// If `true`, the app is ad-hoc code signed. This query is available in iOS 11.3 and later, and tvOS 11.3 and later.
+	// If `true`, the app is ad-hoc code signed.
 	AdHocCodeSigned *bool `json:"AdHocCodeSigned,omitempty" plist:"AdHocCodeSigned,omitempty"`
 	// If `true`, the app has an update available. This key is present only for App Store apps. In macOS, this key is present only for Volume Purchase Program (VPP) apps. This status updates daily and isn't always up-to-date when installing an app.
 	HasUpdateAvailable *bool `json:"HasUpdateAvailable,omitempty" plist:"HasUpdateAvailable,omitempty"`
@@ -586,9 +581,9 @@ type InstalledApplicationListItem struct {
 	DownloadPaused *bool `json:"DownloadPaused,omitempty" plist:"DownloadPaused,omitempty"`
 	// If `true`, the user canceled the download.
 	DownloadCancelled *bool `json:"DownloadCancelled,omitempty" plist:"DownloadCancelled,omitempty"`
-	// If `true`, the app is an App Clip. Available in iOS 16 and later.
+	// If `true`, the app is an App Clip.
 	IsAppClip *bool `json:"IsAppClip,omitempty" plist:"IsAppClip,omitempty"`
-	// The source of the application. When the app is managed by Declarative Device Management this value is `Declarative Device Management`.
+	// The source of the application. When Declarative Device Management manages the app, this value is `Declarative Device Management`.
 	Source *string `json:"Source,omitempty" plist:"Source,omitempty"`
 }
 
@@ -633,7 +628,7 @@ const (
 type ManagedApplicationListCommand struct {
 	// The bundle identifiers of the managed apps to include in the response.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifiers *[]string `json:"Identifiers,omitempty" plist:"Identifiers,omitempty"`
 }
 
@@ -679,17 +674,16 @@ type ManagedApplicationItem struct {
 	// * '1': Remove app upon removal of MDM profile.
 	// * '4': Prevent backup of app data.
 	ManagementFlags int64 `json:"ManagementFlags" plist:"ManagementFlags" required:"true"`
-	// If the user already purchased a paid app, this code is available for use by another user. This code reports only once. This value is available in iOS 5 and later.
+	// If the user already purchased a paid app, this code is available for use by another user. This code reports only once.
 	UnusedRedemptionCode string `json:"UnusedRedemptionCode" plist:"UnusedRedemptionCode" required:"true"`
-	// If 'true', the app has an update available. This key is present only for App Store apps. In macOS, this key is present only for Volume Purchase Program (VPP) apps. This status updates daily and isn't always up-to-date when installing an app.
+	// If 'true', the app has a server-provided managed configuration.
 	HasConfiguration bool `json:"HasConfiguration" plist:"HasConfiguration" required:"true"`
-	// If 'true', the app has feedback for the server. This value is available in iOS 7 and later, and tvOS 10.2 and later. On macOS 11.3 and later, this value is available if the request was sent on the user channel.
+	// If 'true', the app has feedback for the server. On macOS 11.3 and later, this value is available if the device management server sent the request on the user channel.
 	HasFeedback bool `json:"HasFeedback" plist:"HasFeedback" required:"true"`
-	// If 'true', the app is valid and can run on the device. If the app is enterprise-distributed and unvalidated, it won't be able to run until validation has occurred. This value is available in iOS 9.2 and later, and tvOS 10.2 and later.
+	// If 'true', the app is valid and can run on the device. If the app is enterprise-distributed and unvalidated, it won't be able to run until validation has occurred.
 	IsValidated bool `json:"IsValidated" plist:"IsValidated" required:"true"`
-	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and Books for Organizations`.
+	// The app's external version identifier. You can also retrieve this value from the App Store. For more information, see `Apps and books metadata for organizations`.
 	// If the current external version identifier of an app on the App Store doesn't match the external version identifier reported by the device, there may be an app update available for the device.
-	// Available in iOS 10.3 and later, macOS 11.3 and later, and tvOS 10.2 and later.
 	// > Note:
 	// > A newer version of an app might not be available for installation on the device for a variety of reasons. A common reason is that the device's operating system version or hardware is incompatible with the available version of the app.
 	ExternalVersionIdentifier int64 `json:"ExternalVersionIdentifier" plist:"ExternalVersionIdentifier" required:"true"`
@@ -764,7 +758,7 @@ func (p *ApplyRedemptionCodeCommandResponse) ResponseRequestType() string {
 type RemoveApplicationCommand struct {
 	// The bundle identifier of the managed app.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
 }
 
@@ -795,9 +789,23 @@ func (p *ValidateApplicationsCommandResponse) ResponseRequestType() string {
 	return "ValidateApplications"
 }
 
+// Cancel enhanced log collection on the device.
+// This command cancels any active enhanced log collection session on a supervised device. If no session is in progress, the command does nothing and returns `Acknowledged`.
+type CancelEnhancedLogCollectionCommand struct{}
+
+func (p *CancelEnhancedLogCollectionCommand) RequestType() string {
+	return "CancelEnhancedLogCollection"
+}
+
+type CancelEnhancedLogCollectionCommandResponse struct{}
+
+func (p *CancelEnhancedLogCollectionCommandResponse) ResponseRequestType() string {
+	return "CancelEnhancedLogCollection"
+}
+
 // Get a list of installed certificates on a device.
 type CertificateListCommand struct {
-	// If `true`, only include certificates that MDM installed or that are in the same profile as the MDM payload. User-enrolled devices ignore this value and always only include managed certificates. This value is available in iOS 13 and later, macOS 10.15 and later, and tvOS 13 and later.
+	// If `true`, only include certificates that MDM installed or that are in the same profile as the MDM payload. User-enrolled devices ignore this value and always only include managed certificates.
 	ManagedOnly *bool `json:"ManagedOnly,omitempty" plist:"ManagedOnly,omitempty"`
 }
 
@@ -873,7 +881,7 @@ func (p *ClearActivationLockBypassCodeCommandResponse) ResponseRequestType() str
 }
 
 // Inform the device that it can allow the user to continue in Setup Assistant.
-// Informs the device that it can continue past DEP enrollment. Only works on devices in DEP that have their cloud configuration set to await configuration.
+// Informs the device that it can continue past ADE enrollment. Only works on devices in ADE that have their cloud configuration set to await configuration.
 type DeviceConfiguredCommand struct{}
 
 func (p *DeviceConfiguredCommand) RequestType() string {
@@ -889,11 +897,11 @@ func (p *DeviceConfiguredCommandResponse) ResponseRequestType() string {
 // Remotely and immediately erase a device.
 // This command allows the server to remotely erase the device. This command requires the Device Erase right.
 type EraseDeviceCommand struct {
-	// If `true`, preserve the data plan on an iPhone or iPad with eSIM functionality, if one exists. This value is available in iOS 11 and later.
+	// If `true`, preserve the data plan on an iPhone or iPad with eSIM functionality, if one exists.
 	PreserveDataPlan *bool `json:"PreserveDataPlan,omitempty" plist:"PreserveDataPlan,omitempty"`
-	// If `true`, disable Proximity Setup on the next reboot and skip the pane in Setup Assistant. This value is available in iOS 11 and later. Prior to iOS 14, don't use this option with any other option.
+	// If `true`, disable Proximity Setup on the next reboot and skip the pane in Setup Assistant. Prior to iOS 14, don't use this option with any other option.
 	DisallowProximitySetup *bool `json:"DisallowProximitySetup,omitempty" plist:"DisallowProximitySetup,omitempty"`
-	// The six-character PIN for Find My. This value is available in macOS 10.8 and later.
+	// The six-character PIN for Find My.
 	PIN *string `json:"PIN,omitempty" plist:"PIN,omitempty"`
 	// This key defines the fallback behavior for erasing a device.
 	// In macOS 12 and later, this command uses Erase All Content and Settings (EACS) on Mac computers with the Apple M1 chip or the Apple T2 Security Chip. On those devices, if EACS can't run, the device can use obliteration (macOS 11.x behavior). This key has no effect on machines prior to the T2 chip. For a list of supported macs, see [Mac models with the Apple T2 Security Chip](https://support.apple.com/en-us/HT208862).
@@ -907,7 +915,7 @@ type EraseDeviceCommand struct {
 	// - `Default`: If EACS preflight fails, the device responds to the server with an `Error` status and then attempts to erase itself.
 	// If EACS preflight succeeds, but EACS fails, the device attempts to erase itself.
 	ObliterationBehavior *ObliterationBehavior `json:"ObliterationBehavior,omitempty" plist:"ObliterationBehavior,omitempty"`
-	// The configuration settings for return to service. This value is available in iOS 17 and later, with Shared iPad, in tvOS 18 and later, and in visionOS 26 and later.
+	// The configuration settings for return to service.
 	ReturnToService *ReturnToService `json:"ReturnToService,omitempty" plist:"ReturnToService,omitempty"`
 }
 
@@ -941,7 +949,7 @@ const (
 	ObliterationBehaviorAlways                ObliterationBehavior = "Always"
 )
 
-// The configuration settings for return to service. This value is available in iOS 17 and later, with Shared iPad, in tvOS 18 and later, and in visionOS 26 and later.
+// The configuration settings for return to service.
 type ReturnToService struct {
 	// If `true`, the device tries to reenroll itself automatically after erasure. The user needs to deactivate all activation locks for this feature to work correctly.
 	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
@@ -952,6 +960,8 @@ type ReturnToService struct {
 	MDMProfileData *[]byte `json:"MDMProfileData,omitempty" plist:"MDMProfileData,omitempty"`
 	// The bootstrap token the system uses to implement return to service with app preservation. Required when enabling return to service through the cloud configuration.
 	BootstrapToken *[]byte `json:"BootstrapToken,omitempty" plist:"BootstrapToken,omitempty"`
+	// If `true`, the device retries service enrollment when the initial enrollment fails after erasure.
+	ShouldRetryEnrollment *bool `json:"ShouldRetryEnrollment,omitempty" plist:"ShouldRetryEnrollment,omitempty"`
 }
 
 // Query a carrier URL for active eSIM cellular-plan profiles on a device.
@@ -976,11 +986,11 @@ func (p *RefreshCellularPlansCommandResponse) ResponseRequestType() string {
 // Remotely and immediately lock a device.
 // This command allows the server to immediately lock the device. This command requires the Device Lock and Passcode Removal right.
 type DeviceLockCommand struct {
-	// The message to display on the Lock Screen of the device. This value doesn't apply to a Shared iPad device. This value is available in iOS 4 and later, and macOS 10.14 and later.
+	// The message to display on the Lock Screen of the device. This value doesn't apply to a Shared iPad device.
 	Message *string `json:"Message,omitempty" plist:"Message,omitempty"`
-	// The phone number to display on the Lock Screen. This value doesn't apply to a Shared iPad device. This value is available in iOS 7 and later and macOS 11.5 and later (for a Mac with Apple silicon only).
+	// The phone number to display on the Lock Screen. This value doesn't apply to a Shared iPad device. This value is available for a Mac with Apple silicon only.
 	PhoneNumber *string `json:"PhoneNumber,omitempty" plist:"PhoneNumber,omitempty"`
-	// The six-character PIN for Find My. This value is available in macOS 10.8 and later.
+	// The six-character PIN for Find My.
 	PIN *string `json:"PIN,omitempty" plist:"PIN,omitempty"`
 }
 
@@ -1083,12 +1093,11 @@ func (p *PlayLostModeSoundCommandResponse) ResponseRequestType() string {
 // Remotely and immediately restart a device.
 // This command requires the Device Lock access right. The device will restart immediately.
 type RestartDeviceCommand struct {
-	// If `true`, the system rebuilds the kernel cache during a device restart. If `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response, the device requests the bootstrap token from the MDM server prior to executing this command. This value is available in macOS 11 and later.
+	// If `true`, the system rebuilds the kernel cache during a device restart. If `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response, the device requests the bootstrap token from the MDM server prior to executing this command.
 	RebuildKernelCache *bool `json:"RebuildKernelCache,omitempty" plist:"RebuildKernelCache,omitempty"`
-	// If `RebuildKernelCache` is `true`, this value specifies the paths to kexts to add to the auxiliary kernel cache since the last kernel cache rebuild. If not present, the system only adds previously discovered kexts to the kernel cache. This value is available in macOS 11 and later.
+	// If `RebuildKernelCache` is `true`, this value specifies the paths to kexts to add to the auxiliary kernel cache since the last kernel cache rebuild. If not present, the system only adds previously discovered kexts to the kernel cache.
 	KextPaths *[]string `json:"KextPaths,omitempty" plist:"KextPaths,omitempty"`
 	// If `true`, notifies the user to restart the device at their convenience. No forced restart occurs unless the device is at `loginwindow` with no logged-in users. The user can dismiss the notification and ignore the request. No further notifications display unless you resend the command.
-	// This value is available in macOS 11.3 and later.
 	NotifyUser *bool `json:"NotifyUser,omitempty" plist:"NotifyUser,omitempty"`
 }
 
@@ -1118,7 +1127,7 @@ func (p *ClearRestrictionsPasswordCommandResponse) ResponseRequestType() string 
 // Get a list of restrictions on the device.
 // This command allows the server to determine what restrictions are being enforced on the device, and the total sum of all restrictions. This command requires the Restrictions Query access right. This technically does work on macOS but it returns a blank dictionary and there no plans to change this behavior.
 type RestrictionsCommand struct {
-	// If `true`, the device reports restrictions from each profile. This value is available in iOS 4 and later, and tvOS 6.1 and later.
+	// If `true`, the device reports restrictions from each profile.
 	ProfileRestrictions *bool `json:"ProfileRestrictions,omitempty" plist:"ProfileRestrictions,omitempty"`
 }
 
@@ -1127,9 +1136,9 @@ func (p *RestrictionsCommand) RequestType() string {
 }
 
 type RestrictionsCommandResponse struct {
-	// A dictionary that contains the global restrictions in effect. This value is available in iOS 4 and later, and tvOS 6.1 and later.
+	// A dictionary that contains the global restrictions in effect.
 	GlobalRestrictions GlobalRestrictions `json:"GlobalRestrictions" plist:"GlobalRestrictions" required:"true"`
-	// A dictionary that contains dictionaries of restrictions from each profile. This value is only available when `ProfileRestrictions` is `true` in the command. The keys are the identifiers of the profiles. This value is available in iOS 4 and later, and tvOS 6.1 and later.
+	// A dictionary that contains dictionaries of restrictions from each profile. This value is only available when `ProfileRestrictions` is `true` in the command. The keys are the identifiers of the profiles.
 	ProfileRestrictions map[string]RestrictionsDictionary `json:"ProfileRestrictions" plist:"ProfileRestrictions" required:"true"`
 }
 
@@ -1137,7 +1146,7 @@ func (p *RestrictionsCommandResponse) ResponseRequestType() string {
 	return "Restrictions"
 }
 
-// A dictionary that contains the global restrictions in effect. This value is available in iOS 4 and later, and tvOS 6.1 and later.
+// A dictionary that contains the global restrictions in effect.
 type GlobalRestrictions struct {
 	// A dictionary of Boolean profile restrictions.
 	RestrictedBool *map[string]RestrictedBoolRestrictionName `json:"restrictedBool,omitempty" plist:"restrictedBool,omitempty"`
@@ -1570,8 +1579,8 @@ type DeviceInformationCommand struct {
 	// An array of query dictionaries to get information about a device.
 	Queries []string `json:"Queries" plist:"Queries" required:"true"`
 	// A freshness code that appears in the resulting attestation. This value can contain up to 32 bytes of data. If specified, queries need to contain `DevicePropertiesAttestation`.
-	// The MDM server uses this value to prove that an attestation was recently generated. The system caches the most recently generated attestation on the device. If omitted or if the value matches the cached attestation, the system returns the cached attestation. To request a new attestation, provide a new freshness code. Requests for new attestations are rate limited. If it is fewer than 7 days since the system generated an attestation, the device returns the cached attestation rather than generating a new one.
-	// Available in iOS 16 and later, macOS 14 and later, tvOS 16 and later, and watchOS 10 and later. The hardware requirements for attestation are described below.
+	// The MDM server uses this value to prove that an attestation was recently generated. The system caches the most recently generated attestation on the device. If omitted or if the value matches the cached attestation, the system returns the cached attestation. To request a new attestation, provide a new freshness code. Requests for new attestations are rate limited. If it's fewer than 7 days since the system generated an attestation, the device returns the cached attestation rather than generating a new one.
+	// See the hardware requirements for attestation below.
 	DeviceAttestationNonce *[]byte `json:"DeviceAttestationNonce,omitempty" plist:"DeviceAttestationNonce,omitempty"`
 }
 
@@ -1592,13 +1601,13 @@ func (p *DeviceInformationCommandResponse) ResponseRequestType() string {
 type QueryResponses struct {
 	// The unique identifier of the device.
 	UDID *string `json:"UDID" plist:"UDID"`
-	// The device identifier to use in provisioning profiles. This value differs from the UDID on a Mac with Apple silicon. Available in macOS 11.3 and later.
+	// The device identifier to use in provisioning profiles. This value differs from the UDID on a Mac with Apple silicon.
 	ProvisioningUDID *string `json:"ProvisioningUDID" plist:"ProvisioningUDID"`
 	// The contents of `OrganizationInfo`.
 	OrganizationInfo *QueryResponsesOrganizationInfo `json:"OrganizationInfo" plist:"OrganizationInfo"`
 	// The contents of `MDMOptions`.
 	MDMOptions *QueryResponsesMDMOptions `json:"MDMOptions" plist:"MDMOptions"`
-	// The date of the last iCloud backup. Available in iOS 8 and later.
+	// The date of the last iCloud backup.
 	LastCloudBackupDate *time.Time `json:"LastCloudBackupDate" plist:"LastCloudBackupDate"`
 	// If `true` on the device channel, the device is still waiting for a `Device-Configured-Command` command to continue through Setup Assistant.
 	// If `true` on the user channel (Shared iPad only), the device is still waiting for a `User-Configured-Command` command to continue through Setup Assistant and finish login.
@@ -1629,68 +1638,69 @@ type QueryResponses struct {
 	ProductName *string `json:"ProductName" plist:"ProductName"`
 	// The serial number. Requires the Device Information access right.
 	SerialNumber *string `json:"SerialNumber" plist:"SerialNumber"`
-	// The total capacity in floating-point base-10 gigabytes (GB) on iOS and macOS 12 or later. The capacity is in base-2 gibibytes (GiB) on macOS 11 and earlier. Requires the Device Information access right. Available in iOS 4 and later, and macOS 10.7 and later.
+	// The total capacity in floating-point base-10 gigabytes (GB) on iOS and macOS 12 or later. The capacity is in base-2 gibibytes (GiB) on macOS 11 and earlier. Requires the Device Information access right.
 	DeviceCapacity *float64 `json:"DeviceCapacity" plist:"DeviceCapacity"`
-	// The available capacity in floating-point base-10 gigabytes (GB) in iOS and macOS 12 or later. The capacity is in base-2 gibibytes (GiB) in macOS 11 and earlier. Requires the Device Information access right. Available in iOS 4 and later, and macOS 10.7 and later.
+	// The available capacity in floating-point base-10 gigabytes (GB) in iOS and macOS 12 or later. The capacity is in base-2 gibibytes (GiB) in macOS 11 and earlier. Requires the Device Information access right.
 	AvailableDeviceCapacity *float64 `json:"AvailableDeviceCapacity" plist:"AvailableDeviceCapacity"`
 	// The International Mobile Equipment Identity (IMEI) number. Requires the Device Information access right. Available as of iOS 4 and deprecated in iOS 16.
 	IMEI *string `json:"IMEI" plist:"IMEI"`
 	// The mobile equipment identifier (MEID) number. Requires the Device Information access right. Available as of iOS 4 and deprecated in iOS 16.
 	MEID *string `json:"MEID" plist:"MEID"`
-	// The modem firmware version. Requires the Device Information access right. Available in iOS 4 and later.
+	// The modem firmware version. Requires the Device Information access right.
 	ModemFirmwareVersion *string `json:"ModemFirmwareVersion" plist:"ModemFirmwareVersion"`
 	// The cellular technology type, which is one of the following values:
 	// - `0`: None
 	// - `1`: GSM
 	// - `2`: CDMA
 	// - `3`: GSM and CDMA
-	// Requires the Device Information access right. Available in iOS 4.2.6 and later.
+	// Requires the Device Information access right.
 	CellularTechnology *CellularTechnology `json:"CellularTechnology" plist:"CellularTechnology"`
-	// The battery level, between `0.0` and `1.0`, or `-1.0` if MDM can't determine the battery level. Requires the Device Information access right. Available in iOS 5 and later, and macOS 13.3 and later.
+	// The battery level, between `0.0` and `1.0`, or `-1.0` if MDM can't determine the battery level. Requires the Device Information access right.
 	BatteryLevel *float64 `json:"BatteryLevel" plist:"BatteryLevel"`
 	// If `true`, the device has an internal battery.
 	HasBattery *bool `json:"HasBattery" plist:"HasBattery"`
-	// If `true`, it's a supervised device. Requires the Device Information access right. Available in iOS 6 and later, macOS 10.15 and later, and tvOS 9 and later.
+	// If `true`, it's a supervised device. Requires the Device Information access right.
 	IsSupervised *bool `json:"IsSupervised" plist:"IsSupervised"`
-	// If `true`, the device is a Shared iPad. Requires the Device Information access right. Available in iOS 9.3 and later.
+	// If `true`, the device is a Shared iPad. Requires the Device Information access right.
 	IsMultiUser *bool `json:"IsMultiUser" plist:"IsMultiUser"`
-	// If `true`, the device has enabled a device locator service, such as Find My. Requires the Device Information access right. Available in iOS 7 and later.
+	// If `true`, the device has enabled a device locator service, such as Find My. Requires the Device Information access right.
 	IsDeviceLocatorServiceEnabled *bool `json:"IsDeviceLocatorServiceEnabled" plist:"IsDeviceLocatorServiceEnabled"`
 	// If `true`, the device has enabled Activation Lock. Requires the Device Information access right. Available as of iOS 7 and macOS 10.9, and deprecated in iOS 16 and macOS 13.
 	IsActivationLockEnabled *bool `json:"IsActivationLockEnabled" plist:"IsActivationLockEnabled"`
-	// If `true`, the device supports Activation Lock. Also see `IsActivationLockManageable` in `ManagementStatus`. Available in macOS 10.9 and later.
+	// If `true`, the device supports Activation Lock. Also see `IsActivationLockManageable` in `ManagementStatus`.
 	IsActivationLockSupported *bool `json:"IsActivationLockSupported" plist:"IsActivationLockSupported"`
-	// If `true`, the device is in Do Not Disturb (DND) mode. This value is `true` even if DND is only in effect for a locked device. Requires the Device Information access right. Available in iOS 7 and later.
+	// If `true`, the device is in Do Not Disturb (DND) mode. This value is `true` even if DND is only in effect for a locked device. Requires the Device Information access right.
 	IsDoNotDisturbInEffect *bool `json:"IsDoNotDisturbInEffect" plist:"IsDoNotDisturbInEffect"`
-	// If `true`, the device can receive `PowerON`, `PowerOFF`, and `Reset` commands from a lights-out management (LOM) controller. Available in macOS 11 and later.
+	// If `true`, the device can receive `PowerON`, `PowerOFF`, and `Reset` commands from a lights-out management (LOM) controller.
 	SupportsLOMDevice *bool `json:"SupportsLOMDevice" plist:"SupportsLOMDevice"`
-	// The device identifier. Requires the Device Information access right. Available in tvOS 6 and later.
+	// The device identifier. Requires the Device Information access right.
 	DeviceID *string `json:"DeviceID" plist:"DeviceID"`
-	// The device identifier for Exchange Active Sync (EAS). Requires the Device Information access right. Available in iOS 7 and later.
+	// The device identifier for Exchange Active Sync (EAS). Requires the Device Information access right.
 	EASDeviceIdentifier *string `json:"EASDeviceIdentifier" plist:"EASDeviceIdentifier"`
-	// If `true`, the device has enabled iCloud backup. Requires the Device Information access right. Available in iOS 7.1 and later.
+	// If `true`, the device has enabled iCloud backup. Requires the Device Information access right.
 	IsCloudBackupEnabled *bool `json:"IsCloudBackupEnabled" plist:"IsCloudBackupEnabled"`
-	// An array of the directory GUIDs of the logged-in managed users. If one of these users is currently logged in to the console, the `CurrentConsoleManagedUser` key returns the GUID of that user. Requires the Device Information access right. Available in macOS 10.11 and later.
+	// An array of the directory GUIDs of the logged-in managed users. If one of these users is currently logged in to the console, the `CurrentConsoleManagedUser` key returns the GUID of that user. Requires the Device Information access right.
 	ActiveManagedUsers *[]string `json:"ActiveManagedUsers" plist:"ActiveManagedUsers"`
-	// The contents of ``OSUpdateSettings-dictionary``. Requires the Device Information access right. Available in macOS 10.11 and later.
+	// The contents of ``OSUpdateSettings-dictionary``. Requires the Device Information access right.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration to set values.
 	OSUpdateSettings *OSUpdateSettings `json:"OSUpdateSettings" plist:"OSUpdateSettings"`
-	// The local host name from Bonjour. Available in macOS 10.11 and later.
+	// The local host name from Bonjour.
 	LocalHostName *string `json:"LocalHostName" plist:"LocalHostName"`
-	// The host name. Available in macOS 10.11 and later.
+	// The host name.
 	HostName *string `json:"HostName" plist:"HostName"`
-	// The contents of ``AutoSetupAdminAccountsItem``, which Setup Assistant automatically creates during DEP enrollment. Requires the Device Information access right. Available in macOS 10.11 and later.
+	// The contents of ``AutoSetupAdminAccountsItem``, which Setup Assistant automatically creates during ADE enrollment. Requires the Device Information access right.
 	AutoSetupAdminAccounts *[]*AutoSetupAdminAccountsItem `json:"AutoSetupAdminAccounts" plist:"AutoSetupAdminAccounts"`
-	// If `true`, the device has enabled System Integrity Protection. Requires the Device Information access right. Available in macOS 10.12 and later.
+	// If `true`, the device has enabled System Integrity Protection. Requires the Device Information access right.
 	SystemIntegrityProtectionEnabled *bool `json:"SystemIntegrityProtectionEnabled" plist:"SystemIntegrityProtectionEnabled"`
-	// If `true`, the device has enabled Managed Lost Mode. Requires the Device Information access right. Available in iOS 9.3 and later.
+	// If `true`, the device has enabled Managed Lost Mode. Requires the Device Information access right.
 	IsMDMLostModeEnabled *bool `json:"IsMDMLostModeEnabled" plist:"IsMDMLostModeEnabled"`
-	// The maximum number of users that can use this Shared iPad device. Starting with iOS 13.4, the value that returns is always `32`. Requires the Device Information access right. Available in iOS 9.3 and later.
+	// The maximum number of users that can use this Shared iPad device. Starting with iOS 13.4, the value that returns is always `32`. Requires the Device Information access right.
 	MaximumResidentUsers *int64 `json:"MaximumResidentUsers" plist:"MaximumResidentUsers"`
-	// The estimated number of users that can use this Shared iPad device, according to the space available on the device and each user's quota. Requires the Device Information access right. Available in iOS 14 and later.
+	// The estimated number of users that can use this Shared iPad device, according to the space available on the device and each user's quota. Requires the Device Information access right.
 	EstimatedResidentUsers *int64 `json:"EstimatedResidentUsers" plist:"EstimatedResidentUsers"`
-	// The quota size in megabytes for each user on this Shared iPad device. Requires the Device Information access right. Available in iOS 13.4 and later.
+	// The quota size in megabytes for each user on this Shared iPad device. Requires the Device Information access right.
 	QuotaSize *int64 `json:"QuotaSize" plist:"QuotaSize"`
-	// The number of users currently on this Shared iPad device. Requires the Device Information access right. Available in iOS 13.4 and later.
+	// The number of users currently on this Shared iPad device. Requires the Device Information access right.
 	ResidentUsers *int64 `json:"ResidentUsers" plist:"ResidentUsers"`
 	// The timeout interval for the user session. A value of `0` indicates that there's no timeout.
 	UserSessionTimeout *int64 `json:"UserSessionTimeout" plist:"UserSessionTimeout"`
@@ -1698,19 +1708,19 @@ type QueryResponses struct {
 	TemporarySessionTimeout *int64 `json:"TemporarySessionTimeout" plist:"TemporarySessionTimeout"`
 	// If `true`, the device allows only temporary sessions.
 	TemporarySessionOnly *bool `json:"TemporarySessionOnly" plist:"TemporarySessionOnly"`
-	// The list of domains that the device suggests on the Shared iPad login screen. Available in iOS 16 and later.
+	// The list of domains that the device suggests on the Shared iPad login screen.
 	ManagedAppleIDDefaultDomains *[]string `json:"ManagedAppleIDDefaultDomains" plist:"ManagedAppleIDDefaultDomains"`
-	// The grace period for Shared iPad online authentication (in days). A value of `0` indicates that the device requires online authentication for every login. Available in iOS 16 and later.
+	// The grace period for Shared iPad online authentication (in days). A value of `0` indicates that the device requires online authentication for every login.
 	OnlineAuthenticationGracePeriod *int64 `json:"OnlineAuthenticationGracePeriod" plist:"OnlineAuthenticationGracePeriod"`
 	// If `true`, skip the language and country/region panes for new users on Shared iPad.
 	SkipLanguageAndLocaleSetupForNewUsers *bool `json:"SkipLanguageAndLocaleSetupForNewUsers" plist:"SkipLanguageAndLocaleSetupForNewUsers"`
-	// The push token for the user-channel connection, in the same format as in `TokenUpdateRequest`. MDM ignores this query for the device channel. Requires the Device Information access right. Available in iOS 9.3 and later, and macOS 10.12 and later.
+	// The push token for the user-channel connection, in the same format as in `TokenUpdateRequest`. MDM ignores this query for the device channel. Requires the Device Information access right.
 	PushToken *[]byte `json:"PushToken" plist:"PushToken"`
-	// If `true`, the device has enabled diagnostic submission. Requires the Device Information access right. Available in iOS 9.3 and later.
+	// If `true`, the device has enabled diagnostic submission. Requires the Device Information access right.
 	DiagnosticSubmissionEnabled *bool `json:"DiagnosticSubmissionEnabled" plist:"DiagnosticSubmissionEnabled"`
-	// If `true`, the device is sharing app analytics. Requires the Device Information access right. Available in iOS 9.3 and later.
+	// If `true`, the device is sharing app analytics. Requires the Device Information access right.
 	AppAnalyticsEnabled *bool `json:"AppAnalyticsEnabled" plist:"AppAnalyticsEnabled"`
-	// The current Internet Assigned Numbers Authority (IANA) time zone database name. Requires the Device Information access right. Available in iOS 14 and later, and tvOS 14 and later.
+	// The current Internet Assigned Numbers Authority (IANA) time zone database name. Requires the Device Information access right.
 	TimeZone *string `json:"TimeZone" plist:"TimeZone"`
 	// The integrated circuit card (ICC) identifier for the installed SIM card. Requires the Network Information access right. Available as of iOS 4 and deprecated in iOS 16.
 	ICCID *string `json:"ICCID" plist:"ICCID"`
@@ -1718,7 +1728,7 @@ type QueryResponses struct {
 	BluetoothMAC *string `json:"BluetoothMAC" plist:"BluetoothMAC"`
 	// The Wi-Fi MAC address. Requires the Network Information access right.
 	WiFiMAC *string `json:"WiFiMAC" plist:"WiFiMAC"`
-	// The primary Ethernet MAC address. Requires the Network Information access right. Available in macOS 10.7 and later.
+	// The primary Ethernet MAC address. Requires the Network Information access right.
 	EthernetMAC *string `json:"EthernetMAC" plist:"EthernetMAC"`
 	// The name of the current carrier network. Requires the Network Information access right. Available as of iOS 4 and deprecated in iOS 16.
 	CurrentCarrierNetwork *string `json:"CurrentCarrierNetwork" plist:"CurrentCarrierNetwork"`
@@ -1730,13 +1740,13 @@ type QueryResponses struct {
 	CarrierSettingsVersion *string `json:"CarrierSettingsVersion" plist:"CarrierSettingsVersion"`
 	// The raw phone number without punctuation and including the country code. Requires the Network Information access right. Available as of iOS 4 and deprecated in iOS 16.
 	PhoneNumber *string `json:"PhoneNumber" plist:"PhoneNumber"`
-	// If `true`, the device has enabled data roaming. Requires the Network Information access right. Available in iOS 5 and later.
+	// If `true`, the device has enabled data roaming. Requires the Network Information access right.
 	DataRoamingEnabled *bool `json:"DataRoamingEnabled" plist:"DataRoamingEnabled"`
 	// If `true`, the device has enabled voice roaming, which isn't available for all carriers. Requires the Network Information access right. Requires the Device Information access right. Available as of iOS 5 and deprecated in iOS 16.
 	VoiceRoamingEnabled *bool `json:"VoiceRoamingEnabled" plist:"VoiceRoamingEnabled"`
-	// If `true,` the device has enabled Personal Hotspot, which isn't available for all carriers. Requires the Network Information access right. Available in iOS 7 and later.
+	// If `true,` the device has enabled Personal Hotspot, which isn't available for all carriers. Requires the Network Information access right.
 	PersonalHotspotEnabled *bool `json:"PersonalHotspotEnabled" plist:"PersonalHotspotEnabled"`
-	// If `true`, the device is network-tethered. Requires the Network Information access right. Available in iOS 10.3 and later.
+	// If `true`, the device is network-tethered. Requires the Network Information access right.
 	IsNetworkTethered *bool `json:"IsNetworkTethered" plist:"IsNetworkTethered"`
 	// If `true`, the device is roaming. Requires the Network Information access right. IAvailable as of iOS 4.2 and deprecated in iOS 16.
 	IsRoaming *bool `json:"IsRoaming" plist:"IsRoaming"`
@@ -1754,61 +1764,63 @@ type QueryResponses struct {
 	CurrentMNC *string `json:"CurrentMNC" plist:"CurrentMNC"`
 	// The contents of ``ServiceSubscriptionProperty``. Requires the Network Information access right.
 	ServiceSubscriptions *[]*ServiceSubscriptionProperty `json:"ServiceSubscriptions" plist:"ServiceSubscriptions"`
-	// If `true`, the `EraseDeviceCommand` requires a PIN. Available in macOS 11 and later.
+	// If `true`, the `EraseDeviceCommand` requires a PIN.
 	PINRequiredForEraseDevice *bool `json:"PINRequiredForEraseDevice" plist:"PINRequiredForEraseDevice"`
-	// If `true`, the `DeviceLockCommand` requires a PIN. Available in macOS 11 and later.
+	// If `true`, the `DeviceLockCommand` requires a PIN.
 	PINRequiredForDeviceLock *bool `json:"PINRequiredForDeviceLock" plist:"PINRequiredForDeviceLock"`
-	// If `true`, the device supports iOS or iPadOS app installs through MDM. Available in macOS 11 and later.
+	// If `true`, the device supports iOS or iPadOS app installs through MDM.
 	SupportsiOSAppInstalls *bool `json:"SupportsiOSAppInstalls" plist:"SupportsiOSAppInstalls"`
-	// The device identifier to look up available OS updates through [https://gdmf.apple.com/v2/pmv](https://gdmf.apple.com/v2/pmv). Available in iOS 15 and later, and macOS 12 and later.
+	// The device identifier to look up available OS updates through [https://gdmf.apple.com/v2/pmv](https://gdmf.apple.com/v2/pmv).
+	// Removed: subscribe to the declarative management `softwareupdate.device-id` status item.
 	SoftwareUpdateDeviceID *string `json:"SoftwareUpdateDeviceID" plist:"SoftwareUpdateDeviceID"`
-	// The device settings that control which updates appear in the Software Update pane in Settings. Available in iOS 14.5 and later.
+	// The device settings that control which updates appear in the Software Update pane in Settings.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration to set values.
 	SoftwareUpdateSettings *QueryResponsesSoftwareUpdateSettings `json:"SoftwareUpdateSettings" plist:"SoftwareUpdateSettings"`
-	// The current state of settable accessibility settings. Available in iOS 16 and later.
+	// The current state of settable accessibility settings.
 	AccessibilitySettings *QueryResponsesAccessibilitySettings `json:"AccessibilitySettings" plist:"AccessibilitySettings"`
-	// The key to get an attestation of the device's properties. Available in iOS 16 and later, macOS 14 and later, tvOS 16 and later, and watchOS 10 and later. The hardware requirements for attestation are described below.
+	// The key to get an attestation of the device's properties. See the hardware requirements for attestation below.
 	// The value is an array of certificates in DER form that forms a certificate chain. The chain is rooted with the Apple CA `Apple Enterprise Attestation Root CA`. The first array item is the leaf certificate. The leaf certificate contains custom OIDs describing a device. The OS version of the device, and the type of enrollment, determine which OIDs are present in the certificate. If Apple's attestation servers are unable to verify a device property they generate a blank value, omit the OID entirely, or refuse to issue an attestation certificate.
 	// The following OIDs were introduced in iOS 16, iPadOS 16, tvOS 16, watchOS 10, visionOS 1 and macOS 14:
-	// - `1.2.840.113635.100.8.9.1` serial number: This is the serial number of the device. It is omitted if the enrollment is a user enrollment.
-	// - `1.2.840.113635.100.8.9.2` UDID: For a Mac this has the same value as the `ProvisioningUDID` key, and does not match the UDID used elsewhere in the MDM protocol. It is omitted if the enrollment is a user enrollment.
+	// - `1.2.840.113635.100.8.9.1` serial number: This is the serial number of the device. It's omitted if the enrollment is a user enrollment.
+	// - `1.2.840.113635.100.8.9.2` UDID: For a Mac this has the same value as the `ProvisioningUDID` key, and doesn't match the UDID used elsewhere in the MDM protocol. It's omitted if the enrollment is a user enrollment.
 	// - `1.2.840.113635.100.8.10.2` sepOS version: This is the version of the operating system running on the Secure Enclave when the attestation is generated. Typically this matches the version of the main operating system.
-	// - `1.2.840.113635.100.8.11.1` Freshness code: This is the freshness code. See the `DeviceAttestationNonce`. This may not match the requested freshness code if a cached attestation was returned.
+	// - `1.2.840.113635.100.8.11.1` Freshness code: This is the freshness code. See the `DeviceAttestationNonce`. This may not match the requested freshness code if the device returned a cached attestation.
 	// The following OIDs were introduced in iOS 17.2, iPadOS 17.2, tvOS 17.2, watchOS 10.2, visionOS 1.l0, and macOS 14.2:
-	// - `1.2.840.113635.100.8.9.4` Software Update Device ID: This is an identifier of the device model. It is expected to match the `SoftwareUpdateDeviceID` in the `DeviceInformation`` response. This is the device identifier to use when looking up available OS updates through <https://gdmf.apple.com/v2/pmv>.
+	// - `1.2.840.113635.100.8.9.4` Software Update Device ID: This is an identifier of the device model. It's expected to match the `SoftwareUpdateDeviceID` in the `DeviceInformation`` response. This is the device identifier to use when looking up available OS updates through <https://gdmf.apple.com/v2/pmv>.
 	// - `1.2.840.113635.100.8.10.1` OS Version: This is the version of iOS, iPadOS or tvOS running on the device when the attestation is generated.
 	// - `1.2.840.113635.100.8.10.3` LLB Version: This is the version of the Low Level Bootloader firmware running on the device when the attestation is generated. For more information about the boot process, see the documentation of the boot process in the Apple Platform Security guide.
 	// The following OIDs were introduced in macOS 14.2:
 	// - `1.2.840.113635.100.8.13.1` System Integrity Protection (SIP) status: This indicates whether SIP is enabled or disabled when the attestation is generated. `0` indicates enabled, `1` indicates disabled.
 	// - `1.2.840.113635.100.8.13.2` Secure boot status: This describes part of the configuration of the LocalPolicy when the attestation is generated. The values are `Full Security`, `Reduced Security`, or `Permissive Security`. For a description of these values see the Apple Platform Security guide.
-	// - `1.2.840.113635.100.8.13.3` Third party kernel extensions allowed: This indicates whether third party kernel extensions are allowed. A value of `0` indicates third party kernel extensions are not allowed. Any other value means that some kinds of third party kernel extensions are allowed.
+	// - `1.2.840.113635.100.8.13.3` Third party kernel extensions allowed: This indicates whether third party kernel extensions are allowed. A value of `0` indicates third party kernel extensions aren't allowed. Any other value means that some kinds of third party kernel extensions are allowed.
 	DevicePropertiesAttestation *[][]byte `json:"DevicePropertiesAttestation" plist:"DevicePropertiesAttestation"`
 	// Specifies whether the device can perform an `EraseDeviceCommand` using Erase All Content and Settings (EACS), which is one of the following values:
-	// - `success`: The device supports EACS.
-	// - `not supported`: The device is too old to support EACS.
-	// - `unknown failure`: A problem occurred for which there isn't a more specific error message.
-	// - `(other string)`: A reason why the device can't perform EACS, such as "System is not sealed"
+	// * `success`: The device supports EACS.
+	// * `not supported`: The device is too old to support EACS.
+	// * `unknown failure`: A problem occurred for which there isn't a more specific error message.
+	// * `(other string)`: A reason why the device can't perform EACS, such as "System is not sealed"
 	EACSPreflight *string `json:"EACSPreflight" plist:"EACSPreflight"`
 }
 
 // The contents of `OrganizationInfo`.
 type QueryResponsesOrganizationInfo struct {
-	// A string that describes the organization operating the MDM server. This value is available in iOS 7 and later, macOS 10.11 and later, and tvOS 9 and later.
+	// A string that describes the organization operating the MDM server.
 	OrganizationName string `json:"OrganizationName" plist:"OrganizationName" required:"true"`
-	// The organization's address. Use the LF character (`&#10`) to insert line breaks. This value is available in iOS 7 and later, macOS 10.11 and later, and tvOS 9 and later.
+	// The organization's address. Use the LF character (`&#10`) to insert line breaks.
 	OrganizationAddress *string `json:"OrganizationAddress,omitempty" plist:"OrganizationAddress,omitempty"`
-	// The organization's phone number. This value is available in iOS 7 and later, macOS 10.11 and later, and tvOS 9 and later.
+	// The organization's phone number.
 	OrganizationPhone *string `json:"OrganizationPhone,omitempty" plist:"OrganizationPhone,omitempty"`
-	// The organization's support email address. This value is available in iOS 7 and later, macOS 10.11 and later, and tvOS 9 and later.
+	// The organization's support email address.
 	OrganizationEmail *string `json:"OrganizationEmail,omitempty" plist:"OrganizationEmail,omitempty"`
-	// A unique identifier for the various services a single organization manages. This value is available in iOS 7 and later, macOS 10.11 and later, and tvOS 9 and later.
+	// A unique identifier for the various services a single organization manages.
 	OrganizationMagic *string `json:"OrganizationMagic,omitempty" plist:"OrganizationMagic,omitempty"`
 }
 
 // The contents of `MDMOptions`.
 type QueryResponsesMDMOptions struct {
-	// If `true`, a supervised device registers itself with Activation Lock when the user enables Find My. Unsupervised devices ignore this value. This value is available in iOS 7 and later, macOS 11 and later, and tvOS 9 and later.
+	// If `true`, a supervised device registers itself with Activation Lock when the user enables Find My. Unsupervised devices ignore this value.
 	ActivationLockAllowedWhileSupervised *bool `json:"ActivationLockAllowedWhileSupervised,omitempty" plist:"ActivationLockAllowedWhileSupervised,omitempty"`
-	// If `true`, the server supports Bootstrap Token commands. This value is available in macOS 11 and later.
+	// If `true`, the server supports Bootstrap Token commands.
 	BootstrapTokenAllowed *bool `json:"BootstrapTokenAllowed,omitempty" plist:"BootstrapTokenAllowed,omitempty"`
 	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for a Mac with Apple silicon in macOS 11 and later.
 	PromptUserToAllowBootstrapTokenForAuthentication *bool `json:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty" plist:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty"`
@@ -1819,7 +1831,7 @@ type QueryResponsesMDMOptions struct {
 // - `1`: GSM
 // - `2`: CDMA
 // - `3`: GSM and CDMA
-// Requires the Device Information access right. Available in iOS 4.2.6 and later.
+// Requires the Device Information access right.
 type CellularTechnology int64
 
 const (
@@ -1829,85 +1841,87 @@ const (
 	CellularTechnology3 CellularTechnology = 3
 )
 
-// The contents of “OSUpdateSettings-dictionary“. Requires the Device Information access right. Available in macOS 10.11 and later.
+// The contents of “OSUpdateSettings-dictionary“. Requires the Device Information access right.
+// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration to set values.
 type OSUpdateSettings struct {
-	// The URL to the software update catalog the client is using. This value is available in macOS 10.11 and later.
+	// The URL to the software update catalog the client is using.
 	CatalogURL *string `json:"CatalogURL,omitempty" plist:"CatalogURL,omitempty"`
-	// If `true`, `CatalogURL` is the default catalog. This value is available in macOS 10.11 and later.
+	// If `true`, `CatalogURL` is the default catalog.
 	IsDefaultCatalog *bool `json:"IsDefaultCatalog" plist:"IsDefaultCatalog"`
-	// The date of the last software update scan. This value is available in macOS 10.11 and later.
+	// The date of the last software update scan.
 	PreviousScanDate *time.Time `json:"PreviousScanDate" plist:"PreviousScanDate"`
-	// The result code of last software update scan; `0` = success. This value is available in macOS 10.11 and no longer available in macOS 15 and later.
+	// The result code of last software update scan; `0` = success.
 	PreviousScanResult *string `json:"PreviousScanResult,omitempty" plist:"PreviousScanResult,omitempty"`
-	// If `true`, start a new scan. This value is available in macOS 10.11 and later.
+	// If `true`, start a new scan.
 	PerformPeriodicCheck *bool `json:"PerformPeriodicCheck" plist:"PerformPeriodicCheck"`
-	// The preference to automatically check for app updates. This value is available in macOS 10.11 and later.
+	// The preference to automatically check for app updates.
 	AutoCheckEnabled *bool `json:"AutoCheckEnabled" plist:"AutoCheckEnabled"`
-	// The preference to download app updates in the background. This value is available in macOS 10.11 and later.
+	// The preference to download app updates in the background.
 	BackgroundDownloadEnabled *bool `json:"BackgroundDownloadEnabled" plist:"BackgroundDownloadEnabled"`
-	// The preference to automatically install app updates. This value is available in macOS 10.11 and later.
+	// The preference to automatically install app updates.
 	AutomaticAppInstallationEnabled *bool `json:"AutomaticAppInstallationEnabled" plist:"AutomaticAppInstallationEnabled"`
-	// The preference to automatically install operating system updates. This value is available in macOS 10.11 and later.
+	// The preference to automatically install operating system updates.
 	AutomaticOSInstallationEnabled *bool `json:"AutomaticOSInstallationEnabled" plist:"AutomaticOSInstallationEnabled"`
-	// The preference to automatically install system data files and security updates. This value is available in macOS 10.11 and later.
+	// The preference to automatically install system data files and security updates.
 	AutomaticSecurityUpdatesEnabled *bool `json:"AutomaticSecurityUpdatesEnabled" plist:"AutomaticSecurityUpdatesEnabled"`
 }
 
 // The response dictionary that contains the administrator setup information.
 type AutoSetupAdminAccountsItem struct {
-	// The `GeneratedUID` of the administrator account. This value is available in macOS 10.11 and later.
+	// The `GeneratedUID` of the administrator account.
 	GUID *string `json:"GUID" plist:"GUID"`
-	// The short name of the administrator account. This value is available in macOS 10.11 and later.
+	// The short name of the administrator account.
 	ShortName *string `json:"shortName" plist:"shortName"`
 }
 
 // Properties of this Service Subscription. See below.
 type ServiceSubscriptionProperty struct {
-	// The version of the carrier settings. This value is available in iOS 12 and later.
+	// The version of the carrier settings.
 	CarrierSettingsVersion *string `json:"CarrierSettingsVersion" plist:"CarrierSettingsVersion"`
-	// The name of the current carrier network. This value is available in iOS 12 and later.
+	// The name of the current carrier network.
 	CurrentCarrierNetwork *string `json:"CurrentCarrierNetwork" plist:"CurrentCarrierNetwork"`
-	// The current mobile country code (MCC). This value is available in iOS 12 and later.
+	// The current mobile country code (MCC).
 	CurrentMCC *string `json:"CurrentMCC" plist:"CurrentMCC"`
-	// The current mobile network code (MNC). This value is available in iOS 12 and later.
+	// The current mobile network code (MNC).
 	CurrentMNC *string `json:"CurrentMNC" plist:"CurrentMNC"`
-	// The integrated circuit card identifier (ICCID) value. This value is available in iOS 12 and later.
+	// The integrated circuit card identifier (ICCID) value.
 	ICCID *string `json:"ICCID" plist:"ICCID"`
-	// The eSIM identifier. This value is available in iOS 14 and later.
+	// The eSIM identifier.
 	EID *string `json:"EID" plist:"EID"`
-	// The device International Mobile Equipment Identity (IMEI) number. This value is available in iOS 12 and later.
+	// The device International Mobile Equipment Identity (IMEI) number.
 	IMEI *string `json:"IMEI" plist:"IMEI"`
-	// If `true`, this subscription is the preference for data. This value is available in iOS 12 and later.
+	// If `true`, this subscription is the preference for data.
 	IsDataPreferred *bool `json:"IsDataPreferred" plist:"IsDataPreferred"`
-	// If `true`, the phone is roaming. This value is available in iOS 12 and later.
+	// If `true`, the phone is roaming.
 	IsRoaming *bool `json:"IsRoaming" plist:"IsRoaming"`
-	// If `true`, this subscription is the preference for voice. This value is available in iOS 12 and later.
+	// If `true`, this subscription is the preference for voice.
 	IsVoicePreferred *bool `json:"IsVoicePreferred" plist:"IsVoicePreferred"`
-	// The label of this subscription. This value is available in iOS 12 and later.
+	// The label of this subscription.
 	Label *string `json:"Label" plist:"Label"`
-	// The unique identifier for this subscription. This value is available in iOS 12 and later.
+	// The unique identifier for this subscription.
 	LabelID *string `json:"LabelID" plist:"LabelID"`
-	// The device Mobile Equipment Identifier (MEID) number. This query is available in iOS 12 and later.
+	// The device Mobile Equipment Identifier (MEID) number.
 	MEID *string `json:"MEID" plist:"MEID"`
-	// The raw phone number without punctuation and including country code. This value is available in iOS 12 and later.
+	// The raw phone number without punctuation and including country code.
 	PhoneNumber *string `json:"PhoneNumber" plist:"PhoneNumber"`
-	// The description of the slot that contains the SIM representing this subscription. This value is available in iOS 12 and later.
+	// The description of the slot that contains the SIM representing this subscription.
 	Slot *string `json:"Slot" plist:"Slot"`
-	// The name of the home carrier network. This value is available in iOS 16 and later.
+	// The name of the home carrier network.
 	SubscriberCarrierNetwork *string `json:"SubscriberCarrierNetwork" plist:"SubscriberCarrierNetwork"`
 }
 
-// The device settings that control which updates appear in the Software Update pane in Settings. Available in iOS 14.5 and later.
+// The device settings that control which updates appear in the Software Update pane in Settings.
+// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration to set values.
 type QueryResponsesSoftwareUpdateSettings struct {
 	// Which software updates to present to the user.
 	// - `0`: Allows all updates (the default value).
 	// - `1`: Allows only older updates.
 	// - `2`: Allows only newer updates.
 	// No effect if the device qualifies for only a single update.
-	RecommendationsCadence *int64 `json:"RecommendationsCadence" plist:"RecommendationsCadence"`
+	RecommendationCadence *int64 `json:"RecommendationCadence" plist:"RecommendationCadence"`
 }
 
-// The current state of settable accessibility settings. Available in iOS 16 and later.
+// The current state of settable accessibility settings.
 type QueryResponsesAccessibilitySettings struct {
 	// If `true`, the device has enabled bold text.
 	BoldTextEnabled *bool `json:"BoldTextEnabled" plist:"BoldTextEnabled"`
@@ -1975,13 +1989,12 @@ type SecurityInfo struct {
 	// - `3`: Both block-level and file-level encryption
 	// > Important:
 	// > For a device to have data protection, `HardwareEncryptionCaps` must be `3` and `PasscodePresent` must `true`.
-	// This value is available in iOS 4 and later, and tvOS 6 and later.
 	HardwareEncryptionCaps *int64 `json:"HardwareEncryptionCaps" plist:"HardwareEncryptionCaps"`
-	// If `true`, the device has a passcode. This key doesn't apply to User-Enrolled devices. This value is available in iOS 4 and later, and tvOS 6 and later.
+	// If `true`, the device has a passcode. This key doesn't apply to User-Enrolled devices.
 	PasscodePresent *bool `json:"PasscodePresent" plist:"PasscodePresent"`
-	// If `true`, the user's passcode is compliant with all requirements on the device, including Exchange and other accounts. This value is available in iOS 4 and later, and tvOS 6 and later.
+	// If `true`, the user's passcode is compliant with all requirements on the device, including Exchange and other accounts.
 	PasscodeCompliant *bool `json:"PasscodeCompliant" plist:"PasscodeCompliant"`
-	// If `true`, the user's passcode is compliant with requirements from profiles. This key doesn't apply to User-Enrolled devices. This value is available in iOS 4 and later, and tvOS 6 and later.
+	// If `true`, the user's passcode is compliant with requirements from profiles. This key doesn't apply to User-Enrolled devices.
 	PasscodeCompliantWithProfiles *bool `json:"PasscodeCompliantWithProfiles" plist:"PasscodeCompliantWithProfiles"`
 	// The user preference for the number of seconds before a locked screen requires the device passcode to unlock it. This value is only available for Shared iPad.
 	PasscodeLockGracePeriod *int64 `json:"PasscodeLockGracePeriod" plist:"PasscodeLockGracePeriod"`
@@ -1989,31 +2002,31 @@ type SecurityInfo struct {
 	PasscodeLockGracePeriodEnforced *int64 `json:"PasscodeLockGracePeriodEnforced" plist:"PasscodeLockGracePeriodEnforced"`
 	// The number of seconds before a device goes to sleep after being idle. This value is only available on Shared iPad in iOS 17 and later.
 	AutoLockTime *int64 `json:"AutoLockTime" plist:"AutoLockTime"`
-	// If `true`, the device has enabled FileVault full disk encryption (FDE). This value is available in macOS 10.9 and later.
+	// If `true`, the device has enabled FileVault full disk encryption (FDE).
 	FDEEnabled *bool `json:"FDE_Enabled" plist:"FDE_Enabled"`
-	// If `true`, FileVault FDE has a personal recovery key. This value is available in macOS 10.9 and later.
+	// If `true`, FileVault FDE has a personal recovery key.
 	FDEHasPersonalRecoveryKey *bool `json:"FDE_HasPersonalRecoveryKey" plist:"FDE_HasPersonalRecoveryKey"`
-	// If `true`, FileVault FDE has an institutional recovery key. This value is available in macOS 10.9 and later.
+	// If `true`, FileVault FDE has an institutional recovery key.
 	FDEHasInstitutionalRecoveryKey *bool `json:"FDE_HasInstitutionalRecoveryKey" plist:"FDE_HasInstitutionalRecoveryKey"`
-	// If the FileVault personal recovery key has enabled escrow with a recovery key, this value contains the key. The certificate from the `FDERecoveryKeyEscrow` profile encrypts the key and wraps it as CMS data. This value is available in macOS 10.13 and later.
+	// If the FileVault personal recovery key has enabled escrow with a recovery key, this value contains the key. The certificate from the `FDERecoveryKeyEscrow` profile encrypts the key and wraps it as CMS data.
 	FDEPersonalRecoveryKeyCMS *[]byte `json:"FDE_PersonalRecoveryKeyCMS" plist:"FDE_PersonalRecoveryKeyCMS"`
-	// If the FileVault personal recovery key has enabled escrow with a recovery key, this value is the device serial number. This is the value that displays to the user at the EFI Login Window as part of the help message if they enter their password incorrectly three times. The server also uses this value as an index when saving the device personal recovery key. This replaces the `recordNumber` that the server returned in the previous escrow mechanism. This value is available in macOS 10.13 and later.
+	// If the FileVault personal recovery key has enabled escrow with a recovery key, this value is the device serial number. This is the value that displays to the user at the EFI Login Window as part of the help message if they enter their password incorrectly three times. The server also uses this value as an index when saving the device personal recovery key. This replaces the `recordNumber` that the server returned in the previous escrow mechanism.
 	FDEPersonalRecoveryKeyDeviceKey *string `json:"FDE_PersonalRecoveryKeyDeviceKey" plist:"FDE_PersonalRecoveryKeyDeviceKey"`
-	// If `true`, System Integrity Protection (SIP) is active on the device. This value is available in macOS 10.12 and later.
+	// If `true`, System Integrity Protection (SIP) is active on the device.
 	SystemIntegrityProtectionEnabled *bool `json:"SystemIntegrityProtectionEnabled" plist:"SystemIntegrityProtectionEnabled"`
-	// A dictionary that contains the firewall settings. This value is available in macOS 10.12 and later.
+	// A dictionary that contains the firewall settings.
 	FirewallSettings *FirewallSettings `json:"FirewallSettings" plist:"FirewallSettings"`
-	// A dictionary that contains the status of the EFI firmware password. This value is available in macOS 10.13 and later.
+	// A dictionary that contains the status of the EFI firmware password.
 	FirmwarePasswordStatus *FirmwarePasswordStatus `json:"FirmwarePasswordStatus" plist:"FirmwarePasswordStatus"`
 	// A dictionary that contains the status of the device's MDM enrollment.
 	ManagementStatus *ManagementStatus `json:"ManagementStatus" plist:"ManagementStatus"`
-	// A dictionary that contains the device's Secure Boot settings. This value is available in macOS 10.15 and later.
+	// A dictionary that contains the device's Secure Boot settings.
 	SecureBoot *SecureBoot `json:"SecureBoot" plist:"SecureBoot"`
-	// If `true`, Remote Desktop is active on the device. This value is available in macOS 10.14.4 and later.
+	// If `true`, Remote Desktop is active on the device.
 	RemoteDesktopEnabled *bool `json:"RemoteDesktopEnabled" plist:"RemoteDesktopEnabled"`
-	// If `true`, the system booted using an Authenticated Root Volume. This value is available in macOS 11 and later.
+	// If `true`, the system booted using an Authenticated Root Volume.
 	AuthenticatedRootVolumeEnabled *bool `json:"AuthenticatedRootVolumeEnabled" plist:"AuthenticatedRootVolumeEnabled"`
-	// This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The value is automatically set for devices enrolled through the Device Enrollment Program (DEP). The user can also manually set this value in the RecoveryOS.
+	// This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The device automatically sets this value if enrolled through Automated Device Enrollment (ADE). The user can also manually set this value in the RecoveryOS.
 	// This value is available for a Mac with Apple silicon in macOS 11 and later. Not available for user enrollment.
 	BootstrapTokenAllowedForAuthentication *BootstrapTokenAllowedForAuthentication `json:"BootstrapTokenAllowedForAuthentication" plist:"BootstrapTokenAllowedForAuthentication"`
 	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response.
@@ -2026,7 +2039,7 @@ type SecurityInfo struct {
 	IsRecoveryLockEnabled *bool `json:"IsRecoveryLockEnabled" plist:"IsRecoveryLockEnabled"`
 }
 
-// A dictionary that contains the firewall settings. This value is available in macOS 10.12 and later.
+// A dictionary that contains the firewall settings.
 type FirewallSettings struct {
 	// If `true`, the firewall is on.
 	FirewallEnabled *bool `json:"FirewallEnabled" plist:"FirewallEnabled"`
@@ -2061,7 +2074,7 @@ const (
 	LoggingOptionDetail    LoggingOption = "detail"
 )
 
-// A dictionary that contains the status of the EFI firmware password. This value is available in macOS 10.13 and later.
+// A dictionary that contains the status of the EFI firmware password.
 type FirmwarePasswordStatus struct {
 	// If `true`, the device has an EFI firmware password.
 	PasswordExists *bool `json:"PasswordExists" plist:"PasswordExists"`
@@ -2075,24 +2088,23 @@ type FirmwarePasswordStatus struct {
 
 // A dictionary that contains the status of the device's MDM enrollment.
 type ManagementStatus struct {
-	// If `true`, the device enrolled in MDM through the Device Enrollment Program (DEP). This value is available in macOS 10.13.2 and later.
+	// If `true`, the device enrolled in MDM through Automated Device Enrollment (ADE).
 	EnrolledViaDEP *bool `json:"EnrolledViaDEP" plist:"EnrolledViaDEP"`
-	// If `true`, the enrollment was user-approved. If `false`, the device may reject certain security-sensitive payloads or commands. This value is available in macOS 10.13.2 and later.
+	// If `true`, the enrollment was user-approved. If `false`, the device may reject certain security-sensitive payloads or commands.
 	UserApprovedEnrollment *bool `json:"UserApprovedEnrollment" plist:"UserApprovedEnrollment"`
-	// If `true`, the device is user-enrolled. This value is available in iOS 13 and later, and macOS 10.15 and later.
+	// If `true`, the device is user-enrolled.
 	IsUserEnrollment *bool `json:"IsUserEnrollment" plist:"IsUserEnrollment"`
-	// If `true`, the type of enrollment allows the MDM to manage Activation Lock for this device. This value is available in macOS 10.15 and later.
+	// If `true`, the type of enrollment allows the MDM to manage Activation Lock for this device.
 	IsActivationLockManageable *bool `json:"IsActivationLockManageable" plist:"IsActivationLockManageable"`
 }
 
-// A dictionary that contains the device's Secure Boot settings. This value is available in macOS 10.15 and later.
+// A dictionary that contains the device's Secure Boot settings.
 type SecureBoot struct {
 	// The security level for the bootable operating system versions.
 	SecureBootLevel *SecureBootLevel `json:"SecureBootLevel" plist:"SecureBootLevel"`
 	// The device's external boot level, which indicates whether it allows booting from an external device, disallows it, or doesn't support it.
 	ExternalBootLevel *ExternalBootLevel `json:"ExternalBootLevel" plist:"ExternalBootLevel"`
 	// Reports which security features the user disables in `recoveryOS`. This property is only present for a Mac with Apple silicon when `SecureBootLevel` is `medium`.
-	// Available in iOS 11 and later.
 	ReducedSecurity *[]string `json:"ReducedSecurity" plist:"ReducedSecurity"`
 }
 
@@ -2115,7 +2127,7 @@ const (
 	ExternalBootLevelNotSupported ExternalBootLevel = "not supported"
 )
 
-// This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The value is automatically set for devices enrolled through the Device Enrollment Program (DEP). The user can also manually set this value in the RecoveryOS.
+// This value specifies whether the Secure Enclave Processor (SEP) supports and allows secure operations to use the Bootstrap Token. The device automatically sets this value if enrolled through Automated Device Enrollment (ADE). The user can also manually set this value in the RecoveryOS.
 // This value is available for a Mac with Apple silicon in macOS 11 and later. Not available for user enrollment.
 type BootstrapTokenAllowedForAuthentication string
 
@@ -2205,7 +2217,7 @@ func (p *LOMSetupRequestCommandResponse) ResponseRequestType() string {
 type ManagedApplicationAttributesCommand struct {
 	// The bundle identifiers of the managed apps.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifiers []string `json:"Identifiers" plist:"Identifiers" required:"true"`
 }
 
@@ -2226,7 +2238,7 @@ func (p *ManagedApplicationAttributesCommandResponse) ResponseRequestType() stri
 type ApplicationAttributesApplicationAttributesItem struct {
 	// The app's bundle identifier.
 	// > Note:
-	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired.
+	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with.
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
 	// The app's attributes.
 	Attributes *ApplicationAttributesItemAttributes `json:"Attributes,omitempty" plist:"Attributes,omitempty"`
@@ -2237,24 +2249,20 @@ type ApplicationAttributesItemAttributes struct {
 	// A per-app VPN unique identifier for this app.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 	// The content Filter UUID assigned to this app.
-	// Available in iOS 16 and later.
 	ContentFilterUUID *string `json:"ContentFilterUUID,omitempty" plist:"ContentFilterUUID,omitempty"`
 	// The DNS Proxy UUID assigned to this app.
-	// Available in iOS 16 and later.
 	DNSProxyUUID *string `json:"DNSProxyUUID,omitempty" plist:"DNSProxyUUID,omitempty"`
 	// The relay UUID for this app.
 	RelayUUID *string `json:"RelayUUID,omitempty" plist:"RelayUUID,omitempty"`
-	// This app's associated domains. This value is available in iOS 13 and later.
+	// This app's associated domains.
 	AssociatedDomains *[]string `json:"AssociatedDomains,omitempty" plist:"AssociatedDomains,omitempty"`
-	// If `true`, perform claimed site association verification directly at the domain instead of on Apple's servers. Only set this to `true` for domains that can't access the internet. This value is available in iOS 14 and later.
+	// If `true`, perform claimed site association verification directly at the domain instead of on Apple's servers. Only set this to `true` for domains that can't access the internet.
 	AssociatedDomainsEnableDirectDownloads *bool `json:"AssociatedDomainsEnableDirectDownloads,omitempty" plist:"AssociatedDomainsEnableDirectDownloads,omitempty"`
-	// If `false`, this app isn't removable while it's a managed app. This value is available in iOS 14 and later.
+	// If `false`, this app isn't removable while it's a managed app.
 	Removable *bool `json:"Removable,omitempty" plist:"Removable,omitempty"`
 	// If `true`, Tap to Pay on iPhone requires users to use Face ID or a passcode to unlock their device after every transaction that requires a customer's card PIN. If `false`, the user can configure this setting on their device.
-	// Available in iOS 16.4 and later.
 	TapToPayScreenLock *bool `json:"TapToPayScreenLock,omitempty" plist:"TapToPayScreenLock,omitempty"`
 	// The data network name (DNN) or app category. For DNN, the value is `DNN:name`, where `name` is the carrier-provided DNN name. For app category, the value is `AppCategory:category`, where `category` is a carrier-provided string like "Enterprise1".
-	// Available in iOS 17 and later.
 	CellularSliceUUID *string `json:"CellularSliceUUID,omitempty" plist:"CellularSliceUUID,omitempty"`
 	// If `false`, the system prevents the user from hiding the app. It doesn't affect the user's ability to leave it in the App Library, while removing it from the Home Screen.
 	Hideable *bool `json:"Hideable,omitempty" plist:"Hideable,omitempty"`
@@ -2266,7 +2274,7 @@ type ApplicationAttributesItemAttributes struct {
 type ManagedApplicationConfigurationCommand struct {
 	// The bundle identifiers of the managed apps.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifiers []string `json:"Identifiers" plist:"Identifiers" required:"true"`
 }
 
@@ -2287,7 +2295,7 @@ func (p *ManagedApplicationConfigurationCommandResponse) ResponseRequestType() s
 type ApplicationConfigurationsItem struct {
 	// The app's bundle identifier.
 	// > Note:
-	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired.
+	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with.
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
 	// The app's configurations.
 	Configuration *map[string]any `json:"Configuration,omitempty" plist:"Configuration,omitempty"`
@@ -2327,23 +2335,23 @@ type ManagedApplicationFeedbackItem struct {
 type InstallMediaCommand struct {
 	// The book's iTunes Store identifier.
 	ITunesStoreID *int64 `json:"iTunesStoreID,omitempty" plist:"iTunesStoreID,omitempty"`
-	// The URL to retrieve the book. This value is available in iOS 8 and later.
+	// The URL to retrieve the book.
 	MediaURL *string `json:"MediaURL,omitempty" plist:"MediaURL,omitempty"`
 	// The media type, which can only be `Book`.
 	MediaType InstallMediaCommandMediaType `json:"MediaType" plist:"MediaType" required:"true"`
-	// The book's persistent identifier in reverse-DNS form; for example, `com.acme.manuals.training`. This value is available in iOS 8 and later.
+	// The book's persistent identifier in reverse-DNS form; for example, `com.acme.manuals.training`.
 	PersistentID *string `json:"PersistentID,omitempty" plist:"PersistentID,omitempty"`
 	// The kind of the media, which can be one of the following values:
 	// - `pdf`: A PDF file
 	// - `epub`: An EPUB file in `gzip` format.
 	// - `ibooks`: An iBooks Author file in `gzip` format.
-	// If you omit this value, its value is the file extension in the URL. This value is available in iOS 8 and later.
+	// If you omit this value, its value is the file extension in the URL.
 	Kind *Kind `json:"Kind,omitempty" plist:"Kind,omitempty"`
-	// The book's version number. This value is available in iOS 8 and later.
+	// The book's version number.
 	Version *string `json:"Version,omitempty" plist:"Version,omitempty"`
-	// The name of the book's author. This value is available in iOS 8 and later.
+	// The name of the book's author.
 	Author *string `json:"Author,omitempty" plist:"Author,omitempty"`
-	// The book's title. This value is available in iOS 8 and later.
+	// The book's title.
 	Title *string `json:"Title,omitempty" plist:"Title,omitempty"`
 }
 
@@ -2354,9 +2362,9 @@ func (p *InstallMediaCommand) RequestType() string {
 type InstallMediaCommandResponse struct {
 	// The book's iTunes Store identifier, if present in the command.
 	ITunesStoreID *int64 `json:"iTunesStoreID,omitempty" plist:"iTunesStoreID,omitempty"`
-	// The URL to retrieve the book, if present in the command. This value is available in iOS 8 and later.
+	// The URL to retrieve the book, if present in the command.
 	MediaURL *string `json:"MediaURL,omitempty" plist:"MediaURL,omitempty"`
-	// The book's persistent identifier, if present in the command. This value is available in iOS 8 and later.
+	// The book's persistent identifier, if present in the command.
 	PersistentID *string `json:"PersistentID,omitempty" plist:"PersistentID,omitempty"`
 	// The media type, which can only be `Book`.
 	MediaType *string `json:"MediaType,omitempty" plist:"MediaType,omitempty"`
@@ -2387,7 +2395,7 @@ const (
 // - `pdf`: A PDF file
 // - `epub`: An EPUB file in `gzip` format.
 // - `ibooks`: An iBooks Author file in `gzip` format.
-// If you omit this value, its value is the file extension in the URL. This value is available in iOS 8 and later.
+// If you omit this value, its value is the file extension in the URL.
 type Kind string
 
 const (
@@ -2471,7 +2479,6 @@ type BooksItem struct {
 	// - `epub`: An EPUB file in `gzip` format
 	// - `ibooks`: An iBooks Author file in `gzip` format
 	// - The file extension in the URL
-	// This value is available in iOS 8 and later.
 	Kind *string `json:"Kind,omitempty" plist:"Kind,omitempty"`
 	// The book's version number.
 	Version *string `json:"Version,omitempty" plist:"Version,omitempty"`
@@ -2627,7 +2634,7 @@ type VerifyFirmwarePassword struct {
 }
 
 // Set or clear the Recovery Lock password.
-// Sets or clears the recovery lock password (Apple Silicon devices only). Requires the "Device lock and passcode removal right".
+// Sets or clears the recovery lock password (Apple silicon devices only). Requires the "Device lock and passcode removal right".
 type SetRecoveryLockCommand struct {
 	// If the device has a Recovery Lock password set, the system requires the current password.
 	CurrentPassword *string `json:"CurrentPassword,omitempty" plist:"CurrentPassword,omitempty"`
@@ -2685,7 +2692,7 @@ func (p *InstallProfileCommandResponse) ResponseRequestType() string {
 // Get a list of installed profiles on a device.
 // This command allows the MDM server to query for the profiles installed on the device. This command requires the Inspect Profile Manifest right. It's supported on the user channel.
 type ProfileListCommand struct {
-	// If `true`, only include profiles that MDM has installed. For user enrollments, the device ignores this key and always limits the results to managed profiles. This value is available in iOS 13 and later, macOS 10.5 and later, and tvOS 13 and later.
+	// If `true`, only include profiles that MDM has installed. For user enrollments, the device ignores this key and always limits the results to managed profiles.
 	ManagedOnly *bool `json:"ManagedOnly,omitempty" plist:"ManagedOnly,omitempty"`
 }
 
@@ -2724,7 +2731,7 @@ type ProfileListItem struct {
 	IsEncrypted *bool `json:"IsEncrypted,omitempty" plist:"IsEncrypted,omitempty"`
 	// An array that contains the certificate for signing the profile, followed by any intermediate certificates, in DER-encoded X.509 format.
 	SignerCertificates *[][]byte `json:"SignerCertificates,omitempty" plist:"SignerCertificates,omitempty"`
-	// If `true`, the current MDM service installed the profile. MDM doesn't return this value for supervised devices, and can remove or replace all profiles on supervised devices.
+	// If `true`, the current MDM service installed the profile. MDM can remove or replace all profiles on supervised devices.
 	IsManaged *bool `json:"IsManaged,omitempty" plist:"IsManaged,omitempty"`
 	// A string set to `Declarative Device Management` when the profile is managed by Declarative Device Management.
 	Source *string `json:"Source,omitempty" plist:"Source,omitempty"`
@@ -2777,7 +2784,7 @@ func (p *InstallProvisioningProfileCommandResponse) ResponseRequestType() string
 // Get a list of installed provisioning profiles on a device.
 // This command allows the server to retrieve the list of installed provisioning profiles on the device. This command requires the Inspect Provisioning Profiles right. On macOS, this command is for iOS and iPadOS style provisioning profiles only.
 type ProvisioningProfileListCommand struct {
-	// If `true`, only include profiles that MDM has installed. For user enrollments, the device ignores this key and always limits the results to managed profiles. This value is available in iOS 13 and later, and tvOS 13 and later.
+	// If `true`, only include profiles that MDM has installed. For user enrollments, the device ignores this key and always limits the results to managed profiles.
 	ManagedOnly *bool `json:"ManagedOnly,omitempty" plist:"ManagedOnly,omitempty"`
 }
 
@@ -2912,14 +2919,14 @@ type FileVaultUnlock struct {
 
 // The result of rotating the personal recovery key.
 type RotateResult struct {
-	// A new personal recovery key that is encrypted using a `ReplyEncryptionCertificate` as a CMS-compliant envelope.
+	// A new personal recovery key that's encrypted using a `ReplyEncryptionCertificate` as a CMS-compliant envelope.
 	EncryptedNewRecoveryKey *[]byte `json:"EncryptedNewRecoveryKey,omitempty" plist:"EncryptedNewRecoveryKey,omitempty"`
 }
 
 // Update the local administrator account password.
-// Allows changing the password of a local admin account that was created by Setup Assistant during DEP enrollment via the AccountConfiguration command.
+// Allows changing the password of a local admin account that was created by Setup Assistant during ADE enrollment via the AccountConfiguration command.
 type SetAutoAdminPasswordCommand struct {
-	// The unique identifier of the local administrator account. If this value doesn't match the GUID of an administrator account that MDM created during Device Enrollment Program (DEP) enrollment, the command returns an error.
+	// The unique identifier of the local administrator account. If this value doesn't match the GUID of an administrator account that MDM created during Automated Device Enrollment (ADE) enrollment, the command returns an error.
 	GUID string `json:"GUID" plist:"GUID" required:"true"`
 	// The precreated salted SHA-512 PBKDF2 password hash for the account.
 	// Create this hash on the server using the CommonCrypto libraries, or equivalent, as a salted SHA-512 PBKDF2 dictionary that contains these elements:
@@ -2960,7 +2967,7 @@ func (p *SettingsCommandResponse) ResponseRequestType() string {
 	return "Settings"
 }
 
-// A dictionary that contains wallpaper settings. This setting doesn't support user enrollment. Available in iOS 8 and later. Starting in iOS 16 and iPadOS 17, when setting the wallpaper for the first time, both locations update. After that, you can set either location separately.
+// A dictionary that contains wallpaper settings. This setting doesn't support user enrollment. Starting in iOS 16 and iPadOS 17, when setting the wallpaper for the first time, both locations update. After that, you can set either location separately.
 type Wallpaper struct {
 	// A string that identifies this setting.
 	Item WallpaperItem `json:"Item" plist:"Item" required:"true"`
@@ -2994,11 +3001,11 @@ const (
 	Where3 Where = 3
 )
 
-// A dictionary that contains data roaming settings. This setting requires the Network Information access right, and doesn't support user enrollment. Available in iOS 5 and later.
+// A dictionary that contains data roaming settings. This setting requires the Network Information access right, and doesn't support user enrollment.
 type DataRoaming struct {
 	// A string that identifies this setting.
 	Item DataRoamingItem `json:"Item" plist:"Item" required:"true"`
-	// If `true`, enable data roaming, which also enables voice roaming. If `false`, disable data roaming.
+	// If `true`, enable data roaming, which also enables voice roaming. If `false`, disable data roaming. The device only applies this setting to the primary SIM.
 	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
 }
 
@@ -3009,7 +3016,7 @@ const (
 	DataRoamingItemDataRoaming DataRoamingItem = "DataRoaming"
 )
 
-// A dictionary that contains voice roaming settings. This setting requires the Network Information access right, and doesn't support user enrollment. Available in iOS 5 and later.
+// A dictionary that contains voice roaming settings. This setting requires the Network Information access right, and doesn't support user enrollment.
 type VoiceRoaming struct {
 	// A string that identifies this setting.
 	Item VoiceRoamingItem `json:"Item" plist:"Item" required:"true"`
@@ -3024,7 +3031,7 @@ const (
 	VoiceRoamingItemVoiceRoaming VoiceRoamingItem = "VoiceRoaming"
 )
 
-// A dictionary that contains Personal Hotspot settings. This setting requires the Network Information access right, and doesn't support user enrollment. Available in iOS 5 and later.
+// A dictionary that contains Personal Hotspot settings. This setting requires the Network Information access right, and doesn't support user enrollment.
 type PersonalHotspot struct {
 	// A string that identifies this setting.
 	Item PersonalHotspotItem `json:"Item" plist:"Item" required:"true"`
@@ -3039,7 +3046,7 @@ const (
 	PersonalHotspotItemPersonalHotspot PersonalHotspotItem = "PersonalHotspot"
 )
 
-// A dictionary that contains Bluetooth settings. This setting requires the Network Information access right, doesn't support user enrollment, and is available only on supervised devices. Available in iOS 11.3 and later, and macOS 10.13.4 and later.
+// A dictionary that contains Bluetooth settings. This setting requires the Network Information access right, doesn't support user enrollment, and is available only on supervised devices.
 type Bluetooth struct {
 	// A string that identifies this setting.
 	Item BluetoothItem `json:"Item" plist:"Item" required:"true"`
@@ -3054,13 +3061,13 @@ const (
 	BluetoothItemBluetooth BluetoothItem = "Bluetooth"
 )
 
-// A dictionary that contains the configurations to apply to the app. Omit this setting to remove existing configurations. This setting requires the App Management access right, supports user enrollment, and is available in iOS 7 and later, macOS 10.15 and later, and tvOS 10.2 and later. This setting fails for apps that Declarative Device Management manages.
+// A dictionary that contains the configurations to apply to the app. Omit this setting to remove existing configurations. This setting requires the App Management access right, supports user enrollment. This setting fails for apps that Declarative Device Management manages.
 type ApplicationConfiguration struct {
 	// A string that identifies this setting.
 	Item ApplicationConfigurationItem `json:"Item" plist:"Item" required:"true"`
 	// The bundle identifier of the managed app.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
 	// A dictionary that contains the configurations to apply to the app. Omit this setting to remove existing configurations.
 	Configuration *map[string]any `json:"Configuration,omitempty" plist:"Configuration,omitempty"`
@@ -3073,15 +3080,15 @@ const (
 	ApplicationConfigurationItemApplicationConfiguration ApplicationConfigurationItem = "ApplicationConfiguration"
 )
 
-// A dictionary that contains the attributes to apply to the app. Omit this setting to remove existing attributes. This setting supports user enrollment, is available in iOS 7 and later, and tvOS 10.2 and later. This setting fails for apps that Declarative Device Management manages.
+// A dictionary that contains the attributes to apply to the app. Omit this setting to remove existing attributes. This setting supports user enrollment. This setting fails for apps that Declarative Device Management manages.
 type ApplicationAttributes struct {
 	// A string that identifies this setting.
 	Item SettingsApplicationAttributesItem `json:"Item" plist:"Item" required:"true"`
 	// The bundle identifier of the app.
 	// > Important:
-	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting App and Book Information`.
+	// > For a watchOS app, the identifier needs to be the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with. Obtain the watch's bundle identifier for an app with a watch bundle, in the `watchBundleId` key that's part of the Content Metadata query. For more information on this query, see `Getting app and book information (Legacy)`.
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
-	// A dictionary that contains the attributes to apply to the app. Omit this setting to remove existing attributes. This setting is available in iOS 7 and later, and tvOS 10.2 and later.
+	// A dictionary that contains the attributes to apply to the app. Omit this setting to remove existing attributes.
 	Attributes *ApplicationAttributesAttributes `json:"Attributes,omitempty" plist:"Attributes,omitempty"`
 }
 
@@ -3092,27 +3099,25 @@ const (
 	SettingsApplicationAttributesItemApplicationAttributes SettingsApplicationAttributesItem = "ApplicationAttributes"
 )
 
-// A dictionary that contains the attributes to apply to the app. Omit this setting to remove existing attributes. This setting is available in iOS 7 and later, and tvOS 10.2 and later.
+// A dictionary that contains the attributes to apply to the app. Omit this setting to remove existing attributes.
 type ApplicationAttributesAttributes struct {
-	// A per-app VPN unique identifier for this app. Available in iOS 7 and later.
+	// A per-app VPN unique identifier for this app.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
-	// The content filter UUID for this app. Available in iOS 16 and later.
+	// The content filter UUID for this app.
 	ContentFilterUUID *string `json:"ContentFilterUUID,omitempty" plist:"ContentFilterUUID,omitempty"`
-	// The DNS proxy UUID for this app. Available in iOS 16 and later.
+	// The DNS proxy UUID for this app.
 	DNSProxyUUID *string `json:"DNSProxyUUID,omitempty" plist:"DNSProxyUUID,omitempty"`
-	// The relay UUID for this app. Available in iOS 17 and later.
+	// The relay UUID for this app.
 	RelayUUID *string `json:"RelayUUID,omitempty" plist:"RelayUUID,omitempty"`
-	// An array that contains the associated domains to add to this app. Available in iOS 13 and later.
+	// An array that contains the associated domains to add to this app.
 	AssociatedDomains *[]string `json:"AssociatedDomains,omitempty" plist:"AssociatedDomains,omitempty"`
-	// If `true`, perform claimed site association verification directly at the domain, instead of on Apple's servers. Only set this to `true` for domains that can't access the internet. Available in iOS 14 and later.
+	// If `true`, perform claimed site association verification directly at the domain, instead of on Apple's servers. Only set this to `true` for domains that can't access the internet.
 	AssociatedDomainsEnableDirectDownloads *bool `json:"AssociatedDomainsEnableDirectDownloads,omitempty" plist:"AssociatedDomainsEnableDirectDownloads,omitempty"`
-	// If `false`, this app isn't removable while it's managed. Available in iOS 14 and later, and tvOS 14 and later.
+	// If `false`, this app isn't removable while it's managed.
 	Removable *bool `json:"Removable,omitempty" plist:"Removable,omitempty"`
 	// If true, the system require Tap to Pay on iPhone users to use Face ID or a passcode to unlock their device after every transaction that requires a customer's card PIN. If `false`, the user can configure this setting on their device.
-	// Available in iOS 16.4 and later.
 	TapToPayScreenLock *bool `json:"TapToPayScreenLock,omitempty" plist:"TapToPayScreenLock,omitempty"`
 	// The data network name (DNN) or app category. For DNN, the value is `DNN:name`, where `name` is the carrier-provided DNN name. For app category, the value is `AppCategory:category`, where `category` is a carrier-provided string like "Enterprise1"`.`
-	// Available in iOS 17 and later.
 	CellularSliceUUID *string `json:"CellularSliceUUID,omitempty" plist:"CellularSliceUUID,omitempty"`
 	// If `false`, the system prevents the user from hiding the app. It doesn't affect the user's ability to leave it in the App Library, while removing it from the Home Screen.
 	Hideable *bool `json:"Hideable,omitempty" plist:"Hideable,omitempty"`
@@ -3120,7 +3125,7 @@ type ApplicationAttributesAttributes struct {
 	Lockable *bool `json:"Lockable,omitempty" plist:"Lockable,omitempty"`
 }
 
-// A dictionary that contains device name settings. This setting doesn't support user enrollment, and is available only on supervised devices. Available in iOS 5 and later, macOS 10.10 and later, and visionOS 2 and later.
+// A dictionary that contains device name settings. This setting doesn't support user enrollment, and is available only on supervised devices.
 type DeviceName struct {
 	// A string that identifies this setting.
 	Item DeviceNameItem `json:"Item" plist:"Item" required:"true"`
@@ -3135,7 +3140,7 @@ const (
 	DeviceNameItemDeviceName DeviceNameItem = "DeviceName"
 )
 
-// A dictionary that contains hostname settings. This setting doesn't support user enrollment, and is available in macOS 10.11 and later.
+// A dictionary that contains hostname settings. This setting doesn't support user enrollment.
 type HostName struct {
 	// The string that defines this setting type.
 	Item HostNameItem `json:"Item" plist:"Item" required:"true"`
@@ -3150,7 +3155,7 @@ const (
 	HostNameItemHostName HostNameItem = "HostName"
 )
 
-// A dictionary that contains settings about the organization operating the MDM server. This setting supports user enrollment. Available in iOS 5 and later.
+// A dictionary that contains settings about the organization operating the MDM server. This setting supports user enrollment.
 type SettingsOrganizationInfo struct {
 	// The string that defines this setting type.
 	Item OrganizationInfoItem `json:"Item" plist:"Item" required:"true"`
@@ -3191,7 +3196,7 @@ type DefaultApplications struct {
 	Messaging *string `json:"Messaging,omitempty" plist:"Messaging,omitempty"`
 }
 
-// A dictionary that contains settings related to the MDM protocol. This setting doesn't support user enrollment. Available in iOS 7 and later, macOS 10.15 and later, and visionOS 2 and later.
+// A dictionary that contains settings related to the MDM protocol. This setting doesn't support user enrollment.
 type SettingsMDMOptions struct {
 	// The string that defines this setting type.
 	Item MDMOptionsItem `json:"Item" plist:"Item" required:"true"`
@@ -3214,7 +3219,7 @@ type MDMOptionsMDMOptions struct {
 	BootstrapTokenAllowed *bool `json:"BootstrapTokenAllowed,omitempty" plist:"BootstrapTokenAllowed,omitempty"`
 	// If `true`, warn the user that they need to reboot into RecoveryOS and allow the MDM server to use the Bootstrap Token for authentication for certain sensitive operations; for example, enabling kernel extensions or installing certain types of software updates. Set this value to `false` if your MDM server doesn't need to perform these operations. The value provided here overrides the value specified in MDM, and only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for a Mac with Apple silicon in macOS 11 and later.
 	PromptUserToAllowBootstrapTokenForAuthentication *bool `json:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty" plist:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty"`
-	// If `true`, the device automatically reboots while locked after several days of inactivity. This is set to `false` by default when a supervised device enrolls.
+	// If `true`, the device automatically reboots while locked after several days of inactivity. The device sets this to `false` by default for a supervised enrollment. Starting in iOS 26.6 and iPadOS 26.6, changing the effective value from reboot allowed to reboot disallowed requires a reboot or a device unlock before the change takes effect.
 	IdleRebootAllowed *bool `json:"IdleRebootAllowed,omitempty" plist:"IdleRebootAllowed,omitempty"`
 }
 
@@ -3244,27 +3249,21 @@ type SharedDeviceConfiguration struct {
 	// The expected number of users. If this value is greater than the value for the maximum possible number of users that the device supports, the MDM server uses that value instead.
 	ResidentUsers *int64 `json:"ResidentUsers,omitempty" plist:"ResidentUsers,omitempty"`
 	// The timeout, in seconds, for the user session. The user session logs out automatically after the specified period of inactivity. The minimum value is 30 seconds. Setting this value to `0` removes the timeout.
-	// Available in iOS 14.5 and later.
 	UserSessionTimeout *int64 `json:"UserSessionTimeout,omitempty" plist:"UserSessionTimeout,omitempty"`
 	// The timeout, in seconds, for the temporary session. The temporary session logs out automatically after the specified period of inactivity. The minimum value is 30 seconds. Setting this value to `0` removes the timeout.
-	// Available in iOS 14.5 and later.
 	TemporarySessionTimeout *int64 `json:"TemporarySessionTimeout,omitempty" plist:"TemporarySessionTimeout,omitempty"`
 	// If `true`, the user only sees the Guest Welcome pane and can only log in as a guest user.
 	// If `false`, the user can sign in with a Managed Apple Account (the existing behavior).
-	// Available in iOS 14.5 and later.
 	TemporarySessionOnly *bool `json:"TemporarySessionOnly,omitempty" plist:"TemporarySessionOnly,omitempty"`
 	// A list of domains that the Shared iPad login screen displays. The user can pick a domain from the list to complete their Managed Apple Account.
-	// If this list contains more than 3 domains, the system picks 3 at random for display. Available in iOS 16 and later.
+	// If this list contains more than 3 domains, the system picks 3 at random for display.
 	ManagedAppleIDDefaultDomains *[]string `json:"ManagedAppleIDDefaultDomains,omitempty" plist:"ManagedAppleIDDefaultDomains,omitempty"`
 	// A grace period (in days) for Shared iPad online authentication. The Shared iPad only verifies the user's passcode locally during login for users that already exist on the device. However, the system requires an online authentication (against Apple's identity server) after the number of days specified by this setting.
 	// Setting this value to 0 enforces online authentication every time.
-	// Available in iOS 16 and later.
 	OnlineAuthenticationGracePeriod *int64 `json:"OnlineAuthenticationGracePeriod,omitempty" plist:"OnlineAuthenticationGracePeriod,omitempty"`
 	// If `true`, the system picks the system language and locale automatically for the new Shared iPad user.
-	// Available in iOS 16.2 and later.
 	SkipLanguageAndLocaleSetupForNewUsers *bool `json:"SkipLanguageAndLocaleSetupForNewUsers,omitempty" plist:"SkipLanguageAndLocaleSetupForNewUsers,omitempty"`
 	// If enabled, the Shared iPad device enters Setup Assistant after the user triggers a login. The MDM server has a chance to configure the device and user. After configuration, the server needs to send a `User-Configured-Command` command to the user channel to unblock the login. This feature requires the device to have network access during the login process.
-	// Available in iOS 17 and later.
 	AwaitUserConfiguration *AwaitUserConfiguration `json:"AwaitUserConfiguration,omitempty" plist:"AwaitUserConfiguration,omitempty"`
 	// A dictionary that contains passcode policies.
 	PasscodePolicy *PasscodePolicy `json:"PasscodePolicy,omitempty" plist:"PasscodePolicy,omitempty"`
@@ -3278,7 +3277,6 @@ const (
 )
 
 // If enabled, the Shared iPad device enters Setup Assistant after the user triggers a login. The MDM server has a chance to configure the device and user. After configuration, the server needs to send a `User-Configured-Command` command to the user channel to unblock the login. This feature requires the device to have network access during the login process.
-// Available in iOS 17 and later.
 type AwaitUserConfiguration struct {
 	// If `true`, the device stops at the Setup Assistant pane after user login. The user can't use the device until it receives a `User-Configured-Command` command.
 	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
@@ -3374,7 +3372,7 @@ const (
 	PasscodeLockGracePeriodPasscodeLockGracePeriod14400 PasscodeLockGracePeriodPasscodeLockGracePeriod = 14400
 )
 
-// A dictionary that contains time zone settings. This setting is available only on supervised devices and doesn't support user enrollment. Available in iOS 14 and later, tvOS 14 and later, and visionOS 2 and later.
+// A dictionary that contains time zone settings. This setting is available only on supervised devices and doesn't support user enrollment.
 type TimeZone struct {
 	// A string that identifies this setting.
 	Item TimeZoneItem `json:"Item" plist:"Item" required:"true"`
@@ -3390,7 +3388,8 @@ const (
 	TimeZoneItemTimeZone TimeZoneItem = "TimeZone"
 )
 
-// A dictionary that contains software update settings. This setting doesn't support user enrollment. Available in iOS 14.5 and later.
+// A dictionary that contains software update settings. This setting doesn't support user enrollment.
+// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 type SettingsSoftwareUpdateSettings struct {
 	// A string that represents the type of updates that should appear in the Software Update pane in Settings. Supervised only.
 	Item SoftwareUpdateSettingsItem `json:"Item" plist:"Item" required:"true"`
@@ -3399,7 +3398,6 @@ type SettingsSoftwareUpdateSettings struct {
 	// - `1`: Presents the lower numbered (oldest) software update version.
 	// - `2`: Presents only the highest numbered (most recent) release available for the device.
 	// This value has no effect when there's only one available update; the system shows the single available update to the user regardless of the value of this setting.
-	// Available in iOS 14.5 and later.
 	RecommendationCadence RecommendationCadence `json:"RecommendationCadence" plist:"RecommendationCadence" required:"true"`
 }
 
@@ -3415,7 +3413,6 @@ const (
 // - `1`: Presents the lower numbered (oldest) software update version.
 // - `2`: Presents only the highest numbered (most recent) release available for the device.
 // This value has no effect when there's only one available update; the system shows the single available update to the user regardless of the value of this setting.
-// Available in iOS 14.5 and later.
 type RecommendationCadence int64
 
 const (
@@ -3424,7 +3421,7 @@ const (
 	RecommendationCadence2 RecommendationCadence = 2
 )
 
-// A dictionary that contains accessibility settings. Available in iOS 16 and later.
+// A dictionary that contains accessibility settings.
 type SettingsAccessibilitySettings struct {
 	// Sets various accessibility settings. The system allows only keys with explicitly provided values.
 	Item AccessibilitySettingsItem `json:"Item" plist:"Item" required:"true"`
@@ -3483,12 +3480,12 @@ type Settings struct {
 	ErrorChain *[]*map[string]any `json:"ErrorChain,omitempty" plist:"ErrorChain,omitempty"`
 	// The app identifier to which this error applies.
 	// > Note:
-	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone to which the watch is paired.
+	// > For a watchOS app, the identifier is the watch's bundle identifier, which differs from the main bundle identifier for the iPhone the watch pairs with.
 	Identifier *string `json:"Identifier,omitempty" plist:"Identifier,omitempty"`
 }
 
-// Get a list of available operating-system updates for a device.
-// Queries the device for a list of available OS updates. On OS X, a ScheduleOSUpdateScan must be performed to update the results returned by this query.
+// Get a list of available operating-system updates for a device. Removed: use the declarative management `com.apple.configuration.softwareupdate.enforcement.specific` configuration.
+// Queries the device for a list of available OS updates. On macOS, a ScheduleOSUpdateScan must be performed to update the results returned by this query.
 type AvailableOSUpdatesCommand struct{}
 
 func (p *AvailableOSUpdatesCommand) RequestType() string {
@@ -3512,11 +3509,11 @@ type AvailableOSUpdatesItem struct {
 	ProductKey string `json:"ProductKey" plist:"ProductKey" required:"true"`
 	// The human-readable name of the update in the current user's current locale.
 	HumanReadableName string `json:"HumanReadableName" plist:"HumanReadableName" required:"true"`
-	// The locale, in IOS639-1 Alpha-2 code format, of the `HumanReadableName` value. This value is available in macOS 10.11 and later.
+	// The locale, in IOS639-1 Alpha-2 code format, of the `HumanReadableName` value.
 	HumanReadableNameLocale string `json:"HumanReadableNameLocale" plist:"HumanReadableNameLocale" required:"true"`
-	// A URL where the MDM server can request additional localized names for this update. This key isn't present for certain updates, such as mobile software updates (MSUs) or major OS updates. This value is available in macOS 10.11 and later.
+	// A URL where the MDM server can request additional localized names for this update. This key isn't present for certain updates, such as mobile software updates (MSUs) or major OS updates.
 	MetadataURL string `json:"MetadataURL" plist:"MetadataURL" required:"true"`
-	// The product name; for example, _iOS_. This value is available in iOS 9.0 and later, and tvOS 12.0 and later.
+	// The product name; for example, _iOS_.
 	ProductName string `json:"ProductName" plist:"ProductName" required:"true"`
 	// The version of the update.
 	Version string `json:"Version" plist:"Version" required:"true"`
@@ -3524,23 +3521,23 @@ type AvailableOSUpdatesItem struct {
 	Build string `json:"Build" plist:"Build" required:"true"`
 	// The storage size necessary to download the software update. Prior to macOS 10.14, this only includes major operating-system updates. In macOS 10.14 and later, this also includes minor updates.
 	DownloadSize int64 `json:"DownloadSize" plist:"DownloadSize" required:"true"`
-	// The storage size necessary to install the update. This value is available in iOS 9.0 and later, and tvOS 12.0 and later.
+	// The storage size necessary to install the update.
 	InstallSize int64 `json:"InstallSize" plist:"InstallSize" required:"true"`
-	// An array that contains app identifiers of apps to close so you can install the update. This value is available in macOS 10.11 and later.
+	// An array that contains app identifiers of apps to close so you can install the update.
 	AppIdentifiersToClose []string `json:"AppIdentifiersToClose" plist:"AppIdentifiersToClose" required:"true"`
 	// If `true`, this is a critical update.
 	IsCritical *bool `json:"IsCritical,omitempty" plist:"IsCritical,omitempty"`
-	// If `true`, this is an update to a configuration file. This value is available in macOS 10.11 and later.
+	// If `true`, this is an update to a configuration file.
 	IsConfigDataUpdate *bool `json:"IsConfigDataUpdate,omitempty" plist:"IsConfigDataUpdate,omitempty"`
-	// If `true`, this is an update to firmware. This value is available in macOS 10.11 and later.
+	// If `true`, this is an update to firmware.
 	IsFirmwareUpdate *bool `json:"IsFirmwareUpdate,omitempty" plist:"IsFirmwareUpdate,omitempty"`
-	// If `true`, this is a major update; for example, 10.15.x to 11. This value is available in macOS 10.11 and later.
+	// If `true`, this is a major update; for example, 10.15.x to 11.
 	IsMajorOSUpdate *bool `json:"IsMajorOSUpdate,omitempty" plist:"IsMajorOSUpdate,omitempty"`
 	// If `true`, the device restarts after installing the update.
 	RestartRequired *bool `json:"RestartRequired,omitempty" plist:"RestartRequired,omitempty"`
 	// If `true`, download the software update and install it later.
 	AllowsInstallLater *bool `json:"AllowsInstallLater,omitempty" plist:"AllowsInstallLater,omitempty"`
-	// If present, the date when you want the update to install. This value is available in macOS 10.12.4 and later.
+	// If present, the date when you want the update to install.
 	DeferredUntil *time.Time `json:"DeferredUntil,omitempty" plist:"DeferredUntil,omitempty"`
 	// If `true`, the device can accept a Bootstrap Token from the MDM server instead of prompting for user authentication prior to installation. This only applies when `BootstrapTokenAllowedForAuthentication` is `true` in the `SecurityInfo` response. This value is available for a Mac with Apple silicon in macOS 11 and later.
 	RequiresBootstrapToken *bool `json:"RequiresBootstrapToken,omitempty" plist:"RequiresBootstrapToken,omitempty"`
@@ -3552,7 +3549,7 @@ type AvailableOSUpdatesItem struct {
 	SupplementalOSVersionExtra *string `json:"SupplementalOSVersionExtra,omitempty" plist:"SupplementalOSVersionExtra,omitempty"`
 }
 
-// Schedule a background scan for operating-system updates on a device.
+// Schedule a background scan for operating-system updates on a device. Removed: use the declarative management `com.apple.configuration.softwareupdate.enforcement.specific` configuration.
 // Requests that the device perform a background scan for OS updates.
 type ScheduleOSUpdateScanCommand struct {
 	// If `true`, force a scan to start immediately. Otherwise, the scan starts at a system-determined time.
@@ -3572,11 +3569,11 @@ func (p *ScheduleOSUpdateScanCommandResponse) ResponseRequestType() string {
 	return "ScheduleOSUpdateScan"
 }
 
-// Schedule an update of the operating system on a device.
+// Schedule an update of the operating system on a device. Removed: use the declarative management `com.apple.configuration.softwareupdate.enforcement.specific` configuration.
 // This command allows the server to schedule an OS update.
 type ScheduleOSUpdateCommand struct {
 	// An array of dictionaries specifying the updates to download or install. If this value is missing, the device applies the default behavior for handling updates.
-	// The device ignores this command and an informational error is returned, if a software update is managed by a Declarative Device Management `SoftwareUpdateEnforcementSpecific` configuration, as the configuration takes precedence.
+	// The device ignores this command and returns an informational error if a Declarative Device Management `SoftwareUpdateEnforcementSpecific` configuration manages the software update, as the configuration takes precedence.
 	Updates []UpdatesItem `json:"Updates" plist:"Updates" required:"true"`
 }
 
@@ -3597,17 +3594,17 @@ func (p *ScheduleOSUpdateCommandResponse) ResponseRequestType() string {
 type UpdatesItem struct {
 	// The product key that represents the update.
 	ProductKey *string `json:"ProductKey,omitempty" plist:"ProductKey,omitempty"`
-	// The version of the update, which the system requires if `ProductKey` isn't present. This value is available in iOS 11.3 and later, macOS 12 and later, and tvOS 12.2 and later.
+	// The version of the update, which the system requires if `ProductKey` isn't present.
 	// > Note:
 	// > This value isn't available for use with Background Security Improvement updates.
 	ProductVersion *string `json:"ProductVersion,omitempty" plist:"ProductVersion,omitempty"`
 	// The install action, which is one of the following values:
-	// - `Default`: Download or install the update, depending on the current state. You can check the `UpdateResults` dictionary to review scheduled updates. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
-	// - `DownloadOnly`: Download the software update without installing it. This value is available in iOS 9 and later, macOS 11 and later, and tvOS 12 and later.
-	// - `InstallASAP`: In iOS and tvOS, install a previously downloaded software update. In macOS, download the software update and trigger the restart countdown notification. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
-	// - `NotifyOnly`: Download the software update and notify the user through the App Store. This value is available in macOS 10.11 and later.
-	// - `InstallLater`: Download the software update and install it at a later time. This value is available in macOS 10.11 and later.
-	// - `InstallForceRestart`: Perform the `Default` action, and then force a restart if the update requires it. This value is available in macOS 11 and later.
+	// * `Default`: Download or install the update, depending on the current state. You can check the `UpdateResults` dictionary to review scheduled updates. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
+	// * `DownloadOnly`: Download the software update without installing it. This value is available in iOS 9 and later, macOS 11 and later, and tvOS 12 and later.
+	// * `InstallASAP`: In iOS and tvOS, install a previously downloaded software update. In macOS, download the software update and trigger the restart countdown notification. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
+	// * `NotifyOnly`: Download the software update and notify the user through the App Store. This value is available in macOS 10.11 and later.
+	// * `InstallLater`: Download the software update and install it at a later time. This value is available in macOS 10.11 and later.
+	// * `InstallForceRestart`: Perform the `Default` action, and then force a restart if the update requires it. This value is available in macOS 11 and later.
 	// > Warning:
 	// > `InstallForceRestart` may result in data loss.
 	InstallAction UpdatesItemInstallAction `json:"InstallAction" plist:"InstallAction" required:"true"`
@@ -3615,17 +3612,17 @@ type UpdatesItem struct {
 	// This key is only supported when `InstallAction` is `InstallLater` and only supported for minor OS updates (for example, macOS 12.x to 12.y).
 	MaxUserDeferrals *int64 `json:"MaxUserDeferrals,omitempty" plist:"MaxUserDeferrals,omitempty"`
 	// The scheduling priority for downloading and preparing the requested update. This is only supported for minor OS updates (macOS 12.x to 12.y).
-	// Available in macOS 12.3 and later. Prior versions of macOS used a priority of `Low`.
+	// Prior versions of macOS used a priority of `Low`.
 	Priority *Priority `default:"Low" json:"Priority,omitempty" plist:"Priority,omitempty"`
 }
 
 // The install action, which is one of the following values:
-// - `Default`: Download or install the update, depending on the current state. You can check the `UpdateResults` dictionary to review scheduled updates. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
-// - `DownloadOnly`: Download the software update without installing it. This value is available in iOS 9 and later, macOS 11 and later, and tvOS 12 and later.
-// - `InstallASAP`: In iOS and tvOS, install a previously downloaded software update. In macOS, download the software update and trigger the restart countdown notification. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
-// - `NotifyOnly`: Download the software update and notify the user through the App Store. This value is available in macOS 10.11 and later.
-// - `InstallLater`: Download the software update and install it at a later time. This value is available in macOS 10.11 and later.
-// - `InstallForceRestart`: Perform the `Default` action, and then force a restart if the update requires it. This value is available in macOS 11 and later.
+// * `Default`: Download or install the update, depending on the current state. You can check the `UpdateResults` dictionary to review scheduled updates. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
+// * `DownloadOnly`: Download the software update without installing it. This value is available in iOS 9 and later, macOS 11 and later, and tvOS 12 and later.
+// * `InstallASAP`: In iOS and tvOS, install a previously downloaded software update. In macOS, download the software update and trigger the restart countdown notification. This value is available in iOS 9 and later, macOS 10.11 and later, and tvOS 12 and later.
+// * `NotifyOnly`: Download the software update and notify the user through the App Store. This value is available in macOS 10.11 and later.
+// * `InstallLater`: Download the software update and install it at a later time. This value is available in macOS 10.11 and later.
+// * `InstallForceRestart`: Perform the `Default` action, and then force a restart if the update requires it. This value is available in macOS 11 and later.
 // > Warning:
 // > `InstallForceRestart` may result in data loss.
 type UpdatesItemInstallAction string
@@ -3640,7 +3637,7 @@ const (
 )
 
 // The scheduling priority for downloading and preparing the requested update. This is only supported for minor OS updates (macOS 12.x to 12.y).
-// Available in macOS 12.3 and later. Prior versions of macOS used a priority of `Low`.
+// Prior versions of macOS used a priority of `Low`.
 type Priority string
 
 const (
@@ -3726,7 +3723,7 @@ const (
 	UpdateResultsItemStatusInstallFailed               UpdateResultsItemStatus = "InstallFailed"
 )
 
-// Get the status of operating-system updates on a device.
+// Get the status of operating-system updates on a device. Removed: subscribe to the declarative management `softwareupdate.install-state` status item.
 // Queries the device for the status of software updates.
 type OSUpdateStatusCommand struct{}
 
@@ -3736,7 +3733,7 @@ func (p *OSUpdateStatusCommand) RequestType() string {
 
 type OSUpdateStatusCommandResponse struct {
 	// An array of dictionaries that describes the statuses of software updates. The array is empty if there are no software updates currently in progress.
-	// This command only returns the status for System Applications and Configuration Data updates when a software update is managed by a Declarative Device Management `SoftwareUpdateEnforcementSpecific` configuration.
+	// This command only returns the status for System Applications and Configuration Data updates when a Declarative Device Management `SoftwareUpdateEnforcementSpecific` configuration manages a software update.
 	OSUpdateStatus []OSUpdateStatusItem `json:"OSUpdateStatus" plist:"OSUpdateStatus" required:"true"`
 }
 
@@ -3758,21 +3755,34 @@ type OSUpdateStatusItem struct {
 	// - `Installing`: The software update is installing.
 	Status string `json:"Status" plist:"Status" required:"true"`
 	// The number of times a user can defer this OS update.
-	// Available in macOS 12.3 and later.
 	MaxDeferrals *int64 `json:"MaxDeferrals,omitempty" plist:"MaxDeferrals,omitempty"`
 	// The number of remaining user deferrals for this OS update.
-	// Available in macOS 12.3 and later.
 	DeferralsRemaining *int64 `json:"DeferralsRemaining,omitempty" plist:"DeferralsRemaining,omitempty"`
 	// The date of the next attempt at installing this OS update.
-	// Available in macOS 12.3 and later.
 	NextScheduledInstall *time.Time `json:"NextScheduledInstall,omitempty" plist:"NextScheduledInstall,omitempty"`
 	// The dates/times when the OS notified the user about installing this OS update.
-	// Available in macOS 12.3 and later.
 	PastNotifications *[]time.Time `json:"PastNotifications,omitempty" plist:"PastNotifications,omitempty"`
 }
 
+// Trigger enhanced log collection on the device.
+// This command allows supervised devices to collect enhanced log and upload it to a remote server.
+type TriggerEnhancedLogCollectionCommand struct {
+	// The AppleCare token the device uses for authorizing the enhanced log collection session.
+	AppleCareToken string `json:"AppleCareToken" plist:"AppleCareToken" required:"true"`
+}
+
+func (p *TriggerEnhancedLogCollectionCommand) RequestType() string {
+	return "TriggerEnhancedLogCollection"
+}
+
+type TriggerEnhancedLogCollectionCommandResponse struct{}
+
+func (p *TriggerEnhancedLogCollectionCommandResponse) ResponseRequestType() string {
+	return "TriggerEnhancedLogCollection"
+}
+
 // Inform the device that it can continue past Setup Assistant and finish login.
-// Inform the device that it can continue past Setup Assistant and finish login. Only works on Shared iPads that have the AwaitUserConfiguration feature enabled.
+// Inform the device that it can continue past Setup Assistant and finish login. Only works on Shared iPad devices that have the AwaitUserConfiguration feature enabled.
 type UserConfiguredCommand struct{}
 
 func (p *UserConfiguredCommand) RequestType() string {
@@ -3788,11 +3798,11 @@ func (p *UserConfiguredCommandResponse) ResponseRequestType() string {
 // Delete a user's account from a device.
 // This command allows the server to delete a user that has an active account on the device.
 type DeleteUserCommand struct {
-	// The user name of the account to delete. This key is required when the value for `DeleteAllUsers` is absent or `false`.
+	// The user name of the account to delete. The device requires this key when the value for `DeleteAllUsers` is absent or `false`.
 	UserName *string `json:"UserName,omitempty" plist:"UserName,omitempty"`
-	// If `true`, the system deletes the account even if the user has data that's pending sync to the cloud. This value is available on iOS 9.3 and later.
+	// If `true`, the system deletes the account even if the user has data that's pending sync to the cloud.
 	ForceDeletion *bool `json:"ForceDeletion,omitempty" plist:"ForceDeletion,omitempty"`
-	// If `true`, the system attempts to delete all users from the device. If `ForceDeletion` is `false`, the system generates an error instead and doesn't delete users who have data that's pending sync. This value is available in iOS 14 and later.
+	// If `true`, the system attempts to delete all users from the device. If `ForceDeletion` is `false`, the system generates an error instead and doesn't delete users who have data that's pending sync.
 	DeleteAllUsers *bool `json:"DeleteAllUsers,omitempty" plist:"DeleteAllUsers,omitempty"`
 }
 
@@ -3825,25 +3835,25 @@ func (p *UserListCommandResponse) ResponseRequestType() string {
 
 // A dictionary that contains information about an active account on a device.
 type UsersItem struct {
-	// The user name for the account. In macOS, this is the short name of the user account. This value is available in iOS 9.3 and later, and macOS 10.13 and later.
+	// The user name for the account. In macOS, this is the short name of the user account.
 	UserName string `json:"UserName" plist:"UserName" required:"true"`
-	// The user's full name. This value is available in macOS 10.13 and later.
+	// The user's full name.
 	FullName string `json:"FullName" plist:"FullName" required:"true"`
-	// The user's unique identifier. This value is available in macOS 10.13 and later.
+	// The user's unique identifier.
 	UID int64 `json:"UID" plist:"UID" required:"true"`
-	// The user's `GeneratedUID`. This value is available in macOS 10.13 and later.
+	// The user's `GeneratedUID`.
 	UserGUID string `json:"UserGUID" plist:"UserGUID" required:"true"`
-	// If `true`, the user is currently logged in on the device. This value is available in iOS 9.3 and later, and macOS 10.13 and later.
+	// If `true`, the user is currently logged in on the device.
 	IsLoggedIn bool `json:"IsLoggedIn" plist:"IsLoggedIn" required:"true"`
-	// If `true`, the user has data to sync to the cloud. This value is available in iOS 9.3 and later.
+	// If `true`, the user has data to sync to the cloud.
 	HasDataToSync bool `json:"HasDataToSync" plist:"HasDataToSync" required:"true"`
-	// If present, the user's data quota in bytes. This isn't present if the account doesn't enforce a quota. This value is available in iOS 9.3 and later.
+	// If present, the user's data quota in bytes. This isn't present if the account doesn't enforce a quota.
 	DataQuota int64 `json:"DataQuota" plist:"DataQuota" required:"true"`
-	// The amount of data, in bytes, that the user has used. This value is available in iOS 9.3 and later.
+	// The amount of data, in bytes, that the user has used.
 	DataUsed int64 `json:"DataUsed" plist:"DataUsed" required:"true"`
-	// If `true`, the account is a mobile account. This value is available in macOS 10.13 and later.
+	// If `true`, the account is a mobile account.
 	MobileAccount bool `json:"MobileAccount" plist:"MobileAccount" required:"true"`
-	// If `true`, the user currently has a secure token set. This value is available in macOS 11 and later.
+	// If `true`, the user currently has a secure token set.
 	HasSecureToken bool `json:"HasSecureToken" plist:"HasSecureToken" required:"true"`
 }
 

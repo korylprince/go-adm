@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/protocol
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/declarative/protocol
 
 package protocol
 
-const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
+const DeviceManagementGenerateHash = "9e7fdbe23990b2551c4b29b39bc8b0de956805eb"
 
 // The set of available declarations on the server.
 type DeclarationItemsResponse struct {
@@ -67,7 +67,7 @@ type StatusReport struct {
 	StatusItems map[string]any `json:"StatusItems" required:"true"`
 	// An array of errors for this status report.
 	Errors []*Errors `json:"Errors" required:"true"`
-	// The system sets this to `true` to indicate that the status report contains the full set of current status, and is not an incremental report. A full status report includes the full set of items in any status array item, not just the changes. Servers use this to replace their entire status for the device, rather than do an incremental update to the existing status. The system sets this to `true` when sending a "safety sync" status report, which is typically sent every 24 hours or so.
+	// The system sets this to `true` to indicate that the status report contains the full set of current status, and isn't an incremental report. A full status report includes the full set of items in any status array item, not just the changes. Servers use this to replace their entire status for the device, rather than do an incremental update to the existing status. The system sets this to `true` when sending a "safety sync" status report, which is typically sent every 24 hours or so.
 	FullReport *bool `json:"FullReport,omitempty"`
 }
 

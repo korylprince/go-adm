@@ -1,5 +1,5 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/mdm/errors
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/mdm/errors
 
 package mdmerrors
 
@@ -81,7 +81,7 @@ type RequireBetaProgram struct {
 
 // An error response that indicates a device needs to unenroll.
 type ErrorUnrecognizedDevice struct {
-	// Indicates that the device is not recognized by the server. This causes the device to unenroll from MDM.
+	// Indicates that the device isn't recognized by the server. This causes the device to unenroll from MDM.
 	Code ErrorUnrecognizedDeviceCode `json:"code" plist:"code" required:"true"`
 	// A description of the error. Only use this for logging purposes and don't display it to the user.
 	Description *string `json:"description,omitempty" plist:"description,omitempty"`
@@ -89,7 +89,7 @@ type ErrorUnrecognizedDevice struct {
 	Message *string `json:"message,omitempty" plist:"message,omitempty"`
 }
 
-// Indicates that the device is not recognized by the server. This causes the device to unenroll from MDM.
+// Indicates that the device isn't recognized by the server. This causes the device to unenroll from MDM.
 type ErrorUnrecognizedDeviceCode string
 
 const (

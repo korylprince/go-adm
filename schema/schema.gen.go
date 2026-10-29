@@ -1,11 +1,11 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/docs/schema.yaml
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/docs/schema.yaml
 
 package schema
 
 import yamlschema "github.com/korylprince/go-adm/yamlschema"
 
-const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
+const DeviceManagementGenerateHash = "9e7fdbe23990b2551c4b29b39bc8b0de956805eb"
 
 // Indicates how multiple configurations of the same type are applied. If set to 'single', then only one configuration will be applied. If set to 'multiple', then each configuration is applied separately. If set to 'combined', then all configurations are combined into a single effective configuration.
 type PayloadApply string
@@ -126,6 +126,8 @@ type Schema struct {
 	RelatedStatusItems []*RelatedStatusItems `yaml:"related-status-items,omitempty"`
 	// An array of additional notes about a payload. These are published to the open source repository.
 	Notes []*Notes `yaml:"notes,omitempty"`
+	// An array of examples.
+	Examples []*Examples `yaml:"examples,omitempty"`
 }
 
 // Overall properties of the payload.
@@ -318,4 +320,24 @@ type Notes struct {
 	Title string `yaml:"title"`
 	// The note content in "markdown" format.
 	Content string `yaml:"content"`
+}
+type Examples struct {
+	// Title for the example.
+	Title string `yaml:"title"`
+	// An array of files with their own descriptions.
+	Files []*Files `yaml:"files"`
+}
+
+// A description and path for an example file.
+type Files struct {
+	// Tab title. Must be present when there are multiple items in files array. Must be unique.
+	Tab string `yaml:"tab,omitempty"`
+	// Description for the example. Must be present when there are multiple items in files array.
+	Description string `yaml:"description,omitempty"`
+	// The file path for the example data.
+	File string `yaml:"file,omitempty"`
+	// The file path for the request example data in a tabbed request/response.
+	RequestFile string `yaml:"request-file,omitempty"`
+	// The file path for the response example data in a tabbed request/response.
+	ResponseFile string `yaml:"response-file,omitempty"`
 }
