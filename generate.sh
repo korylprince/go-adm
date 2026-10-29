@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 go install ./cmd/yamlschemagen
 
 pushd ./schema/

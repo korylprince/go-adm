@@ -1,0 +1,49 @@
+name: on-push-pr
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  format-build-test:
+    strategy:
+      matrix:
+        go-version: ['1.26.x', '1.27.x']
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - if: matrix.platform == 'ubuntu-latest'
+        run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
+
+      - run: go build -v ./...
+
+      - run: go test -v -race ./...
+
+  check-generated:
+    # Fail if generated code wasn't committed: run the generators
+    # (./generate.sh, which reads GENERATE_SHA) and diff the working tree.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
+        with:
+          go-version: '1.27.x'
+
+      - name: Run generators
+        run: ./generate.sh
+
+      - name: Check for uncommitted changes
+        run: |
+          if [ -n "$(git status --porcelain -- generated schema)" ]; then
+            git diff --stat -- generated schema
+            echo "::error::Generated code is out of date. Run ./generate.sh and commit the changes."
+            exit 1
+          fi
