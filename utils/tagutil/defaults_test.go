@@ -92,3 +92,35 @@ func TestStructDefaults(t *testing.T) {
 		}
 	}
 }
+
+func TestValueStructDefaults(t *testing.T) {
+	type child struct {
+		Mode   *string `default:"RSA"`
+		Values []string
+	}
+	nested := struct{ Child child }{}
+	slice := struct{ Items []child }{Items: []child{{}}}
+	items := []child{{}}
+	pointerSlice := struct{ Items *[]child }{Items: &items}
+	for _, test := range []struct {
+		name  string
+		value any
+		child *child
+	}{
+		{"nested struct", &nested, &nested.Child},
+		{"slice of structs", &slice, &slice.Items[0]},
+		{"pointer to slice of structs", &pointerSlice, &items[0]},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if err := tagutil.SetDefaults(test.value); err != nil {
+				t.Fatal(err)
+			}
+			if test.child.Mode == nil || *test.child.Mode != "RSA" {
+				t.Errorf("default was not applied: %+v", test.child)
+			}
+			if test.child.Values == nil {
+				t.Error("slice was not initialized")
+			}
+		})
+	}
+}
