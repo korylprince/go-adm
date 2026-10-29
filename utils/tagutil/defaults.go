@@ -26,7 +26,7 @@ func SetDefaults(v any) error {
 
 		// nested struct
 		if fld.Type.Kind() == reflect.Struct {
-			if err := SetDefaults(val.Field(i).Interface()); err != nil {
+			if err := SetDefaults(val.Field(i).Addr().Interface()); err != nil {
 				return err
 			}
 			continue
@@ -74,7 +74,11 @@ func SetDefaults(v any) error {
 			// check that slice is made of struct or *struct
 			if typ.Elem().Kind() == reflect.Struct || (typ.Elem().Kind() == reflect.Pointer && typ.Elem().Elem().Kind() == reflect.Struct) {
 				for j := 0; j < fldval.Len(); j++ {
-					if err := SetDefaults(fldval.Index(j).Interface()); err != nil {
+					item := fldval.Index(j)
+					if item.Kind() == reflect.Struct {
+						item = item.Addr()
+					}
+					if err := SetDefaults(item.Interface()); err != nil {
 						return err
 					}
 				}
