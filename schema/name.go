@@ -182,6 +182,12 @@ func NewGlobalNamer(file *File, reps replace.Replacements, opts ...NamerOption) 
 		return reps.Replace(rawName, repTyp)
 	}
 
+	// fqName returns the raw fully qualified name of a key, that is, its whole
+	// path joined together.
+	fqName := func(key *payloadKey) string {
+		return strings.Join(key.fullyQualified(nOpts.overrides), "")
+	}
+
 	// fixedName returns the name a key is given outright, rather than by
 	// searching for the shortest unique suffix of its path.
 	fixedName := func(key *payloadKey) (string, bool) {
@@ -216,9 +222,54 @@ func NewGlobalNamer(file *File, reps replace.Replacements, opts ...NamerOption) 
 		names[resolveName(name, key.repTyp)] += 1
 	}
 
+	// Reserve the name of every root key that no other root key claims.
+	//
+	// A root key -- the top level struct or map built from a schema's payload
+	// or response keys -- has a fully qualified path of a single segment: the
+	// schema title, or the schema title plus "Response". It is also the only
+	// kind of key with no longer name to fall back on, so a nested key that
+	// merely shares its name can push it into a numbered suffix. Give the root
+	// its name and let the nested key take the qualified one instead.
+	//
+	// Roots that share a name with another root cannot both have it, so they
+	// are left to the general path and its numbered fallback, and a root whose
+	// name is already claimed by a fixed name yields to it.
+	rootCounts := make(map[string]int)
+	for _, key := range keys {
+		if _, ok := fixedName(key); ok || !key.root {
+			continue
+		}
+		rootCounts[resolveName(fqName(key), key.repTyp)] += 1
+	}
+
+	// reserved holds the resolved names claimed by a root key, and
+	// reservedKeys the root keys that claimed one.
+	reserved := make(map[string]bool)
+	reservedKeys := make(map[*payloadKey]bool)
+	for _, key := range keys {
+		if _, ok := fixedName(key); ok || !key.root {
+			continue
+		}
+		rawName := fqName(key)
+		resolved := resolveName(rawName, key.repTyp)
+		// names holds only the fixed names assigned so far, including any
+		// numbered ones, so a root yields to every one of them
+		if rootCounts[resolved] != 1 || names[resolved] > 0 {
+			continue
+		}
+		key.name = rawName
+		namer.keyNames[key.key] = key
+		reserved[resolved] = true
+		reservedKeys[key] = true
+	}
+
 	// mark every possible key name (using post-replacement names for collision counting)
 	for _, key := range keys {
 		if _, ok := fixedName(key); ok {
+			continue
+		}
+		if reservedKeys[key] {
+			// a reserved root key already owns its name
 			continue
 		}
 		fq := key.fullyQualified(nOpts.overrides)
@@ -236,11 +287,16 @@ outer:
 		if _, ok := fixedName(key); ok {
 			continue
 		}
+		if reservedKeys[key] {
+			continue
+		}
 		fq := key.fullyQualified(nOpts.overrides)
 		for start := len(fq) - 1; start >= 0; start-- {
 			rawName := strings.Join(fq[start:], "")
 			resolved := resolveName(rawName, key.repTyp)
-			if names[resolved] == 1 {
+			// a name reserved by a root key is taken, even though the root
+			// itself was not counted above
+			if names[resolved] == 1 && !reserved[resolved] {
 				key.name = rawName
 				namer.keyNames[key.key] = key
 				continue outer
