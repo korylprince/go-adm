@@ -224,11 +224,18 @@ See [cmd/README.md](cmd/README.md) for full flag reference for every tool.
 
 # Regenerating Code
 
-Run `./generate.sh` with the Go version used by the `check-generated` CI job
-(currently Go 1.27.x). Go formatter changes can affect generated comments even
-when the schemas and generator logic are unchanged. In particular, Go 1.27
-preserves paired backticks in struct field comments that older versions
-converted to curly quotes.
+Use Go 1.27.3 or newer to run `./generate.sh`, matching the Go version used by
+the `check-generated` CI job (currently Go 1.27.x). The checked-in output was
+regenerated with Go 1.27.3.
+
+The generators use Go's formatter, so its version can affect the output even
+when the schemas and generator logic are unchanged. Before Go 1.27, the
+formatter could mistake unindented struct field comments for top-level doc
+comments and convert paired backticks from Apple's schemas into curly quotes.
+Go 1.27 fixed this behavior ([Go issue #52605](https://github.com/golang/go/issues/52605)),
+preserving the backticks. The Go 1.27.3 minimum for regeneration keeps output
+consistent with the checked-in files and avoids comment-only `check-generated`
+failures; it does not change the minimum Go version for using the library.
 
 # Future Work
 
