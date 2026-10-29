@@ -1,17 +1,17 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/mdm/profiles/profiles
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/mdm/profiles/profiles
 
 package profiles
 
 import "time"
 
-const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
+const DeviceManagementGenerateHash = "9e7fdbe23990b2551c4b29b39bc8b0de956805eb"
 
 var PayloadMap = map[string]any{
 	".GlobalPreferences":                                     GlobalPreferences{},
 	"com.apple.ADCertificate.managed":                        ActiveDirectoryCertificate{},
 	"com.apple.AIM.account":                                  AIMAccount{},
-	"com.apple.AssetCache.managed":                           ContentCaching{},
+	"com.apple.AssetCache.managed":                           ContentCachingService{},
 	"com.apple.Dictionary":                                   ParentalControlsDictionary{},
 	"com.apple.DirectoryService.managed":                     DirectoryService{},
 	"com.apple.DiscRecording":                                MediaManagementDiscBurning{},
@@ -186,9 +186,9 @@ type TopLevel struct {
 	PayloadType PayloadType `json:"PayloadType" plist:"PayloadType" required:"true"`
 	// The version number of the profile format, which needs to be `1`. This number represents the version of the configuration profile as a whole, not of the individual profiles within it.
 	PayloadVersion TopLevelPayloadVersion `json:"PayloadVersion" plist:"PayloadVersion" required:"true"`
-	// The array of payload dictionaries. If `IsEncrypted` is `true`, this array isn't needed.
+	// The array of payload dictionaries. Not present for encrypted payloads.
 	PayloadContent []ProfilePayload `json:"PayloadContent" plist:"PayloadContent" required:"true"`
-	// Enabled if `IsEncrypted` is `true`.
+	// The encrypted payload content. Only present for encrypted payloads.
 	EncryptedPayloadContent *[]byte `json:"EncryptedPayloadContent,omitempty" plist:"EncryptedPayloadContent,omitempty"`
 	// The description of the profile, shown on the Detail screen for the profile. Make this description detailed enough to help the user decide whether to install the profile.
 	PayloadDescription *string `json:"PayloadDescription,omitempty" plist:"PayloadDescription,omitempty"`
@@ -295,13 +295,13 @@ type ActiveDirectoryCertificate struct {
 	*CommonPayloadKeys
 	// The fully qualified host name of the CA.
 	CertServer string `json:"CertServer" plist:"CertServer" required:"true"`
-	// The certificate template for your environment. The default user certificate value is \`User\`. The default computer certificate value is \`Machine\`.
+	// The certificate template for your environment. The default user certificate value is `User`. The default computer certificate value is `Machine`.
 	CertTemplate string `json:"CertTemplate" plist:"CertTemplate" required:"true"`
 	// A user-friendly description of the certification identity.
 	Description *string `json:"Description,omitempty" plist:"Description,omitempty"`
 	// The number of days in advance of certificate expiration that the notification center notifies the user.
 	CertificateRenewalTimeInterval *int64 `json:"CertificateRenewalTimeInterval,omitempty" plist:"CertificateRenewalTimeInterval,omitempty"`
-	// The name of the certificate authority (CA), which is determined from the common name (CN) of the Active Directory entry. Available in macOS 10.8 and later. Valid values:
+	// The name of the certificate authority (CA), which the device determines from the common name (CN) of the Active Directory entry. Valid values:
 	// - CN=<your CA Name>
 	// - CN=`Certification Authorities`
 	// - CN=`Public Key Services`
@@ -309,17 +309,17 @@ type ActiveDirectoryCertificate struct {
 	// - CN=`Configuration`
 	// - CN=<your base Domain Name>
 	CertificateAuthority *string `json:"CertificateAuthority,omitempty" plist:"CertificateAuthority,omitempty"`
-	// This value is most commonly `RPC`; if using web enrollment, use `HTTP`. Available in macOS 10.8 and later.
+	// This value is most commonly `RPC`; if using web enrollment, use `HTTP`.
 	CertificateAcquisitionMechanism *string `json:"CertificateAcquisitionMechanism,omitempty" plist:"CertificateAcquisitionMechanism,omitempty"`
-	// If `true`, gives apps access to the private key. Available in macOS 10.10 and later.
+	// If `true`, gives apps access to the private key.
 	AllowAllAppsAccess *bool `json:"AllowAllAppsAccess,omitempty" plist:"AllowAllAppsAccess,omitempty"`
-	// If `true`, the system prompts the user for credentials when is installs the profile. This key applies only to user certificates with the Manual Download profile delivery method. Omit this key for computer certificates. Available in macOS 10.8 and later.
+	// If `true`, the system prompts the user for credentials when is installs the profile. This key applies only to user certificates with the Manual Download profile delivery method. Omit this key for computer certificates.
 	PromptForCredentials *bool `json:"PromptForCredentials,omitempty" plist:"PromptForCredentials,omitempty"`
-	// If `true`, the system allows exporting the private key. Available in macOS 10.10 and later.
+	// If `true`, the system allows exporting the private key.
 	KeyIsExtractable *bool `json:"KeyIsExtractable,omitempty" plist:"KeyIsExtractable,omitempty"`
-	// The RSA key size for the certificate signing request (CSR). Available in macOS 10.11 and later.
+	// The RSA key size for the certificate signing request (CSR).
 	KeySize *int64 `default:"2048" json:"Keysize,omitempty" plist:"Keysize,omitempty"`
-	// If `true`, the certificate obtained with this payload attempts auto-renewal. Auto-renewal can only be used with device Active Directory certificate payloads. Available in macOS 10.13.4 and later.
+	// If `true`, the certificate obtained with this payload attempts auto-renewal. Auto-renewal can only be used with device Active Directory certificate payloads.
 	EnableAutoRenewal *bool `json:"EnableAutoRenewal,omitempty" plist:"EnableAutoRenewal,omitempty"`
 }
 
@@ -367,9 +367,9 @@ const (
 
 // The payload that configures the Content Caching service.
 // Configures the Content Caching service.
-type ContentCaching struct {
+type ContentCachingService struct {
 	*CommonPayloadKeys
-	// If true, the system purges content from the cache automatically when it needs disk space for other apps when free disk space runs low on the computer. Set to `false` to maximize effectiveness of Content Caching. Available in macOS 10.15 and later.
+	// If true, the system purges content from the cache automatically when it needs disk space for other apps when free disk space runs low on the computer. Set to `false` to maximize effectiveness of Content Caching.
 	AllowCacheDelete *bool `json:"AllowCacheDelete,omitempty" plist:"AllowCacheDelete,omitempty"`
 	// If `true`, the system caches the user's iCloud data. Changes to this value don't have an immediate effect. Clients may take some time, such as hours or days, to react to changes.
 	// > Note:
@@ -383,7 +383,6 @@ type ContentCaching struct {
 	// Removing a profile that set `AutoActivation` to `true` doesn't deactivate the Content Cache.
 	AutoActivation *bool `json:"AutoActivation,omitempty" plist:"AutoActivation,omitempty"`
 	// If `true`, the system automatically enables Internet connection sharing when possible and prevent disabling Internet connection sharing. `DenyTetheredCaching` overrides `AutoEnableTetheredCaching`. Tethered caching requires Content Caching.
-	// Available in macOS 10.15.4 and later.
 	AutoEnableTetheredCaching *bool `json:"AutoEnableTetheredCaching,omitempty" plist:"AutoEnableTetheredCaching,omitempty"`
 	// The maximum number of bytes of disk space to use for the content cache. Set to `0` for unlimited disk space.
 	CacheLimit *int64 `default:"0" json:"CacheLimit,omitempty" plist:"CacheLimit,omitempty"`
@@ -392,9 +391,9 @@ type ContentCaching struct {
 	DataPath *string `default:"/Library/Application Support/Apple/AssetCache/Data" json:"DataPath,omitempty" plist:"DataPath,omitempty"`
 	// If `true`, the system disables tethered caching.
 	DenyTetheredCaching *bool `json:"DenyTetheredCaching,omitempty" plist:"DenyTetheredCaching,omitempty"`
-	// If `true`, Content Caching displays exceptional conditions (alerts) as system notifications in the upper corner of the screen. Alerts were automatically displayed starting in macOS 10.13. In macOS 10.15 the alerts are off by default, but still available through this setting. Available in macOS 10.15 and later.
+	// If `true`, Content Caching displays exceptional conditions (alerts) as system notifications in the upper corner of the screen. The device automatically displayed alerts starting in macOS 10.13. In macOS 10.15 the alerts are off by default, but still available through this setting.
 	DisplayAlerts *bool `json:"DisplayAlerts,omitempty" plist:"DisplayAlerts,omitempty"`
-	// If `true`, the system prevents the computer from sleeping as long as Content Caching is on (System Preferences > Sharing > Content Caching is on). Customers who want Content Caching to be as available as much as possible should turn this setting on. Available in macOS 10.15 and later.
+	// If `true`, the system prevents the computer from sleeping as long as Content Caching is on (System Preferences > Sharing > Content Caching is on). Customers who want Content Caching to be as available as much as possible should turn this setting on.
 	KeepAwake *bool `json:"KeepAwake,omitempty" plist:"KeepAwake,omitempty"`
 	// An array of dictionaries that describe a range of client IP addresses to serve.
 	ListenRanges *[]*RangesItem `json:"ListenRanges,omitempty" plist:"ListenRanges,omitempty"`
@@ -409,11 +408,11 @@ type ContentCaching struct {
 	// An array of the local IP addresses of other content caches that this cache should download from or upload to, instead of downloading from or uploading to Apple directly. The system ignores invalid addresses and addresses of computers that aren't content caches. The system skips Parent caches that become unavailable. If all parent content caches become unavailable, the content cache downloads from or uploads to Apple directly, until a parent content cache becomes available again.
 	Parents *[]string `json:"Parents,omitempty" plist:"Parents,omitempty"`
 	// The policy to implement when choosing among more than one configured parent content cache. With every policy, the system skips parent caches that are temporarily unavailable. Allowed values:
-	// - `first-available`: Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.
-	// - `url-path-hash`: Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of     the parents.
-	// - `random`: Choose a parent at random. Use this policy for load balancing.
-	// - `round-robin`: Rotate through the parents in order. Use this policy for load balancing.
-	// - `sticky-available`: Use the first available parent in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.
+	// * `first-available`: Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.
+	// * `url-path-hash`: Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of     the parents.
+	// * `random`: Choose a parent at random. Use this policy for load balancing.
+	// * `round-robin`: Rotate through the parents in order. Use this policy for load balancing.
+	// * `sticky-available`: Use the first available parent in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.
 	ParentSelectionPolicy *ParentSelectionPolicy `default:"round-robin" json:"ParentSelectionPolicy,omitempty" plist:"ParentSelectionPolicy,omitempty"`
 	// An array of dictionaries describing a range of peer IP addresses that the content cache uses to filter its list of peers to query for content. The content cache only queries peers in `PeerFilterRanges`. When `PeerFilterRanges` is an empty array, the content cache doesn't query any peers.
 	PeerFilterRanges *[]*RangesItem `json:"PeerFilterRanges,omitempty" plist:"PeerFilterRanges,omitempty"`
@@ -427,7 +426,7 @@ type ContentCaching struct {
 	PublicRanges *[]*RangesItem `json:"PublicRanges,omitempty" plist:"PublicRanges,omitempty"`
 }
 
-func (p *ContentCaching) PayloadType() string {
+func (p *ContentCachingService) PayloadType() string {
 	return "com.apple.AssetCache.managed"
 }
 
@@ -450,11 +449,11 @@ const (
 )
 
 // The policy to implement when choosing among more than one configured parent content cache. With every policy, the system skips parent caches that are temporarily unavailable. Allowed values:
-// - `first-available`: Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.
-// - `url-path-hash`: Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of     the parents.
-// - `random`: Choose a parent at random. Use this policy for load balancing.
-// - `round-robin`: Rotate through the parents in order. Use this policy for load balancing.
-// - `sticky-available`: Use the first available parent in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.
+// * `first-available`: Always use the first available parent in the Parents list. Use this policy to designate permanent primary, secondary, and subsequent parents.
+// * `url-path-hash`: Hash the path part of the requested URL so that the same parent is always used for the same URL. This is useful for maximizing the size of the combined caches of     the parents.
+// * `random`: Choose a parent at random. Use this policy for load balancing.
+// * `round-robin`: Rotate through the parents in order. Use this policy for load balancing.
+// * `sticky-available`: Use the first available parent in the Parents list until it becomes unavailable, then advance to the next one. Use this policy for designating floating primary, secondary, and subsequent parents.
 type ParentSelectionPolicy string
 
 const (
@@ -569,9 +568,9 @@ func (p *DirectoryService) PayloadType() string {
 type MediaManagementDiscBurning struct {
 	*CommonPayloadKeys
 	// Configure disc-burn. Allowed values:
-	// - `off`: The system disables disc burning.
-	// - `on`: The system allows normal default operation. Setting this key to `on` doesn't enable disc burn support if other mechanisms or preferences disabled it. Needs to be enabled with the `Finder` profile.
-	// - `authenticate`: The system requires authentication.
+	// * `off`: The system disables disc burning.
+	// * `on`: The system allows normal default operation. Setting this key to `on` doesn't enable disc burn support if other mechanisms or preferences disabled it. Needs to be enabled with the `Finder` profile.
+	// * `authenticate`: The system requires authentication.
 	BurnSupport BurnSupport `json:"BurnSupport" plist:"BurnSupport" required:"true"`
 }
 
@@ -580,9 +579,9 @@ func (p *MediaManagementDiscBurning) PayloadType() string {
 }
 
 // Configure disc-burn. Allowed values:
-// - `off`: The system disables disc burning.
-// - `on`: The system allows normal default operation. Setting this key to `on` doesn't enable disc burn support if other mechanisms or preferences disabled it. Needs to be enabled with the `Finder` profile.
-// - `authenticate`: The system requires authentication.
+// * `off`: The system disables disc burning.
+// * `on`: The system allows normal default operation. Setting this key to `on` doesn't enable disc burn support if other mechanisms or preferences disabled it. Needs to be enabled with the `Finder` profile.
+// * `authenticate`: The system requires authentication.
 type BurnSupport string
 
 const (
@@ -873,8 +872,8 @@ type FDEFileVault struct {
 	// If `true`, the system prevents requests to enable FileVault at user logout time.
 	DeferDontAskAtUserLogout *bool `json:"DeferDontAskAtUserLogout,omitempty" plist:"DeferDontAskAtUserLogout,omitempty"`
 	// If `true`, and installation of this payload occurs after enrolling with MDM in Setup Assistant, the system requests Setup Assistant to enable FileVault at setup time.
-	// To use this, enable the Await Device Configured DEP configuration option and send this profile with this key set, before sending the `DeviceConfiguredCommand`.
-	// An admin SecureToken user is required, otherwise the FileVault pane does not appear.
+	// To use this, enable the Await Device Configured ADE configuration option and send this profile with this key set, before sending the `DeviceConfiguredCommand`.
+	// An admin SecureToken user is required, otherwise the FileVault pane doesn't appear.
 	ForceEnableInSetupAssistant *bool `json:"ForceEnableInSetupAssistant,omitempty" plist:"ForceEnableInSetupAssistant,omitempty"`
 }
 
@@ -976,7 +975,7 @@ type SetupAssistant struct {
 	SkipScreenTime *bool `json:"SkipScreenTime,omitempty" plist:"SkipScreenTime,omitempty"`
 	// If `true`, the system skips the Accessibility pane.
 	SkipAccessibility *bool `json:"SkipAccessibility,omitempty" plist:"SkipAccessibility,omitempty"`
-	// An array of strings that describe the setup items to skip. `SkipKeys` provides a list of valid strings and their meanings. Available in iOS 14 and later, and macOS 15 and later.
+	// An array of strings that describe the setup items to skip. `SkipKeys` provides a list of valid strings and their meanings.
 	SkipSetupItems *[]string `json:"SkipSetupItems,omitempty" plist:"SkipSetupItems,omitempty"`
 	// If `true`, the system skips the Unlock With Apple Watch pane.
 	SkipUnlockWithWatch *bool `json:"SkipUnlockWithWatch,omitempty" plist:"SkipUnlockWithWatch,omitempty"`
@@ -994,7 +993,7 @@ type ShareKit struct {
 	*CommonPayloadKeys
 	// The list of plugin IDs that show up in the user's Share menu. If this array exists, only these items are permitted.
 	SHKAllowedShareServices *[]string `json:"SHKAllowedShareServices,omitempty" plist:"SHKAllowedShareServices,omitempty"`
-	// The list of plugin IDs that won't show up in the user's Share menu. This key is used only if there is no `SHKAllowedShareServices` key.
+	// The list of plugin IDs that won't show up in the user's Share menu. This key is used only if there's no `SHKAllowedShareServices` key.
 	SHKDeniedShareServices *[]string `json:"SHKDeniedShareServices,omitempty" plist:"SHKDeniedShareServices,omitempty"`
 }
 
@@ -1002,11 +1001,11 @@ func (p *ShareKit) PayloadType() string {
 	return "com.apple.ShareKitHelper"
 }
 
-// The payload that configures the software update policy.
+// The payload that configures the software update policy. Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 // Software update catalog options.
 type SoftwareUpdate struct {
 	*CommonPayloadKeys
-	// The URL of the software update catalog. This property is not supported in macOS 11 and later.
+	// The URL of the software update catalog. This property isn't supported in macOS 11 and later.
 	CatalogURL *string `json:"CatalogURL,omitempty" plist:"CatalogURL,omitempty"`
 	// If `true`, prerelease software can be installed on this computer.
 	AllowPreReleaseInstallation *bool `json:"AllowPreReleaseInstallation,omitempty" plist:"AllowPreReleaseInstallation,omitempty"`
@@ -1115,11 +1114,12 @@ type Services struct {
 	Reminders *[]*IdentityDict `json:"Reminders,omitempty" plist:"Reminders,omitempty"`
 	// The pictures managed by the Photos app in `~/Pictures/.photoslibrary`.
 	Photos *[]*IdentityDict `json:"Photos,omitempty" plist:"Photos,omitempty"`
-	// A system camera. Access to the camera can't be given in a profile; it can only be denied.
+	// A system camera. A profile can't grant access to the camera; it can only deny it.
 	Camera *[]*IdentityDict `json:"Camera,omitempty" plist:"Camera,omitempty"`
-	// A system microphone. Access to the microphone can't be given in a profile; it can only be denied.
+	// A system microphone. A profile can't grant access to the microphone; it can only deny it.
 	Microphone *[]*IdentityDict `json:"Microphone,omitempty" plist:"Microphone,omitempty"`
-	// Specifies the policies for the app via the Accessibility subsystem. The ability to grant access by this profile is deprecated as of macOS 26.2, and will be removed in macOS 27.0.
+	// Specifies the policies for the app via the Accessibility subsystem. In macOS 27.0, the device shows a non-blocking notification for each application when this setting is applied, and it allows the user to make changes to the setting in the System Settings app.
+	// Deprecated: use the `Privacy` key in the declarative management `com.apple.configuration.app.settings` configuration.
 	Accessibility *[]*IdentityDict `json:"Accessibility,omitempty" plist:"Accessibility,omitempty"`
 	// Specifies the policies for the application to use CoreGraphics APIs to send CGEvents to the system event stream.
 	PostEvent *[]*IdentityDict `json:"PostEvent,omitempty" plist:"PostEvent,omitempty"`
@@ -1133,11 +1133,12 @@ type Services struct {
 	MediaLibrary *[]*IdentityDict `json:"MediaLibrary,omitempty" plist:"MediaLibrary,omitempty"`
 	// Allows a File Provider application to know when the user is using files managed by the File Provider.
 	FileProviderPresence *[]*IdentityDict `json:"FileProviderPresence,omitempty" plist:"FileProviderPresence,omitempty"`
-	// Allows the application to use CoreGraphics and HID APIs to listen to (receive) CGEvents and HID events from all processes. Access to these events can't be given in a profile; it can only be denied.
+	// Allows the application to use CoreGraphics and HID APIs to listen to (receive) CGEvents and HID events from all processes. A profile can't grant access to these events; it can only deny it.
 	ListenEvent *[]*IdentityDict `json:"ListenEvent,omitempty" plist:"ListenEvent,omitempty"`
-	// Allows the application to capture (read) the contents of the system display. Access to the contents can't be given in a profile; it can only be denied.
+	// Allows the application to capture (read) the contents of the system display. A profile can't grant access to the contents; it can only deny it.
 	ScreenCapture *[]*IdentityDict `json:"ScreenCapture,omitempty" plist:"ScreenCapture,omitempty"`
 	// Allows the application to use the system Speech Recognition facility and to send speech data to Apple.
+	// Deprecated: use the `Privacy` key in the declarative management `com.apple.configuration.app.settings` configuration.
 	SpeechRecognition *[]*IdentityDict `json:"SpeechRecognition,omitempty" plist:"SpeechRecognition,omitempty"`
 	// Allows the application to access files in the user's Desktop folder.
 	SystemPolicyDesktopFolder *[]*IdentityDict `json:"SystemPolicyDesktopFolder,omitempty" plist:"SystemPolicyDesktopFolder,omitempty"`
@@ -1149,11 +1150,12 @@ type Services struct {
 	SystemPolicyNetworkVolumes *[]*IdentityDict `json:"SystemPolicyNetworkVolumes,omitempty" plist:"SystemPolicyNetworkVolumes,omitempty"`
 	// Allows the application to access files on removable volumes.
 	SystemPolicyRemovableVolumes *[]*IdentityDict `json:"SystemPolicyRemovableVolumes,omitempty" plist:"SystemPolicyRemovableVolumes,omitempty"`
-	// Allows the application to update or delete other apps. Available in macOS 13 and later.
+	// Allows the application to update or delete other apps.
 	SystemPolicyAppBundles *[]*IdentityDict `json:"SystemPolicyAppBundles,omitempty" plist:"SystemPolicyAppBundles,omitempty"`
 	// Specifies the policies for the app to access the data of other apps.
 	SystemPolicyAppData *[]*IdentityDict `json:"SystemPolicyAppData,omitempty" plist:"SystemPolicyAppData,omitempty"`
 	// Specifies the policies for the app to access Bluetooth devices.
+	// Deprecated: use the `Privacy` key in the declarative management `com.apple.configuration.app.settings` configuration.
 	BluetoothAlways *[]*IdentityDict `json:"BluetoothAlways,omitempty" plist:"BluetoothAlways,omitempty"`
 }
 
@@ -1165,7 +1167,7 @@ type IdentityDict struct {
 	Identifier string `json:"Identifier" plist:"Identifier" required:"true"`
 	// The type of identifier value. Application bundles must be identified by bundle ID. Nonbundled binaries must be identified by installation path. Helper tools embedded within an application bundle automatically inherit the permissions of their enclosing app bundle.
 	IdentifierType IdentifierType `json:"IdentifierType" plist:"IdentifierType" required:"true"`
-	// Obtained via the command `codesign -display -r -`.
+	// Obtain this value by running `codesign -display -r -`.
 	CodeRequirement string `json:"CodeRequirement" plist:"CodeRequirement" required:"true"`
 	// If `true`, statically validate the code requirement. Used only if the process invalidates its dynamic code signature.
 	StaticCode *bool `json:"StaticCode,omitempty" plist:"StaticCode,omitempty"`
@@ -1179,7 +1181,6 @@ type IdentityDict struct {
 	// - `AllowStandardUserToSetSystemService`: Allows a standard (non-admin) user to configure the permissions for the specified app in the Privacy preferences for services that otherwise require admin authorization; only valid for the `ListenEvent` and `ScreenCapture` services
 	// > Note:
 	// > Every payload needs to include either `Authorization` or `Allowed`, but not both.
-	// Available in macOS 11 and later.
 	Authorization *Authorization `json:"Authorization,omitempty" plist:"Authorization,omitempty"`
 	// Not used.
 	Comment *string `json:"Comment,omitempty" plist:"Comment,omitempty"`
@@ -1205,7 +1206,6 @@ const (
 // - `AllowStandardUserToSetSystemService`: Allows a standard (non-admin) user to configure the permissions for the specified app in the Privacy preferences for services that otherwise require admin authorization; only valid for the `ListenEvent` and `ScreenCapture` services
 // > Note:
 // > Every payload needs to include either `Authorization` or `Allowed`, but not both.
-// Available in macOS 11 and later.
 type Authorization string
 
 const (
@@ -1227,9 +1227,9 @@ const (
 type AirPlaySecurity struct {
 	*CommonPayloadKeys
 	// The security policy for AirPlay. Allowed values:
-	// - `PASSCODE_ONCE`: Requires an onscreen passcode on first connection from a device. Subsequent connections from the same device aren't prompted.
-	// - `PASSCODE_ALWAYS`: Requires an onscreen passcode for every AirPlay connection. After an AirPlay connection ends, the system allows reconnecting within 30 seconds without a password.
-	// - `PASSWORD`: Requires the passphrase set for `Password`.
+	// * `PASSCODE_ONCE`: Requires an onscreen passcode on first connection from a device. Subsequent connections from the same device aren't prompted.
+	// * `PASSCODE_ALWAYS`: Requires an onscreen passcode for every AirPlay connection. After an AirPlay connection ends, the system allows reconnecting within 30 seconds without a password.
+	// * `PASSWORD`: Requires the passphrase set for `Password`.
 	// > Note:
 	// > `NONE` was deprecated in tvOS 11.3. Existing profiles that use `NONE` get the `PASSWORD_ONCE` behavior.
 	SecurityType SecurityType `json:"SecurityType" plist:"SecurityType" required:"true"`
@@ -1246,9 +1246,9 @@ func (p *AirPlaySecurity) PayloadType() string {
 }
 
 // The security policy for AirPlay. Allowed values:
-// - `PASSCODE_ONCE`: Requires an onscreen passcode on first connection from a device. Subsequent connections from the same device aren't prompted.
-// - `PASSCODE_ALWAYS`: Requires an onscreen passcode for every AirPlay connection. After an AirPlay connection ends, the system allows reconnecting within 30 seconds without a password.
-// - `PASSWORD`: Requires the passphrase set for `Password`.
+// * `PASSCODE_ONCE`: Requires an onscreen passcode on first connection from a device. Subsequent connections from the same device aren't prompted.
+// * `PASSCODE_ALWAYS`: Requires an onscreen passcode for every AirPlay connection. After an AirPlay connection ends, the system allows reconnecting within 30 seconds without a password.
+// * `PASSWORD`: Requires the passphrase set for `Password`.
 // > Note:
 // > `NONE` was deprecated in tvOS 11.3. Existing profiles that use `NONE` get the `PASSWORD_ONCE` behavior.
 type SecurityType string
@@ -1274,18 +1274,18 @@ const (
 type AirPlay struct {
 	*CommonPayloadKeys
 	// If present, only AirPlay destinations in this list are available to the device. This allow list applies to supervised devices.
-	AllowList *[]AllowListItem `json:"AllowList,omitempty" plist:"AllowList,omitempty"`
+	AllowList *[]AirPlayAllowListAllowListItem `json:"AllowList,omitempty" plist:"AllowList,omitempty"`
 	// If present, sets passwords for known AirPlay destinations. Using multiple entries for the same destination, whether within the same payload or across multiple installed payloads, is an error and results in undefined behavior.
 	Passwords *[]PasswordsItem `json:"Passwords,omitempty" plist:"Passwords,omitempty"`
 	// Use `AllowList` instead. This key is deprecated in iOS 14.5 and macOS 11.3.
-	Whitelist *[]AllowListItem `json:"Whitelist,omitempty" plist:"Whitelist,omitempty"`
+	Whitelist *[]AirPlayAllowListAllowListItem `json:"Whitelist,omitempty" plist:"Whitelist,omitempty"`
 }
 
 func (p *AirPlay) PayloadType() string {
 	return "com.apple.airplay"
 }
 
-type AllowListItem struct {
+type AirPlayAllowListAllowListItem struct {
 	// The device ID of the AirPlay destination in the format `xx:xx:xx:xx:xx:xx`. This field isn't case-sensitive.
 	// The system limits the list of visible AirPlay destinations to devices that are present in the `AllowList` field of all installed AirPlay payloads.
 	// Specifying the same MACAddress more than once, whether in the same payload across different payloads, results in undefined behavior.
@@ -1296,7 +1296,7 @@ type AllowListItem struct {
 	DeviceName *string `json:"DeviceName,omitempty" plist:"DeviceName,omitempty"`
 }
 type PasswordsItem struct {
-	// The name of the AirPlay destination; used in iOS, and available in macOS 15 and later.
+	// The name of the AirPlay destination.
 	DeviceName *string `json:"DeviceName,omitempty" plist:"DeviceName,omitempty"`
 	// The password for the AirPlay destination.
 	Password string `json:"Password" plist:"Password" required:"true"`
@@ -1327,7 +1327,7 @@ type AirPrintItem struct {
 	ResourcePath string `json:"ResourcePath" plist:"ResourcePath" required:"true"`
 	// The listening port of the AirPrint destination. Available only in iOS 11 and later.
 	Port *int64 `json:"Port,omitempty" plist:"Port,omitempty"`
-	// If `true`, AirPrint connections are secured by Transport Layer Security (TLS). Available only in iOS 11 and later.
+	// If `true`, Transport Layer Security (TLS) secures AirPrint connections. Available only in iOS 11 and later.
 	ForceTLS *bool `json:"ForceTLS,omitempty" plist:"ForceTLS,omitempty"`
 }
 
@@ -1350,7 +1350,7 @@ func (p *APN) PayloadType() string {
 
 // The list of access point names (APNs).
 type DefaultsData struct {
-	// An array of APN dictionaries (\`APN.DefaultsData.Apns\`).
+	// An array of APN dictionaries.
 	APNs []*DefaultsDataAPNsAPNsItem `json:"apns" plist:"apns" required:"true"`
 }
 
@@ -1444,21 +1444,27 @@ type UserEnabledOptions struct {
 // Parental controls application restrictions.
 // Order of evaluation:
 // (1) Certain system applications and utilities are always allowed to run
-// (2) The "whiteList" is searched to see if a matching entry is found by bundleID. If a match is found, the "appID" and "detachedSignature"
+// (2) The "allowList" is searched to see if a matching entry is found by bundleID. If a match is found, the "appID" and "detachedSignature"
 // (if present) are used to verify the signature of the application being launched. If the signature is valid and matches the designated
 // requirement (in the "appID" key), the application is allowed to launch.
-// (3) (deprecated) If the path to the binary being launched matches (or is in a subdirectory) of a path in "pathBlackList", the binary is denied.
-// (4) (deprecated) If the path to the binary being launched matches (or is a subdirectory) of a path in "pathWhiteList", the binary is allowed to launch.
+// (3) (deprecated) If the path to the binary being launched matches (or is in a subdirectory) of a path in "pathDenyList", the binary is denied.
+// (4) (deprecated) If the path to the binary being launched matches (or is a subdirectory) of a path in "pathAllowList", the binary is allowed to launch.
 // (5) The binary is denied permission to launch.
 type ParentalControlsApplicationRestrictions struct {
 	*CommonPayloadKeys
 	// If `true`, enables app access restrictions.
 	FamilyControlsEnabled bool `json:"familyControlsEnabled" plist:"familyControlsEnabled" required:"true"`
 	// The allow list of app item dictionaries.
-	WhiteList *[]*ParentalControlsApplicationRestrictionsWhiteListWhiteListItem `json:"whiteList,omitempty" plist:"whiteList,omitempty"`
-	// The paths to apps in the deny list. This property is deprecated in macOS 10.15 and later.
+	AllowList *[]*ParentalControlsApplicationRestrictionsAllowListAllowListItem `json:"allowList,omitempty" plist:"allowList,omitempty"`
+	// The allow list of app item dictionaries. This property is deprecated in macOS 10.15 and later - use `allowList` instead.
+	WhiteList *[]*ParentalControlsApplicationRestrictionsAllowListAllowListItem `json:"whiteList,omitempty" plist:"whiteList,omitempty"`
+	// The paths to apps in the deny list.
+	PathDenyList *[]string `json:"pathDenyList,omitempty" plist:"pathDenyList,omitempty"`
+	// The paths to apps in the deny list. This property is deprecated in macOS 10.15 and later - use `pathDenyList` instead.
 	PathBlackList *[]string `json:"pathBlackList,omitempty" plist:"pathBlackList,omitempty"`
-	// The paths to apps in the allow list. This property is deprecated in macOS 10.15 and later.
+	// The paths to apps in the allow list.
+	PathAllowList *[]string `json:"pathAllowList,omitempty" plist:"pathAllowList,omitempty"`
+	// The paths to apps in the allow list. This property is deprecated in macOS 10.15 and later - use `pathAllowList` instead.
 	PathWhiteList *[]string `json:"pathWhiteList,omitempty" plist:"pathWhiteList,omitempty"`
 }
 
@@ -1467,7 +1473,7 @@ func (p *ParentalControlsApplicationRestrictions) PayloadType() string {
 }
 
 // A dictionary defining an app for parental control.
-type ParentalControlsApplicationRestrictionsWhiteListWhiteListItem struct {
+type ParentalControlsApplicationRestrictionsAllowListAllowListItem struct {
 	// The bundle ID of the app.
 	BundleID string `json:"bundleID" plist:"bundleID" required:"true"`
 	// The identifier of the app. Obtain this value from the Security framework using `SecCodeCopyDesignatedRequirement`.
@@ -1477,7 +1483,7 @@ type ParentalControlsApplicationRestrictionsWhiteListWhiteListItem struct {
 	// If `true`, this app isn't added to the allow list.
 	Disabled *bool `json:"disabled,omitempty" plist:"disabled,omitempty"`
 	// An array of nested helper applications.
-	SubApps *[]*ParentalControlsApplicationRestrictionsWhiteListWhiteListItem `json:"subApps,omitempty" plist:"subApps,omitempty"`
+	SubApps *[]*ParentalControlsApplicationRestrictionsAllowListAllowListItem `json:"subApps,omitempty" plist:"subApps,omitempty"`
 	// The name used for display purposes.
 	DisplayName *string `json:"displayName,omitempty" plist:"displayName,omitempty"`
 }
@@ -1509,6 +1515,7 @@ type Restrictions struct {
 	// In iOS 10 and later, MDM commands can override this restriction. Requires a supervised device in iOS 13 and later.
 	AllowAppInstallation *bool `json:"allowAppInstallation,omitempty" plist:"allowAppInstallation,omitempty"`
 	// If `false`, the system disables Apple Intelligence reports.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowAppleIntelligenceReport *bool `json:"allowAppleIntelligenceReport,omitempty" plist:"allowAppleIntelligenceReport,omitempty"`
 	// If `false`, the system limits Apple personalized advertising.
 	AllowApplePersonalizedAdvertising *bool `json:"allowApplePersonalizedAdvertising,omitempty" plist:"allowApplePersonalizedAdvertising,omitempty"`
@@ -1521,12 +1528,16 @@ type Restrictions struct {
 	// If `false`, the system prevents modifying the Remote Management Sharing setting in System Settings.
 	AllowARDRemoteManagementModification *bool `json:"allowARDRemoteManagementModification,omitempty" plist:"allowARDRemoteManagementModification,omitempty"`
 	// If `false`, the system disables Siri.
+	// Deprecated: use the declarative management `com.apple.configuration.siri.settings` configuration.
 	AllowAssistant *bool `json:"allowAssistant,omitempty" plist:"allowAssistant,omitempty"`
 	// If `false`, the system prevents Siri from querying user-generated content from the web.
+	// Deprecated: use the declarative management `com.apple.configuration.siri.settings` configuration.
 	AllowAssistantUserGeneratedContent *bool `json:"allowAssistantUserGeneratedContent,omitempty" plist:"allowAssistantUserGeneratedContent,omitempty"`
 	// If `false`, the system disables Siri when the device is locked. The system ignores this restriction if the device doesn't have a passcode set.
+	// Deprecated: use the declarative management `com.apple.configuration.siri.settings` configuration.
 	AllowAssistantWhileLocked *bool `json:"allowAssistantWhileLocked,omitempty" plist:"allowAssistantWhileLocked,omitempty"`
 	// If `false`, the system disables keyboard autocorrection.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowAutoCorrection *bool `json:"allowAutoCorrection,omitempty" plist:"allowAutoCorrection,omitempty"`
 	// If `false`, disables auto dim on iPads with OLED displays.
 	AllowAutoDim *bool `json:"allowAutoDim,omitempty" plist:"allowAutoDim,omitempty"`
@@ -1581,6 +1592,7 @@ type Restrictions struct {
 	// If `false`, the system disables content caching. This restriction is not supported on the user channel.
 	AllowContentCaching *bool `json:"allowContentCaching,omitempty" plist:"allowContentCaching,omitempty"`
 	// If `false`, the system disables QuickPath keyboard.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowContinuousPathKeyboard *bool `json:"allowContinuousPathKeyboard,omitempty" plist:"allowContinuousPathKeyboard,omitempty"`
 	// If `false`, disables default browser preference modification. The MDM Settings command to set the default browser preference still works when applying this.
 	AllowDefaultBrowserModification *bool `json:"allowDefaultBrowserModification,omitempty" plist:"allowDefaultBrowserModification,omitempty"`
@@ -1589,6 +1601,7 @@ type Restrictions struct {
 	// If `false`, disables default messaging app preference modification. The MDM Settings command to set the default messaging app preference still works when applying this.
 	AllowDefaultMessagingAppModification *bool `json:"allowDefaultMessagingAppModification,omitempty" plist:"allowDefaultMessagingAppModification,omitempty"`
 	// If `false`, the system disables definition lookup.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowDefinitionLookup *bool `json:"allowDefinitionLookup,omitempty" plist:"allowDefinitionLookup,omitempty"`
 	// If `false`, the system prevents the user from changing the device name.
 	AllowDeviceNameModification *bool `json:"allowDeviceNameModification,omitempty" plist:"allowDeviceNameModification,omitempty"`
@@ -1599,10 +1612,12 @@ type Restrictions struct {
 	// If `false`, the system disables changing the diagnostic submission and app analytics settings in the Diagnostics & Usage UI in Settings.
 	AllowDiagnosticSubmissionModification *bool `json:"allowDiagnosticSubmissionModification,omitempty" plist:"allowDiagnosticSubmissionModification,omitempty"`
 	// If `false`, the system disallows dictation input.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowDictation *bool `json:"allowDictation,omitempty" plist:"allowDictation,omitempty"`
 	// If present, the system exempts apps with bundle IDs in the array from the `allowCamera` restriction. The system doesn't grant these apps access to the camera automatically; they're only exempted from the `allowCamera` restriction. This key has no effect when the camera isn't restricted. Multiple payloads combine using an intersect operation. Requires a supervised device.
 	AllowedCameraRestrictionBundleIDs *[]string `json:"allowedCameraRestrictionBundleIDs,omitempty" plist:"allowedCameraRestrictionBundleIDs,omitempty"`
 	// An array of strings, but currently restricted to a single element. If present, Apple Intelligence allows use of only the given external integration workspace ID, and requires a sign-in to make requests. The user is required to sign in to integrations that support signing in. Multiple payloads combine using an intersect operation. This means the allowed set of workspace IDs can become the empty set if multiple payloads specify conflicting values.
+	// Deprecated: use the declarative management `com.apple.configuration.external-intelligence.settings` configuration.
 	AllowedExternalIntelligenceWorkspaceIDs *[]string `json:"allowedExternalIntelligenceWorkspaceIDs,omitempty" plist:"allowedExternalIntelligenceWorkspaceIDs,omitempty"`
 	// If `false`, the system disables the Enable Restrictions option in the Restrictions UI in Settings. If `false` in iOS 12 and later, the system disables the Enable ScreenTime option in the ScreenTime UI in Settings and disables ScreenTime if already enabled.
 	AllowEnablingRestrictions *bool `json:"allowEnablingRestrictions,omitempty" plist:"allowEnablingRestrictions,omitempty"`
@@ -1614,7 +1629,7 @@ type Restrictions struct {
 	AllowEnterpriseBookMetadataSync *bool `json:"allowEnterpriseBookMetadataSync,omitempty" plist:"allowEnterpriseBookMetadataSync,omitempty"`
 	// If `false`, the system disables the Erase All Content and Settings option in the Reset UI.
 	AllowEraseContentAndSettings *bool `json:"allowEraseContentAndSettings,omitempty" plist:"allowEraseContentAndSettings,omitempty"`
-	// If `false`, the system disables modifications of eSIMs.
+	// If `false`, the system disables modifications of eSIMs. This also disables the phone number sharing setup on iPhones, in iOS 27 and later.
 	AllowESIMModification *bool `json:"allowESIMModification,omitempty" plist:"allowESIMModification,omitempty"`
 	// If `false`, prevents the transfer of an eSIM from the device on which the restriction is installed to a different device.
 	AllowESIMOutgoingTransfers *bool `json:"allowESIMOutgoingTransfers,omitempty" plist:"allowESIMOutgoingTransfers,omitempty"`
@@ -1622,8 +1637,10 @@ type Restrictions struct {
 	// Requires a supervised device in iOS 13 and later. Support for this restriction on unsupervised devices is deprecated.
 	AllowExplicitContent *bool `json:"allowExplicitContent,omitempty" plist:"allowExplicitContent,omitempty"`
 	// If `false`, disables the use of external, cloud-based intelligence services with Siri. In iOS, this restriction is temporarily allowed on unsupervised and user enrollments. In a future release, this restriction will require supervision, and will be ignored on unsupervised devices.
+	// Deprecated: use the declarative management `com.apple.configuration.external-intelligence.settings` configuration.
 	AllowExternalIntelligenceIntegrations *bool `json:"allowExternalIntelligenceIntegrations,omitempty" plist:"allowExternalIntelligenceIntegrations,omitempty"`
 	// If `false`, forces external intelligence providers into anonymous mode. If a user is already signed in to an external intelligence provider, applying this restriction signs them out when attempting the next request.
+	// Deprecated: use the declarative management `com.apple.configuration.external-intelligence.settings` configuration.
 	AllowExternalIntelligenceIntegrationsSignIn *bool `json:"allowExternalIntelligenceIntegrationsSignIn,omitempty" plist:"allowExternalIntelligenceIntegrationsSignIn,omitempty"`
 	// If `false`, the system prevents modifying File Sharing setting in System Settings.
 	AllowFileSharingModification *bool `json:"allowFileSharingModification,omitempty" plist:"allowFileSharingModification,omitempty"`
@@ -1644,14 +1661,17 @@ type Restrictions struct {
 	// If `false`, the system disables Game Center, and the system removes its icon from the Home Screen.
 	AllowGameCenter *bool `json:"allowGameCenter,omitempty" plist:"allowGameCenter,omitempty"`
 	// If `false`, prohibits creating new Genmoji.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowGenmoji *bool `json:"allowGenmoji,omitempty" plist:"allowGenmoji,omitempty"`
 	// If `false`, the system disables global background fetch activity when an iOS phone is roaming. Support for this restriction on unsupervised devices is deprecated.
 	AllowGlobalBackgroundFetchWhenRoaming *bool `json:"allowGlobalBackgroundFetchWhenRoaming,omitempty" plist:"allowGlobalBackgroundFetchWhenRoaming,omitempty"`
 	// If `false`, the system disables host pairing with the exception of the supervision host. If there's no configured supervision host certificate, the system disables all pairing. Host pairing lets the administrator control whether an iOS device can pair with a host Mac or PC.
 	AllowHostPairing *bool `json:"allowHostPairing,omitempty" plist:"allowHostPairing,omitempty"`
 	// If `false`, prohibits the use of image generation.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowImagePlayground *bool `json:"allowImagePlayground,omitempty" plist:"allowImagePlayground,omitempty"`
 	// If `false`, prohibits the use of Image Wand.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowImageWand *bool `json:"allowImageWand,omitempty" plist:"allowImageWand,omitempty"`
 	// If `false`, the system prohibits in-app purchasing. Support for this restriction on unsupervised devices is deprecated.
 	AllowInAppPurchases *bool `json:"allowInAppPurchases,omitempty" plist:"allowInAppPurchases,omitempty"`
@@ -1666,8 +1686,10 @@ type Restrictions struct {
 	// If `false`, the system disables iTunes file sharing services.
 	AllowiTunesFileSharing *bool `json:"allowiTunesFileSharing,omitempty" plist:"allowiTunesFileSharing,omitempty"`
 	// If `false`, the system disables keyboard shortcuts.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowKeyboardShortcuts *bool `json:"allowKeyboardShortcuts,omitempty" plist:"allowKeyboardShortcuts,omitempty"`
 	// If present, the system only shows or can launch apps with bundle IDs in the array. Include the value `com.apple.webapp` to allow all webclips. This applies to App Store apps, marketplace apps, and locally installed apps (using Configurator, Xcode, and so forth).
+	// Deprecated: use the declarative management `com.apple.configuration.app.settings` configuration.
 	AllowListedAppBundleIDs *[]string `json:"allowListedAppBundleIDs,omitempty" plist:"allowListedAppBundleIDs,omitempty"`
 	// If `false`, the system disables live voicemail on the device.
 	AllowLiveVoicemail *bool `json:"allowLiveVoicemail,omitempty" plist:"allowLiveVoicemail,omitempty"`
@@ -1682,8 +1704,10 @@ type Restrictions struct {
 	// If `false`, the system disables Mail Privacy Protection on the device.
 	AllowMailPrivacyProtection *bool `json:"allowMailPrivacyProtection,omitempty" plist:"allowMailPrivacyProtection,omitempty"`
 	// If `false`, disables smart replies in Mail.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowMailSmartReplies *bool `json:"allowMailSmartReplies,omitempty" plist:"allowMailSmartReplies,omitempty"`
 	// If `false`, disables the ability to create summaries of email messages manually. This doesn't affect automatic summary generation.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowMailSummary *bool `json:"allowMailSummary,omitempty" plist:"allowMailSummary,omitempty"`
 	// If `false`, the system prevents managed apps from using iCloud sync.
 	AllowManagedAppsCloudSync *bool `json:"allowManagedAppsCloudSync,omitempty" plist:"allowManagedAppsCloudSync,omitempty"`
@@ -1704,8 +1728,10 @@ type Restrictions struct {
 	// If `false`, the system disables NFC.
 	AllowNFC *bool `json:"allowNFC,omitempty" plist:"allowNFC,omitempty"`
 	// If `false`, disables transcription in Notes.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowNotesTranscription *bool `json:"allowNotesTranscription,omitempty" plist:"allowNotesTranscription,omitempty"`
 	// If `false`, disables transcription summarization in Notes.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowNotesTranscriptionSummary *bool `json:"allowNotesTranscriptionSummary,omitempty" plist:"allowNotesTranscriptionSummary,omitempty"`
 	// If `false`, the system disables modification of notification settings.
 	AllowNotificationsModification *bool `json:"allowNotificationsModification,omitempty" plist:"allowNotificationsModification,omitempty"`
@@ -1735,22 +1761,26 @@ type Restrictions struct {
 	// If `false`, the system disables modifications of the personal hotspot setting.
 	AllowPersonalHotspotModification *bool `json:"allowPersonalHotspotModification,omitempty" plist:"allowPersonalHotspotModification,omitempty"`
 	// If false, prevents the system from generating text in the user's handwriting.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowPersonalizedHandwritingResults *bool `json:"allowPersonalizedHandwritingResults,omitempty" plist:"allowPersonalizedHandwritingResults,omitempty"`
 	// If `false`, the system disables Photo Stream.
 	AllowPhotoStream *bool `json:"allowPhotoStream,omitempty" plist:"allowPhotoStream,omitempty"`
 	// If `false`, the system disables podcasts.
 	AllowPodcasts *bool `json:"allowPodcasts,omitempty" plist:"allowPodcasts,omitempty"`
 	// If `false`, the system disables predictive keyboards.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowPredictiveKeyboard *bool `json:"allowPredictiveKeyboard,omitempty" plist:"allowPredictiveKeyboard,omitempty"`
 	// If `false`, the system prevents modifying Printer Sharing settings in System Settings.
 	AllowPrinterSharingModification *bool `json:"allowPrinterSharingModification,omitempty" plist:"allowPrinterSharingModification,omitempty"`
-	// If `false`, disables the prompt to set up new devices that are nearby.
+	// If `false`, disables the prompt to set up new devices that are nearby. Starting with iOS 26.3, this also prevents exporting iOS data to set up new Android devices.
 	AllowProximitySetupToNewDevice *bool `json:"allowProximitySetupToNewDevice,omitempty" plist:"allowProximitySetupToNewDevice,omitempty"`
 	// If `false`, the system disables Apple Music Radio.
 	AllowRadioService *bool `json:"allowRadioService,omitempty" plist:"allowRadioService,omitempty"`
 	// If `false`, the system prohibits installation of Background Security Improvements.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	AllowRapidSecurityResponseInstallation *bool `json:"allowRapidSecurityResponseInstallation,omitempty" plist:"allowRapidSecurityResponseInstallation,omitempty"`
 	// If `false`, the system prohibits removal of Background Security Improvements.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	AllowRapidSecurityResponseRemoval *bool `json:"allowRapidSecurityResponseRemoval,omitempty" plist:"allowRapidSecurityResponseRemoval,omitempty"`
 	// If `false`, prevents the use of RCS messaging.
 	AllowRCSMessaging *bool `json:"allowRCSMessaging,omitempty" plist:"allowRCSMessaging,omitempty"`
@@ -1760,6 +1790,8 @@ type Restrictions struct {
 	AllowRemoteAppPairing *bool `json:"allowRemoteAppPairing,omitempty" plist:"allowRemoteAppPairing,omitempty"`
 	// If `false`, the system disables remote screen observation by the Classroom app. Nest this key beneath `allowScreenShot` as a subrestriction. If `allowScreenShot` is `false`, the Classroom app doesn't observe remote screens. Requires a supervised device until iOS 13 and macOS 10.15. Allowed for user enrollments in macOS 12 and later.
 	AllowRemoteScreenObservation *bool `json:"allowRemoteScreenObservation,omitempty" plist:"allowRemoteScreenObservation,omitempty"`
+	// If `false`, disables Rosetta usage awareness. When Rosetta usage awareness is active, the device displays a pop-up dialog to the user when launching an app that uses Rosetta. The pop-up dialog indicates that Rosetta will be removed in a future version of the operating system so that the user can contact the app vendor regarding a replacement for the current app.
+	AllowRosettaUsageAwareness *bool `json:"allowRosettaUsageAwareness,omitempty" plist:"allowRosettaUsageAwareness,omitempty"`
 	// If `false`, the system disables the Safari web browser app, and the system removes its icon from the Home Screen. This setting also prevents users from opening web clips. Requires a supervised device in iOS 13 and later.
 	AllowSafari *bool `json:"allowSafari,omitempty" plist:"allowSafari,omitempty"`
 	// If `false`, the system disables the ability to clear browsing history in Safari.
@@ -1767,6 +1799,7 @@ type Restrictions struct {
 	// If `false`, the system disables the ability to use private browsing in Safari.
 	AllowSafariPrivateBrowsing *bool `json:"allowSafariPrivateBrowsing,omitempty" plist:"allowSafariPrivateBrowsing,omitempty"`
 	// If `false`, the system disables the ability to summarize content in Safari.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowSafariSummary *bool `json:"allowSafariSummary,omitempty" plist:"allowSafariSummary,omitempty"`
 	// If `false`, the system prohibits the connection to and use of satellite services.
 	AllowSatelliteConnection *bool `json:"allowSatelliteConnection,omitempty" plist:"allowSatelliteConnection,omitempty"`
@@ -1776,7 +1809,11 @@ type Restrictions struct {
 	AllowSharedDeviceTemporarySession *bool `json:"allowSharedDeviceTemporarySession,omitempty" plist:"allowSharedDeviceTemporarySession,omitempty"`
 	// If `false`, the system disables Shared Photo Stream. Support for this restriction on unsupervised devices is deprecated.
 	AllowSharedStream *bool `json:"allowSharedStream,omitempty" plist:"allowSharedStream,omitempty"`
+	// If `false`, the system disables Apple Intelligence integration in Siri.
+	// Deprecated: use the declarative management `com.apple.configuration.siri.settings` configuration.
+	AllowSiriAI *bool `json:"allowSiriAI,omitempty" plist:"allowSiriAI,omitempty"`
 	// If `false`, the system disables the keyboard spell checker.
+	// Deprecated: use the declarative management `com.apple.configuration.keyboard.settings` configuration.
 	AllowSpellCheck *bool `json:"allowSpellCheck,omitempty" plist:"allowSpellCheck,omitempty"`
 	// If `false`, the system disables Spotlight Internet search results in Siri Suggestions. Support for this restriction on unsupervised devices is deprecated.
 	AllowSpotlightInternetResults *bool `json:"allowSpotlightInternetResults,omitempty" plist:"allowSpotlightInternetResults,omitempty"`
@@ -1784,7 +1821,7 @@ type Restrictions struct {
 	AllowStartupDiskModification *bool `json:"allowStartupDiskModification,omitempty" plist:"allowStartupDiskModification,omitempty"`
 	// If `false`, the system disables the removal of system apps from the device.
 	AllowSystemAppRemoval *bool `json:"allowSystemAppRemoval,omitempty" plist:"allowSystemAppRemoval,omitempty"`
-	// If `false`, the system prevents modification of Time Machine settings in System Settings. This restriction is not supported on the user channel.
+	// If `false`, the system prevents modification of Time Machine settings in System Settings. This restriction isn't supported on the user channel.
 	AllowTimeMachineBackup *bool `json:"allowTimeMachineBackup,omitempty" plist:"allowTimeMachineBackup,omitempty"`
 	// If `false`, the system disables the App Store and removes its icon from the Home Screen. However, users can continue to install or update their apps either locally (via Configurator, Xcode, and so forth), or using alternative marketplace apps.
 	// In iOS 10 and later, MDM commands can override this restriction.
@@ -1801,13 +1838,14 @@ type Restrictions struct {
 	AllowUnpairedExternalBootToRecovery *bool `json:"allowUnpairedExternalBootToRecovery,omitempty" plist:"allowUnpairedExternalBootToRecovery,omitempty"`
 	// If `false`, the system automatically rejects untrusted HTTPS certificates without prompting the user.
 	AllowUntrustedTLSPrompt *bool `json:"allowUntrustedTLSPrompt,omitempty" plist:"allowUntrustedTLSPrompt,omitempty"`
-	// If `false`, the system allows iOS devices to always connect to USB accessories while locked. In macOS, allows new USB and Thunderbolt accessories, and SD cards to connect without authorization. If the system has Lockdown mode enabled, it ignores this value. This restriction is not supported on the user channel.
+	// If `false`, the system allows iOS devices to always connect to USB accessories while locked. In macOS, allows new USB and Thunderbolt accessories, and SD cards to connect without authorization. If the system has Lockdown mode enabled, it ignores this value. This restriction isn't supported on the user channel.
 	AllowUSBRestrictedMode *bool `json:"allowUSBRestrictedMode,omitempty" plist:"allowUSBRestrictedMode,omitempty"`
 	// If `false`, the system hides the FaceTime app. Requires a supervised device in iOS 13 and later.
 	AllowVideoConferencing *bool `json:"allowVideoConferencing,omitempty" plist:"allowVideoConferencing,omitempty"`
 	// If `false`, disables the ability for a remote FaceTime session to request control of the device.
 	AllowVideoConferencingRemoteControl *bool `json:"allowVideoConferencingRemoteControl,omitempty" plist:"allowVideoConferencingRemoteControl,omitempty"`
 	// If `false`, the system disables visual intelligence summarization.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowVisualIntelligenceSummary *bool `json:"allowVisualIntelligenceSummary,omitempty" plist:"allowVisualIntelligenceSummary,omitempty"`
 	// If `false`, the system disables voice dialing if the device is locked with a passcode.
 	AllowVoiceDialing *bool `json:"allowVoiceDialing,omitempty" plist:"allowVoiceDialing,omitempty"`
@@ -1818,12 +1856,14 @@ type Restrictions struct {
 	// If `false`, the device prevents installation of apps directly from the web.
 	AllowWebDistributionAppInstallation *bool `json:"allowWebDistributionAppInstallation,omitempty" plist:"allowWebDistributionAppInstallation,omitempty"`
 	// If `false`, disables Apple Intelligence writing tools.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	AllowWritingTools *bool `json:"allowWritingTools,omitempty" plist:"allowWritingTools,omitempty"`
 	// If present, the system allows apps identified by the bundle IDs listed in the array to autonomously enter Single App Mode.
 	AutonomousSingleAppModePermittedAppIDs *[]string `json:"autonomousSingleAppModePermittedAppIDs,omitempty" plist:"autonomousSingleAppModePermittedAppIDs,omitempty"`
-	// Use `blockedAppBundleIDs` instead.
+	// Deprecated: use the declarative management `com.apple.configuration.app.settings` configuration.
 	BlacklistedAppBundleIDs *[]string `json:"blacklistedAppBundleIDs,omitempty" plist:"blacklistedAppBundleIDs,omitempty"`
 	// If present, the system prevents showing or launching apps with bundle IDs in the array. Include the value `com.apple.webapp` to restrict all webclips. This applies to App Store apps, marketplace apps, and locally installed apps (using Configurator, Xcode, and so forth).
+	// Deprecated: use the declarative management `com.apple.configuration.app.settings` configuration.
 	// > Note:
 	// > Denying system apps may disable other functionality. For example, denying the App Store app may prevent users from accepting the terms and conditions for the user-based Volume Purchase Program (VPP).
 	BlockedAppBundleIDs *[]string `json:"blockedAppBundleIDs,omitempty" plist:"blockedAppBundleIDs,omitempty"`
@@ -1834,12 +1874,16 @@ type Restrictions struct {
 	// The value, in seconds, after which the fingerprint unlock requires a password to authenticate. The default value is 48 hours.
 	EnforcedFingerprintTimeout *int64 `default:"172800" json:"enforcedFingerprintTimeout,omitempty" plist:"enforcedFingerprintTimeout,omitempty"`
 	// How many days to delay a software update on the device. With this restriction in place, the user doesn't see a software update until the specified number of days after the software update release date. The restrictions `forceDelayedAppSoftwareUpdates` and `forceDelayedSoftwareUpdates` use this value.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	EnforcedSoftwareUpdateDelay *int64 `default:"30" json:"enforcedSoftwareUpdateDelay,omitempty" plist:"enforcedSoftwareUpdateDelay,omitempty"`
 	// This restriction allows the administrator to set the number of days to delay a major software upgrade on the device. When this restriction is in place, the user sees a software upgrade only after the specified delay after the release of the software upgrade. This value controls the delay for `forceDelayedMajorSoftwareUpdates`.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	EnforcedSoftwareUpdateMajorOSDeferredInstallDelay *int64 `default:"30" json:"enforcedSoftwareUpdateMajorOSDeferredInstallDelay,omitempty" plist:"enforcedSoftwareUpdateMajorOSDeferredInstallDelay,omitempty"`
 	// This restriction allows the administrator to set the number of days to delay a minor OS software update on the device. When this restriction is in place, the user sees a software update only after the specified delay after the release of the software update. This value controls the delay for `forceDelayedSoftwareUpdates`.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	EnforcedSoftwareUpdateMinorOSDeferredInstallDelay *int64 `default:"30" json:"enforcedSoftwareUpdateMinorOSDeferredInstallDelay,omitempty" plist:"enforcedSoftwareUpdateMinorOSDeferredInstallDelay,omitempty"`
 	// This restriction allows the administrator to set the number of days to delay an app software update on the device. When this restriction is in place, the user sees a non-OS software update only after the specified delay after the release of the software. This value controls the delay for `forceDelayedAppSoftwareUpdates`.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	EnforcedSoftwareUpdateNonOSDeferredInstallDelay *int64 `default:"30" json:"enforcedSoftwareUpdateNonOSDeferredInstallDelay,omitempty" plist:"enforcedSoftwareUpdateNonOSDeferredInstallDelay,omitempty"`
 	// If `true`, the system considers AirDrop to be an unmanaged drop target.
 	ForceAirDropUnmanaged *bool `json:"forceAirDropUnmanaged,omitempty" plist:"forceAirDropUnmanaged,omitempty"`
@@ -1850,6 +1894,7 @@ type Restrictions struct {
 	// If `true`, the system requires trusted certificates for TLS printing communication.
 	ForceAirPrintTrustedTLSRequirement *bool `json:"forceAirPrintTrustedTLSRequirement,omitempty" plist:"forceAirPrintTrustedTLSRequirement,omitempty"`
 	// If `true`, the system forces the use of the profanity filter for Siri and dictation. Requires a supervised device in iOS.
+	// Deprecated: use the declarative management `com.apple.configuration.siri.settings` configuration.
 	ForceAssistantProfanityFilter *bool `json:"forceAssistantProfanityFilter,omitempty" plist:"forceAssistantProfanityFilter,omitempty"`
 	// If `true`, the user needs to authenticate before the system can autofill passwords or credit card information in Safari and apps. If this restriction isn't enforced, the user can toggle this feature in Settings. Only supported on devices with Face ID or Touch ID.
 	ForceAuthenticationBeforeAutoFill *bool `json:"forceAuthenticationBeforeAutoFill,omitempty" plist:"forceAuthenticationBeforeAutoFill,omitempty"`
@@ -1868,8 +1913,10 @@ type Restrictions struct {
 	// If `true`, the system delays user visibility of non-OS software updates. Control visibility of operating system updates through `forceDelayedSoftwareUpdates`. The delay is 30 days unless you set `enforcedSoftwareUpdateDelay` to another value.
 	ForceDelayedAppSoftwareUpdates *bool `json:"forceDelayedAppSoftwareUpdates,omitempty" plist:"forceDelayedAppSoftwareUpdates,omitempty"`
 	// If `true`, the system delays user visibility of major OS updates.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	ForceDelayedMajorSoftwareUpdates *bool `json:"forceDelayedMajorSoftwareUpdates,omitempty" plist:"forceDelayedMajorSoftwareUpdates,omitempty"`
 	// If `true`, the system delays user visibility of software updates. In macOS, the system allows seed build updates without delay. The delay is 30 days unless you set `enforcedSoftwareUpdateDelay` to another value.
+	// Removed: use the declarative management `com.apple.configuration.softwareupdate.settings` configuration.
 	ForceDelayedSoftwareUpdates *bool `json:"forceDelayedSoftwareUpdates,omitempty" plist:"forceDelayedSoftwareUpdates,omitempty"`
 	// If `true`, the system encrypts all backups.
 	ForceEncryptedBackup *bool `json:"forceEncryptedBackup,omitempty" plist:"forceEncryptedBackup,omitempty"`
@@ -1878,8 +1925,10 @@ type Restrictions struct {
 	// If `true`, the system limits ad tracking. Additionally, it disables app tracking and the Allow Apps to Request to Track setting.
 	ForceLimitAdTracking *bool `json:"forceLimitAdTracking,omitempty" plist:"forceLimitAdTracking,omitempty"`
 	// If `true`, the system disables connections to Siri servers for the purposes of dictation.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	ForceOnDeviceOnlyDictation *bool `json:"forceOnDeviceOnlyDictation,omitempty" plist:"forceOnDeviceOnlyDictation,omitempty"`
 	// If `true`, the device can't connect to Siri servers for the purposes of translation.
+	// Deprecated: use the declarative management `com.apple.configuration.intelligence.settings` configuration.
 	ForceOnDeviceOnlyTranslation *bool `json:"forceOnDeviceOnlyTranslation,omitempty" plist:"forceOnDeviceOnlyTranslation,omitempty"`
 	// If `true`, the system preserves eSIM when it erases the device due to too many failed password attempts or the Erase All Content and Settings option in Settings > General > Reset.
 	// > Note:
@@ -1893,16 +1942,9 @@ type Restrictions struct {
 	ForceWiFiToAllowedNetworksOnly *bool `json:"forceWiFiToAllowedNetworksOnly,omitempty" plist:"forceWiFiToAllowedNetworksOnly,omitempty"`
 	// Use `forceWiFiToAllowedNetworksOnly` instead.
 	ForceWiFiWhitelisting *bool `json:"forceWiFiWhitelisting,omitempty" plist:"forceWiFiWhitelisting,omitempty"`
-	// The maximum level of app content allowed on the device. Preinstalled (first-party) apps ignore this restriction.
-	// Possible values, with the U.S. description of the rating level:
-	// - `1000`: All
-	// - `600`: 17+
-	// - `300`: 12+
-	// - `200`: 9+
-	// - `100`: 4+
-	// - `0`: None
+	// The maximum level of app content allowed on the device. Starting with iOS 26.2, this rating may apply to certain system apps.
 	// Age bands and the number of discrete age values vary by region, but the values are consistent across regions. For example, in a region that defines rating level 14+, its value is guaranteed to be larger than 300 (12+) and smaller than 600 (17+). Also, the value of rating level 15+ is guaranteed to be larger than the assigned value of rating level 14+. For more information about age ratings, see [Age ratings values and definitions](https://developer.apple.com/help/app-store-connect/reference/age-ratings-values-and-definitions).
-	// Examples of values in other regions include:
+	// Below is the complete list of age rating values used across all App Store regions.
 	// - `1000`: All
 	// - `621`: 21+
 	// - `620`: 20+
@@ -1953,7 +1995,7 @@ type Restrictions struct {
 	// - `100`: TV-Y
 	// - `0`: None
 	RatingTVShows *int64 `default:"1000" json:"ratingTVShows,omitempty" plist:"ratingTVShows,omitempty"`
-	// If `true`, copy-and-paste functionality is limited by the `allowOpenFromManagedToUnmanaged` and `allowOpenFromUnmanagedToManaged` restrictions.
+	// If `true`, the `allowOpenFromManagedToUnmanaged` and `allowOpenFromUnmanagedToManaged` restrictions also limit copy-and-paste functionality.
 	RequireManagedPasteboard *bool `json:"requireManagedPasteboard,omitempty" plist:"requireManagedPasteboard,omitempty"`
 	// Defines the conditions under which the device accepts cookies. The user-facing settings changed in iOS 11, although the possible values remain the same. Support for this restriction on unsupervised devices is deprecated. Allowed values:
 	// - `0`: Enables Prevent Cross-Site Tracking and Block All Cookies, and the user canʼt disable either setting.
@@ -1970,7 +2012,7 @@ type Restrictions struct {
 	SafariAllowPopups *bool `json:"safariAllowPopups,omitempty" plist:"safariAllowPopups,omitempty"`
 	// If `true`, the system enables Safari fraud warning.
 	SafariForceFraudWarning *bool `json:"safariForceFraudWarning,omitempty" plist:"safariForceFraudWarning,omitempty"`
-	// Use `allowListedAppBundleIDs` instead.
+	// Deprecated: use the declarative management `com.apple.configuration.app.settings` configuration.
 	WhitelistedAppBundleIDs *[]string `json:"whitelistedAppBundleIDs,omitempty" plist:"whitelistedAppBundleIDs,omitempty"`
 }
 
@@ -2012,11 +2054,11 @@ type AppStore struct {
 	*CommonPayloadKeys
 	// If `true`, the system restricts app installations to admin users only. Deprecated in macOS 10.14. Use the `com.apple.SoftwareUpdate` payload key `restrict-software-update-require-admin-to-install` instead.
 	RestrictStoreRequireAdminToInstall *bool `json:"restrict-store-require-admin-to-install,omitempty" plist:"restrict-store-require-admin-to-install,omitempty"`
-	// If `true`, the system prevents App Store from launching. Available in macOS 10.14 and later. Restricts installations to software updates only in macOS 10.10 through 10.13.
+	// If `true`, the system prevents App Store from launching. Restricts installations to software updates only in macOS 10.10 through 10.13.
 	RestrictStoreSoftwareupdateOnly *bool `json:"restrict-store-softwareupdate-only,omitempty" plist:"restrict-store-softwareupdate-only,omitempty"`
-	// If `true`, the system disables app adoption by users. Available in macOS 10.10 and later.
+	// If `true`, the system disables app adoption by users.
 	RestrictStoreDisableAppAdoption *bool `json:"restrict-store-disable-app-adoption,omitempty" plist:"restrict-store-disable-app-adoption,omitempty"`
-	// If `true`, the system disables software update notifications. Available in macOS 10.10 and later.
+	// If `true`, the system disables software update notifications.
 	DisableSoftwareUpdateNotifications *bool `json:"DisableSoftwareUpdateNotifications,omitempty" plist:"DisableSoftwareUpdateNotifications,omitempty"`
 }
 
@@ -2061,7 +2103,7 @@ type ConfigurationItem struct {
 	ApplicationIdentifier string `json:"ApplicationIdentifier" plist:"ApplicationIdentifier" required:"true"`
 	// The domains to associate with the app. Each string is in the form of `service:domain`. Use fully qualified hostnames, such as `www.example.com`. See `Supporting associated domains` for more information.
 	AssociatedDomains []string `json:"AssociatedDomains" plist:"AssociatedDomains" required:"true"`
-	// If `true`, the system enables direct download of data for this domain instead of through a CDN. Set the entitlement value for this domain to `service:domain?mode=managed`; otherwise, the system ignores this value. Available in macOS 11 and later.
+	// If `true`, the system enables direct download of data for this domain instead of through a CDN. Set the entitlement value for this domain to `service:domain?mode=managed`; otherwise, the system ignores this value.
 	EnableDirectDownloads *bool `json:"EnableDirectDownloads,omitempty" plist:"EnableDirectDownloads,omitempty"`
 }
 
@@ -2082,7 +2124,7 @@ type CalDAV struct {
 	CalDAVUseSSL *bool `json:"CalDAVUseSSL,omitempty" plist:"CalDAVUseSSL,omitempty"`
 	// The server's port.
 	CalDAVPort *int64 `json:"CalDAVPort,omitempty" plist:"CalDAVPort,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -2109,7 +2151,7 @@ type CardDAV struct {
 	CardDAVPort *int64 `json:"CardDAVPort,omitempty" plist:"CardDAVPort,omitempty"`
 	// An array of communication service rules for this account.
 	CommunicationServiceRules *CardDAVCommunicationServiceRules `json:"CommunicationServiceRules,omitempty" plist:"CommunicationServiceRules,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -2196,27 +2238,27 @@ type CellularAPNsAPNsItem struct {
 	ProxyServer *string `json:"ProxyServer,omitempty" plist:"ProxyServer,omitempty"`
 	// The proxy server's port number.
 	ProxyPort *int64 `json:"ProxyPort,omitempty" plist:"ProxyPort,omitempty"`
-	// The default Internet Protocol versions. Available in iOS 10.3 but no longer used in iOS 11 and later. Allowed values:
+	// The default Internet Protocol versions. Allowed values:
 	// - `1`: IPv4
 	// - `2`: IPv6
 	// - `3`: Both
 	DefaultProtocolMask *DefaultProtocolMask `json:"DefaultProtocolMask,omitempty" plist:"DefaultProtocolMask,omitempty"`
-	// The Internet Protocol versions that the system supports. Available in iOS 10.3 and later. Allowed values:
+	// The Internet Protocol versions that the system supports. Allowed values:
 	// - `1`: IPv4
 	// - `2`: IPv6
 	// - `3`: Both
 	AllowedProtocolMask *APNsItemAllowedProtocolMask `json:"AllowedProtocolMask,omitempty" plist:"AllowedProtocolMask,omitempty"`
-	// The Internet Protocol versions that the system supports while roaming. Available in iOS 10.3 and later. Allowed values:
+	// The Internet Protocol versions that the system supports while roaming. Allowed values:
 	// - `1`: IPv4
 	// - `2`: IPv6
 	// - `3`: Both
 	AllowedProtocolMaskInRoaming *AllowedProtocolMaskInRoaming `json:"AllowedProtocolMaskInRoaming,omitempty" plist:"AllowedProtocolMaskInRoaming,omitempty"`
-	// The Internet Protocol versions that the system supports while roaming. Available in iOS 10.3 and later. Allowed values:
+	// The Internet Protocol versions that the system supports while roaming. Allowed values:
 	// - `1`: IPv4
 	// - `2`: IPv6
 	// - `3`: Both
 	AllowedProtocolMaskInDomesticRoaming *AllowedProtocolMaskInDomesticRoaming `json:"AllowedProtocolMaskInDomesticRoaming,omitempty" plist:"AllowedProtocolMaskInDomesticRoaming,omitempty"`
-	// If `true`, the system enables XLAT464. Available in iOS 16 and later and watchOS 9 and later.
+	// If `true`, the system enables XLAT464.
 	EnableXLAT464 *bool `json:"EnableXLAT464,omitempty" plist:"EnableXLAT464,omitempty"`
 }
 
@@ -2228,7 +2270,7 @@ const (
 	APNsItemAuthenticationTypePAP  APNsItemAuthenticationType = "PAP"
 )
 
-// The default Internet Protocol versions. Available in iOS 10.3 but no longer used in iOS 11 and later. Allowed values:
+// The default Internet Protocol versions. Allowed values:
 // - `1`: IPv4
 // - `2`: IPv6
 // - `3`: Both
@@ -2240,7 +2282,7 @@ const (
 	DefaultProtocolMask3 DefaultProtocolMask = 3
 )
 
-// The Internet Protocol versions that the system supports. Available in iOS 10.3 and later. Allowed values:
+// The Internet Protocol versions that the system supports. Allowed values:
 // - `1`: IPv4
 // - `2`: IPv6
 // - `3`: Both
@@ -2252,7 +2294,7 @@ const (
 	APNsItemAllowedProtocolMask3 APNsItemAllowedProtocolMask = 3
 )
 
-// The Internet Protocol versions that the system supports while roaming. Available in iOS 10.3 and later. Allowed values:
+// The Internet Protocol versions that the system supports while roaming. Allowed values:
 // - `1`: IPv4
 // - `2`: IPv6
 // - `3`: Both
@@ -2264,7 +2306,7 @@ const (
 	AllowedProtocolMaskInRoaming3 AllowedProtocolMaskInRoaming = 3
 )
 
-// The Internet Protocol versions that the system supports while roaming. Available in iOS 10.3 and later. Allowed values:
+// The Internet Protocol versions that the system supports while roaming. Allowed values:
 // - `1`: IPv4
 // - `2`: IPv6
 // - `3`: Both
@@ -2381,7 +2423,7 @@ type ParentalControlsDashboardWidgetRestrictions struct {
 	// If `true`, enables the widget allow list.
 	WhiteListEnabled bool `json:"whiteListEnabled" plist:"whiteListEnabled" required:"true"`
 	// An array of widget item dictionaries that are allowed.
-	WhiteList []*ParentalControlsDashboardWidgetRestrictionsWhiteListWhiteListItem `json:"WhiteList" plist:"WhiteList" required:"true"`
+	WhiteList []*WhiteListItem `json:"WhiteList" plist:"WhiteList" required:"true"`
 }
 
 func (p *ParentalControlsDashboardWidgetRestrictions) PayloadType() string {
@@ -2389,7 +2431,7 @@ func (p *ParentalControlsDashboardWidgetRestrictions) PayloadType() string {
 }
 
 // The widget item dictionary.
-type ParentalControlsDashboardWidgetRestrictionsWhiteListWhiteListItem struct {
+type WhiteListItem struct {
 	// The type of allow list item. Set to `bundleID` to use a widget's bundle ID as its main ID.
 	Type string `json:"Type" plist:"Type" required:"true"`
 	// The bundle ID of a widget.
@@ -2428,6 +2470,8 @@ type DNSProxy struct {
 	AppBundleIdentifier string `json:"AppBundleIdentifier" plist:"AppBundleIdentifier" required:"true"`
 	// The bundle identifier of the DNS proxy network extension to use. Declaring the bundle identifier is useful for apps that contain more than one DNS proxy extension.
 	ProviderBundleIdentifier *string `json:"ProviderBundleIdentifier,omitempty" plist:"ProviderBundleIdentifier,omitempty"`
+	// The designated requirement string that the system embeds in the code signature of the DNS proxy network extension. Use this to correctly identify the DNS proxy extension when `ProviderBundleIdentifier` is present.
+	ProviderDesignatedRequirement *string `json:"ProviderDesignatedRequirement,omitempty" plist:"ProviderDesignatedRequirement,omitempty"`
 	// The dictionary of vendor-specific configuration items.
 	ProviderConfiguration *map[string]any `json:"ProviderConfiguration,omitempty" plist:"ProviderConfiguration,omitempty"`
 	// A globally unique identifier for this DNS proxy configuration. The proxy processes DNS lookups traffic for managed apps with the same `DNSProxyUUID` in their app attributes. This key is required for user enrollment.
@@ -2468,7 +2512,7 @@ type DNSSettingsDNSSettings struct {
 	// The UUID that points to an identity certificate payload. The system uses this identity to authenticate the user to the DNS resolver.
 	PayloadCertificateUUID *string `json:"PayloadCertificateUUID,omitempty" plist:"PayloadCertificateUUID,omitempty"`
 	// A list of domain strings used to determine which DNS queries use the DNS server. If not set, all domains use the DNS server.
-	// The system supports a single wildcard (`*`) prefix, but it's not required. For example, both `*.example.com` and `example.com` match against `mydomain.example.com` and `your.domain.example.com`, but don't match against `mydomain-example.com`.
+	// The system supports a single wildcard (`\*`) prefix, but it's not required. For example, both `\*.example.com` and `example.com` match against `mydomain.example.com` and `your.domain.example.com`, but don't match against `mydomain-example.com`.
 	SupplementalMatchDomains *[]string `json:"SupplementalMatchDomains,omitempty" plist:"SupplementalMatchDomains,omitempty"`
 }
 
@@ -2489,10 +2533,10 @@ type DNSSettingsOnDemandRulesOnDemandRulesElement struct {
 	// An array of dictionaries that provide per-connection rules. The system uses this array only for settings where the `Action` value is `EvaluateConnection`.
 	ActionParameters *[]*DNSSettingsOnDemandRulesOnDemandRulesElementActionParametersActionParameter `json:"ActionParameters,omitempty" plist:"ActionParameters,omitempty"`
 	// An array of domain names. This rule matches if any of the domain names in the specified list matches any domain in the device's search domains list.
-	// The system supports a single wildcard (`*`) prefix, but it's not required. For example, both `*.example.com` and `example.com` match against `mydomain.example.com` and `your.domain.example.com`, but don't match against `mydomain-example.com`.
+	// The system supports a single wildcard (`\*`) prefix, but it's not required. For example, both `\*.example.com` and `example.com` match against `mydomain.example.com` and `your.domain.example.com`, but don't match against `mydomain-example.com`.
 	DNSDomainMatch *[]string `json:"DNSDomainMatch,omitempty" plist:"DNSDomainMatch,omitempty"`
 	// An array of IP addresses. This rule matches if any of the network's specified DNS servers match any entry in the array.
-	// The system supports matching with a single wildcard. For example, `17.*` matches any DNS server in the 17.0.0.0/8 subnet.
+	// The system supports matching with a single wildcard. For example, `17.\*` matches any DNS server in the 17.0.0.0/8 subnet.
 	DNSServerAddressMatch *[]string `json:"DNSServerAddressMatch,omitempty" plist:"DNSServerAddressMatch,omitempty"`
 	// An interface type. If specified, this rule matches only if the primary network interface hardware matches the specified type.
 	InterfaceTypeMatch *DNSSettingsOnDemandRulesOnDemandRulesElementInterfaceTypeMatch `json:"InterfaceTypeMatch,omitempty" plist:"InterfaceTypeMatch,omitempty"`
@@ -2597,20 +2641,20 @@ type Dock struct {
 	ShowRecentsImmutable *bool `json:"showrecents-immutable,omitempty" plist:"showrecents-immutable,omitempty"`
 	// If `true`, disables changes to the Dock.
 	ContentsImmutable *bool `json:"contents-immutable,omitempty" plist:"contents-immutable,omitempty"`
-	// One or more special folders that may be created at user login time and placed in the Dock.
+	// One or more special folders that the device may create at user login time and place in the Dock.
 	// The "My Applications" item is only used for Simple Finder environments. The "Original Network Home" item is only used for mobile account users.
 	MCXDockSpecialFolders *[]MCXDockSpecialFolders `json:"MCXDockSpecialFolders,omitempty" plist:"MCXDockSpecialFolders,omitempty"`
-	// If `true`, use the file in `/Library/Preferences/com.apple.dockfixup.plist` when a new user or migrated user logs in. This option has no effect for existing users. Available in macOS 10.12 and later. Only available on the device channel.
+	// If `true`, use the file in `/Library/Preferences/com.apple.dockfixup.plist` when a new user or migrated user logs in. This option has no effect for existing users. Only available on the device channel.
 	AllowDockFixupOverride *bool `json:"AllowDockFixupOverride,omitempty" plist:"AllowDockFixupOverride,omitempty"`
 	// If `true`, uses the `static-apps` and `static-others` dictionaries for the Dock and ignores any items in the `persistent-apps` and `persistent-others` dictionaries. If `false`, the contents are merged with the static items listed first.
 	StaticOnly *bool `json:"static-only,omitempty" plist:"static-only,omitempty"`
-	// An array of items located on the Documents side of the Dock and cannot be removed from that location.
+	// An array of items located on the Documents side of the Dock that users can't remove from that location.
 	StaticOthers *[]*StaticItem `json:"static-others,omitempty" plist:"static-others,omitempty"`
-	// An array of items located on the Applications side of the Dock and cannot be removed from that location.
+	// An array of items located on the Applications side of the Dock that users can't remove from that location.
 	StaticApps *[]*StaticItem `json:"static-apps,omitempty" plist:"static-apps,omitempty"`
-	// An array of items located on the Applications side of the Dock that can be removed from the Dock.
+	// An array of items located on the Applications side of the Dock that users can remove from the Dock.
 	PersistentApps *[]*StaticItem `json:"persistent-apps,omitempty" plist:"persistent-apps,omitempty"`
-	// An array of items located on the Documents side of the Dock that can be removed from the Dock.
+	// An array of items located on the Documents side of the Dock that users can remove from the Dock.
 	PersistentOthers *[]*StaticItem `json:"persistent-others,omitempty" plist:"persistent-others,omitempty"`
 }
 
@@ -2653,7 +2697,7 @@ const (
 	DblClickBehaviorNone     DblClickBehavior = "none"
 )
 
-// One or more special folders that may be created at user login time and placed in the Dock.
+// One or more special folders that the device may create at user login time and place in the Dock.
 // The "My Applications" item is only used for Simple Finder environments. The "Original Network Home" item is only used for mobile account users.
 type MCXDockSpecialFolders string
 
@@ -2713,20 +2757,15 @@ const (
 type Domains struct {
 	*CommonPayloadKeys
 	// An array of domains. Mail marks in red all email addresses that lack a suffix matching any of these strings.
-	// Available in iOS 8 and later and macOS 10.10 and later.
 	EmailDomains *[]string `json:"EmailDomains,omitempty" plist:"EmailDomains,omitempty"`
 	// An array of domains. The system considers URLs matching the patterns listed in this property managed.
-	// Available in iOS 9.3 and later.
 	WebDomains *[]string `json:"WebDomains,omitempty" plist:"WebDomains,omitempty"`
 	// An array of domains. Users can only save passwords in Safari from URLs matching the patterns listed here. This property doesn't disable the autofill feature itself.
-	// Supervised devices or Shared iPads need this property to enable saving passwords in Safari.
-	// Available in iOS 9.3 and later.
+	// Supervised devices or Shared iPad need this property to enable saving passwords in Safari.
 	SafariPasswordAutoFillDomains *[]string `json:"SafariPasswordAutoFillDomains,omitempty" plist:"SafariPasswordAutoFillDomains,omitempty"`
 	// An array of up to 10 strings. URLs matching the patterns listed here have relaxed enforcement of cross-site tracking prevention.
-	// Available in iOS 16.2 and later and macOS 13.1 and later.
 	CrossSiteTrackingPreventionRelaxedDomains *[]string `json:"CrossSiteTrackingPreventionRelaxedDomains,omitempty" plist:"CrossSiteTrackingPreventionRelaxedDomains,omitempty"`
 	// An array of up to 10 strings representing app bundle-ids. Apps matching the bundle-ids listed here have relaxed enforcement of cross-site tracking prevention for the domains listed in `CrossSiteTrackingPreventionRelaxedDomains`.
-	// Available in iOS 18 and later and macOS 15 and later.
 	CrossSiteTrackingPreventionRelaxedApps *[]string `json:"CrossSiteTrackingPreventionRelaxedApps,omitempty" plist:"CrossSiteTrackingPreventionRelaxedApps,omitempty"`
 }
 
@@ -2766,16 +2805,16 @@ type ExchangeActiveSync struct {
 	PayloadCertificateUUID *string `json:"PayloadCertificateUUID,omitempty" plist:"PayloadCertificateUUID,omitempty"`
 	// If `true`, the system enables S/MIME encryption. In iOS 10.0 and later, this key is ignored. Use `SMIMESigningEnabled` instead.
 	SMIMEEnabled *bool `json:"SMIMEEnabled,omitempty" plist:"SMIMEEnabled,omitempty"`
-	// If `true`, the system enables S/MIME signing for this account. Available in iOS 10.0 and later.
+	// If `true`, the system enables S/MIME signing for this account.
 	SMIMESigningEnabled *bool `json:"SMIMESigningEnabled,omitempty" plist:"SMIMESigningEnabled,omitempty"`
 	// The UUID of the identity certificate used to sign messages sent from this account.
 	SMIMESigningCertificateUUID *string `json:"SMIMESigningCertificateUUID,omitempty" plist:"SMIMESigningCertificateUUID,omitempty"`
-	// If `true`, the system enables S/MIME encryption for this account. Available in iOS 10.0 and later. As of iOS 12.0, this key is deprecated. Use `SMIMEEncryptByDefault` instead.
+	// If `true`, the system enables S/MIME encryption for this account. This key is deprecated. Use `SMIMEEncryptByDefault` instead.
 	SMIMEEncryptionEnabled *bool `json:"SMIMEEncryptionEnabled,omitempty" plist:"SMIMEEncryptionEnabled,omitempty"`
 	// The payload UUID of the identity certificate used to decrypt messages sent to this account. The system attaches the public certificate to outgoing mail to allow the user to receive encrypted mail. When the user sends encrypted mail, the system uses the public certificate to encrypt the copy of the mail in the user's Sent mailbox.
 	SMIMEEncryptionCertificateUUID *string `json:"SMIMEEncryptionCertificateUUID,omitempty" plist:"SMIMEEncryptionCertificateUUID,omitempty"`
 	// If `true`, the system displays the per-message encryption switch in the Mail Compose UI.
-	// Available in iOS 8.0 and later. As of iOS 12.0, this key is deprecated. Use `SMIMEEnableEncryptionPerMessageSwitch` instead.
+	// This key is deprecated. Use `SMIMEEnableEncryptionPerMessageSwitch` instead.
 	SMIMEEnablePerMessageSwitch *bool `json:"SMIMEEnablePerMessageSwitch,omitempty" plist:"SMIMEEnablePerMessageSwitch,omitempty"`
 	// If `true`, the system excludes this account from Recent Addresses syncing.
 	DisableMailRecentsSyncing *bool `json:"disableMailRecentsSyncing,omitempty" plist:"disableMailRecentsSyncing,omitempty"`
@@ -2788,17 +2827,17 @@ type ExchangeActiveSync struct {
 	CommunicationServiceRules *ExchangeActiveSyncCommunicationServiceRules `json:"CommunicationServiceRules,omitempty" plist:"CommunicationServiceRules,omitempty"`
 	// If `true`, the system enables this account to use Mail Drop.
 	AllowMailDrop *bool `json:"allowMailDrop,omitempty" plist:"allowMailDrop,omitempty"`
-	// If `true`, the user can turn S/MIME signing on or off in Settings. Available in iOS 12.0 and later.
+	// If `true`, the user can turn S/MIME signing on or off in Settings.
 	SMIMESigningUserOverrideable *bool `json:"SMIMESigningUserOverrideable,omitempty" plist:"SMIMESigningUserOverrideable,omitempty"`
-	// If `true`, the user can select the signing identity. Available in iOS 12.0 and later.
+	// If `true`, the user can select the signing identity.
 	SMIMESigningCertificateUUIDUserOverrideable *bool `json:"SMIMESigningCertificateUUIDUserOverrideable,omitempty" plist:"SMIMESigningCertificateUUIDUserOverrideable,omitempty"`
-	// If `true`, the system enables S/MIME encryption by default. If `SMIMEEnableEncryptionPerMessageSwitch` is `false`, the user can't change this default. Available in iOS 12.0 and later.
+	// If `true`, the system enables S/MIME encryption by default. If `SMIMEEnableEncryptionPerMessageSwitch` is `false`, the user can't change this default.
 	SMIMEEncryptByDefault *bool `json:"SMIMEEncryptByDefault,omitempty" plist:"SMIMEEncryptByDefault,omitempty"`
-	// If `true`, the system enables encryption by default and the user can't change it. Available in iOS 12.0 and later.
+	// If `true`, the system enables encryption by default and the user can't change it.
 	SMIMEEncryptByDefaultUserOverrideable *bool `json:"SMIMEEncryptByDefaultUserOverrideable,omitempty" plist:"SMIMEEncryptByDefaultUserOverrideable,omitempty"`
-	// If `true`, the user can select the S/MIME encryption identity, and encryption is on.Available in iOS 12.0 and later.
+	// If `true`, the user can select the S/MIME encryption identity, and encryption is on.
 	SMIMEEncryptionCertificateUUIDUserOverrideable *bool `json:"SMIMEEncryptionCertificateUUIDUserOverrideable,omitempty" plist:"SMIMEEncryptionCertificateUUIDUserOverrideable,omitempty"`
-	// If `true`, the system displays the per-message encryption switch in the Mail Compose UI. Available in iOS 12.0 and later.
+	// If `true`, the system displays the per-message encryption switch in the Mail Compose UI.
 	SMIMEEnableEncryptionPerMessageSwitch *bool `json:"SMIMEEnableEncryptionPerMessageSwitch,omitempty" plist:"SMIMEEnableEncryptionPerMessageSwitch,omitempty"`
 	// If `false`, the system disables the Mail service for this account. The user can reenable Mail service in Settings unless `EnableMailUserOverridable` is `false`.
 	// > Note:
@@ -2834,9 +2873,9 @@ type ExchangeActiveSync struct {
 	OAuthSignInURL *string `json:"OAuthSignInURL,omitempty" plist:"OAuthSignInURL,omitempty"`
 	// The URL that this account should use for token requests through OAuth. Ignored unless `OAuth` is `true`.
 	OAuthTokenRequestURL *string `json:"OAuthTokenRequestURL,omitempty" plist:"OAuthTokenRequestURL,omitempty"`
-	// If `true`, the system overrides the previous user/EAS password with the new EAS password in the payload. Available in iOS 14 and later.
+	// If `true`, the system overrides the previous user/EAS password with the new EAS password in the payload.
 	OverridePreviousPassword *bool `json:"OverridePreviousPassword,omitempty" plist:"OverridePreviousPassword,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -2998,7 +3037,7 @@ type ExchangeWebServices struct {
 	Host *string `json:"Host,omitempty" plist:"Host,omitempty"`
 	// If `true`, the system enables SSL.
 	SSL *bool `json:"SSL,omitempty" plist:"SSL,omitempty"`
-	// If `true`, the system enables OAuth for authentication. Don't specify a password if `OAuth` is `true`. Available in macOS 10.14 and later
+	// If `true`, the system enables OAuth for authentication. Don't specify a password if `OAuth` is `true`.
 	OAuth *bool `json:"OAuth,omitempty" plist:"OAuth,omitempty"`
 	// The URL to load into a web view for authentication through OAuth when autodiscovery isn't used. This setting requires a `Host` value.
 	OAuthSignInURL *string `json:"OAuthSignInURL,omitempty" plist:"OAuthSignInURL,omitempty"`
@@ -3092,76 +3131,75 @@ type ExtensionData struct {
 	UseSiteAutoDiscovery *bool `json:"useSiteAutoDiscovery,omitempty" plist:"useSiteAutoDiscovery,omitempty"`
 	// A list of bundle IDs allowed to access the ticket-granting ticket (TGT).
 	CredentialBundleIDACL *[]string `json:"credentialBundleIdACL,omitempty" plist:"credentialBundleIdACL,omitempty"`
-	// If `true`, the Kerberos extension allows only managed apps to access and use the credential. This is in addition to the `credentialBundleIDACL`, if you specify that value. Available in iOS 14 and later, and macOS 12 and later.
+	// If `true`, the Kerberos extension allows only managed apps to access and use the credential. This is in addition to the `credentialBundleIDACL`, if you specify that value.
 	IncludeManagedAppsInBundleIDACL *bool `json:"includeManagedAppsInBundleIdACL,omitempty" plist:"includeManagedAppsInBundleIdACL,omitempty"`
-	// If `true`, the Kerberos extension allows the standard Kerberos utilities including `TicketViewer` and `klist` to access and use the credential. This is in addition to `includeManagedAppsInBundleIdACL` or the `credentialBundleIdACL`, if you specify those values. Available in macOS 12 and later.
+	// If `true`, the Kerberos extension allows the standard Kerberos utilities including `TicketViewer` and `klist` to access and use the credential. This is in addition to `includeManagedAppsInBundleIdACL` or the `credentialBundleIdACL`, if you specify those values.
 	IncludeKerberosAppsInBundleIDACL *bool `json:"includeKerberosAppsInBundleIdACL,omitempty" plist:"includeKerberosAppsInBundleIdACL,omitempty"`
 	// A custom domain-realm mapping for Kerberos. The system uses this when the DNS name of hosts doesn't match the realm name. Most administrators don't need to customize this.
 	DomainRealmMapping *DomainRealmMapping `json:"domainRealmMapping,omitempty" plist:"domainRealmMapping,omitempty"`
 	// Specifies whether this is the default realm if there's more than one Kerberos extension configuration.
 	IsDefaultRealm *bool `json:"isDefaultRealm,omitempty" plist:"isDefaultRealm,omitempty"`
-	// The custom user name label used in the Kerberos extension instead of "Username," such as "Company ID". Available in macOS 11 and later.
+	// The custom user name label used in the Kerberos extension instead of "Username," such as "Company ID".
 	CustomUsernameLabel *string `json:"customUsernameLabel,omitempty" plist:"customUsernameLabel,omitempty"`
-	// The text to display to the user at the bottom of the Kerberos Login Window. You can also use this to display help information or disclaimer text. Available in iOS 14 and later, and macOS 11 and later.
+	// The text to display to the user at the bottom of the Kerberos Login Window. You can also use this to display help information or disclaimer text.
 	HelpText *string `json:"helpText,omitempty" plist:"helpText,omitempty"`
-	// If `false`, the system disables password changes. Available in macOS 10.15 and later.
+	// If `false`, the system disables password changes.
 	AllowPasswordChange *bool `json:"allowPasswordChange,omitempty" plist:"allowPasswordChange,omitempty"`
 	// If `false`, the system doesn't allow saving passwords in the keychain.
 	AllowAutomaticLogin *bool `json:"allowAutomaticLogin,omitempty" plist:"allowAutomaticLogin,omitempty"`
 	// If `true`, the system requires the user to provide Touch ID, Face ID or their passcode to access the keychain entry.
 	RequireUserPresence *bool `json:"requireUserPresence,omitempty" plist:"requireUserPresence,omitempty"`
-	// The number of days that the system allows using passwords on this domain. For most domains, this calculation is automatic. Available in macOS 10.15 and later.
+	// The number of days that the system allows using passwords on this domain. For most domains, this calculation is automatic.
 	PwExpireOverride *int64 `json:"pwExpireOverride,omitempty" plist:"pwExpireOverride,omitempty"`
-	// The number of days prior to password expiration when the system sends a notification of password expiration to the user. Available in macOS 10.15 and later.
+	// The number of days prior to password expiration when the system sends a notification of password expiration to the user.
 	PwNotificationDays *int64 `default:"15" json:"pwNotificationDays,omitempty" plist:"pwNotificationDays,omitempty"`
-	// The minimum length of passwords on the domain.Available in macOS 10.15 and later.
+	// The minimum length of passwords on the domain.
 	PwReqLength *int64 `json:"pwReqLength,omitempty" plist:"pwReqLength,omitempty"`
-	// If `true`, the system requires passwords to meet Active Directory's definition of "complex". Available in macOS 10.15 and later.
+	// If `true`, the system requires passwords to meet Active Directory's definition of "complex".
 	PwReqComplexity *bool `json:"pwReqComplexity,omitempty" plist:"pwReqComplexity,omitempty"`
-	// The minimum age of passwords before the system allows changing them on this domain. Available in macOS 10.15 and later.
+	// The minimum age of passwords before the system allows changing them on this domain.
 	PwReqMinAge *int64 `json:"pwReqMinAge,omitempty" plist:"pwReqMinAge,omitempty"`
-	// The number of prior passwords that the system disallows reuse on this domain. Available in macOS 10.15 and later.
+	// The number of prior passwords that the system disallows reuse on this domain.
 	PwReqHistory *int64 `json:"pwReqHistory,omitempty" plist:"pwReqHistory,omitempty"`
-	// The text version of the domain's password requirements. Only for use if `pwReqComplexity` or `pwReqLength` aren't specified. Available in macOS 10.15 and later.
+	// The text version of the domain's password requirements. Only for use if `pwReqComplexity` or `pwReqLength` aren't specified.
 	PwReqText *string `json:"pwReqText,omitempty" plist:"pwReqText,omitempty"`
-	// The RTF file formatted version of the domain's password requirements. Only for use if `pwReqComplexity` or `pwReqLength` aren't specified. Available in macOS 15 and later.
+	// The RTF file formatted version of the domain's password requirements. Only for use if `pwReqComplexity` or `pwReqLength` aren't specified.
 	PwReqRTFData *[]byte `json:"pwReqRTFData,omitempty" plist:"pwReqRTFData,omitempty"`
-	// This URL will launch in the user's default web browser when they initiate a password change. Available in macOS 10.15 and later.
+	// This URL will launch in the user's default web browser when they initiate a password change.
 	PwChangeURL *string `json:"pwChangeURL,omitempty" plist:"pwChangeURL,omitempty"`
-	// If `false`, the system disables password sync. Note that this will not work if the user is logged in with a mobile account. Available in macOS 10.15 and later.
+	// If `false`, the system disables password sync. Note that this will not work if the user is logged in with a mobile account.
 	SyncLocalPassword *bool `json:"syncLocalPassword,omitempty" plist:"syncLocalPassword,omitempty"`
-	// The time, in seconds, required to replicate changes in the Active Directory domain. The Kerberos extension uses this when checking password age after a change. Available in macOS 11 and later.
+	// The time, in seconds, required to replicate changes in the Active Directory domain. The Kerberos extension uses this when checking password age after a change.
 	ReplicationTime *int64 `default:"900" json:"replicationTime,omitempty" plist:"replicationTime,omitempty"`
-	// If `true`, the system doesn't prompt the user to setup the Kerberos extension until either the administrator enables it with the `app-sso` tool or the system receives a Kerberos challenge. Available in macOS 11 and later.
+	// If `true`, the system doesn't prompt the user to setup the Kerberos extension until either the administrator enables it with the `app-sso` tool or the system receives a Kerberos challenge.
 	DelayUserSetup *bool `json:"delayUserSetup,omitempty" plist:"delayUserSetup,omitempty"`
-	// If `false`, the system requests the credential on the next matching Kerberos challenge or network state change. If the credential is expired or missing, the system creates a new one. Available in macOS 11 and later.
+	// If `false`, the system requests the credential on the next matching Kerberos challenge or network state change. If the credential is expired or missing, the system creates a new one.
 	MonitorCredentialsCache *bool `json:"monitorCredentialsCache,omitempty" plist:"monitorCredentialsCache,omitempty"`
-	// Require that LDAP connections use TLS. Available in macOS 11 and later.
+	// Require that LDAP connections use TLS.
 	RequireTLSForLDAP *bool `json:"requireTLSForLDAP,omitempty" plist:"requireTLSForLDAP,omitempty"`
 	// This setting affects how other processes use the Kerberos Extension credential. Allowed values:
 	// - `always`: The system always uses the credential if the SPN matches the Kerberos Extension `Hosts` array and the caller hasn't specified another credential. However, the system won't use the credential if the calling app isn't in the `credentialBundleIDACL`.
 	// - `whenNotSpecified`: The system only uses the extension credential if the SPN matches the Kerberos Extension `Hosts` array. However, the system won't use the credential if the calling app isn't in the `credentialBundleIDACL`.
 	// - `kerberosDefault`: The system uses the default Kerberos processes to select credentials, and normally uses the default Kerberos credential. This is the same as turning off this capability.
-	// Available in macOS 11 and later.
 	CredentialUseMode *CredentialUseMode `default:"always" json:"credentialUseMode,omitempty" plist:"credentialUseMode,omitempty"`
-	// The ordered list of preferred Key Distribution Centers (KDCs) to use for Kerberos traffic. Use this if the servers aren't discoverable through DNS. If the servers are specified, then the system uses them for both connectivity checks and attempts to use them first for Kerberos traffic. If the servers don't respond, the device falls back to DNS discovery. Format each entry the same as it would be in a `krb5.conf` file, for example:
+	// The ordered list of preferred Key Distribution Centers (KDCs) to use for Kerberos traffic. Use this if the servers aren't discoverable through DNS. If you specify the servers, the system uses them for both connectivity checks and attempts to use them first for Kerberos traffic. If the servers don't respond, the device falls back to DNS discovery. Format each entry the same as it would be in a `krb5.conf` file, for example:
 	// - `adserver1.example.com`
 	// - `tcp/adserver1.example.com:88`
 	// - `kkdcp://kerberosproxy.example.com:443/kkdcp`
 	PreferredKDCs *[]string `json:"preferredKDCs,omitempty" plist:"preferredKDCs,omitempty"`
-	// If `true`, the system requires this configuration uses a TGT from Platform SSO instead of requesting a new one. Available in macOS 13 and later.
+	// If `true`, the system requires this configuration uses a TGT from Platform SSO instead of requesting a new one.
 	UsePlatformSSOTGT *bool `json:"usePlatformSSOTGT,omitempty" plist:"usePlatformSSOTGT,omitempty"`
-	// If `true` and `usePlatformSSOTGT` is `true`, the system allows the user to manually sign in. Available in macOS 13 and later.
+	// If `true` and `usePlatformSSOTGT` is `true`, the system allows the user to manually sign in.
 	AllowPlatformSSOAuthFallback *bool `json:"allowPlatformSSOAuthFallback,omitempty" plist:"allowPlatformSSOAuthFallback,omitempty"`
-	// If `true`, the Kerberos Extension handles Kerberos requests only. It doesn't check for password expiration, show the password expiration in the menu, check for external password changes, perform password sync, or retrieve the home directory. Available in macOS 13 and later.
+	// If `true`, the Kerberos Extension handles Kerberos requests only. It doesn't check for password expiration, show the password expiration in the menu, check for external password changes, perform password sync, or retrieve the home directory.
 	PerformKerberosOnly *bool `json:"performKerberosOnly,omitempty" plist:"performKerberosOnly,omitempty"`
-	// A string with wildcards that can use used to filter the list of available SmartCards by issuer. e.g "\*My CA2\*". If there is one remaining, it will be auto-selected. If there more than one remaining, then the list is shorter. Available in macOS 15 and later.
+	// A string with wildcards that can use used to filter the list of available SmartCards by issuer. e.g "\*My CA2\*". If there's one remaining, it will be auto-selected. If there more than one remaining, then the list is shorter.
 	IdentityIssuerAutoSelectFilter *string `json:"identityIssuerAutoSelectFilter,omitempty" plist:"identityIssuerAutoSelectFilter,omitempty"`
-	// If `true`, allow the user to switch the user interface to SmartCard mode. Available in macOS 15 and later.
+	// If `true`, allow the user to switch the user interface to SmartCard mode.
 	AllowSmartCard *bool `json:"allowSmartCard,omitempty" plist:"allowSmartCard,omitempty"`
-	// If `true`, allow the user to switch the user interface to Password mode. Available in macOS 15 and later.
+	// If `true`, allow the user to switch the user interface to Password mode.
 	AllowPassword *bool `json:"allowPassword,omitempty" plist:"allowPassword,omitempty"`
-	// If `true`, the user interface will start in SmartCard mode. Available in macOS 15 and later.
+	// If `true`, the user interface will start in SmartCard mode.
 	StartInSmartCardMode *bool `json:"startInSmartCardMode,omitempty" plist:"startInSmartCardMode,omitempty"`
 }
 
@@ -3175,7 +3213,6 @@ type DomainRealmMapping struct {
 // - `always`: The system always uses the credential if the SPN matches the Kerberos Extension `Hosts` array and the caller hasn't specified another credential. However, the system won't use the credential if the calling app isn't in the `credentialBundleIDACL`.
 // - `whenNotSpecified`: The system only uses the extension credential if the SPN matches the Kerberos Extension `Hosts` array. However, the system won't use the credential if the calling app isn't in the `credentialBundleIDACL`.
 // - `kerberosDefault`: The system uses the default Kerberos processes to select credentials, and normally uses the default Kerberos credential. This is the same as turning off this capability.
-// Available in macOS 11 and later.
 type CredentialUseMode string
 
 const (
@@ -3190,7 +3227,7 @@ type ExtensibleSingleSignOn struct {
 	*CommonPayloadKeys
 	// The bundle identifier of the app extension that performs SSO for the specified URLs.
 	ExtensionIdentifier string `json:"ExtensionIdentifier" plist:"ExtensionIdentifier" required:"true"`
-	// The team identifier of the app extension. This key is required on macOS and ignored elsewhere.
+	// The team identifier of the app extension. The device requires this key on macOS and ignores it elsewhere.
 	TeamIdentifier *string `json:"TeamIdentifier,omitempty" plist:"TeamIdentifier,omitempty"`
 	// The type of SSO.
 	Type ExtensibleSingleSignOnType `json:"Type" plist:"Type" required:"true"`
@@ -3214,15 +3251,16 @@ type ExtensibleSingleSignOn struct {
 	// > Note:
 	// > Host names that begin with a "." are wildcard suffixes that match all subdomains; otherwise the host name needs be an exact match.
 	Hosts *[]string `json:"Hosts,omitempty" plist:"Hosts,omitempty"`
-	// If set to `Cancel`, the system cancels authentication requests when the screen is locked. If set to `DoNotHandle`, the request continues without SSO instead. This doesn't apply to requests where `userInterfaceEnabled` is `false`, or for background `URLSession` requests. Available in iOS 15 and later, and macOS 12 and later.
+	// If set to `Cancel`, the system cancels authentication requests when the screen is locked. If set to `DoNotHandle`, the request continues without SSO instead. This doesn't apply to requests where `userInterfaceEnabled` is `false`, or for background `URLSession` requests.
 	ScreenLockedBehavior *ScreenLockedBehavior `default:"Cancel" json:"ScreenLockedBehavior,omitempty" plist:"ScreenLockedBehavior,omitempty"`
-	// An array of bundle identifiers of apps that don't use SSO provided by this extension. Available in iOS 15 and later, and macOS 12 and later.
+	// An array of bundle identifiers of apps that don't use SSO provided by this extension.
 	DeniedBundleIdentifiers *[]string `json:"DeniedBundleIdentifiers,omitempty" plist:"DeniedBundleIdentifiers,omitempty"`
-	// The Platform SSO authentication method the extension uses. Requires that the SSO Extension also supports the method. Available in macOS 13 and later, and deprecated in macOS 14.
+	// The Platform SSO authentication method the extension uses. Requires that the SSO Extension also supports the method.
+	// Don't use this. Use the `AuthenticationMethod` key in the `PlatformSSO` dictionary instead.
 	AuthenticationMethod *ExtensibleSingleSignOnAuthenticationMethod `json:"AuthenticationMethod,omitempty" plist:"AuthenticationMethod,omitempty"`
-	// The token this device uses for registration with Platform SSO. Use it for silent registration with the Identity Provider. Requires that `AuthenticationMethod` in `PlatformSSO` isn't empty. Available in macOS 13 and later.
+	// The token this device uses for registration with Platform SSO. Use it for silent registration with the Identity Provider. Requires that `AuthenticationMethod` in `PlatformSSO` isn't empty.
 	RegistrationToken *string `json:"RegistrationToken,omitempty" plist:"RegistrationToken,omitempty"`
-	// The dictionary to configure Platform SSO. Requires `Type` to be set to `Redirect`.
+	// The dictionary to configure Platform SSO. Requires setting `Type` to `Redirect`.
 	PlatformSSO *PlatformSSO `json:"PlatformSSO,omitempty" plist:"PlatformSSO,omitempty"`
 }
 
@@ -3238,7 +3276,7 @@ const (
 	ExtensibleSingleSignOnTypeRedirect   ExtensibleSingleSignOnType = "Redirect"
 )
 
-// If set to `Cancel`, the system cancels authentication requests when the screen is locked. If set to `DoNotHandle`, the request continues without SSO instead. This doesn't apply to requests where `userInterfaceEnabled` is `false`, or for background `URLSession` requests. Available in iOS 15 and later, and macOS 12 and later.
+// If set to `Cancel`, the system cancels authentication requests when the screen is locked. If set to `DoNotHandle`, the request continues without SSO instead. This doesn't apply to requests where `userInterfaceEnabled` is `false`, or for background `URLSession` requests.
 type ScreenLockedBehavior string
 
 const (
@@ -3246,17 +3284,20 @@ const (
 	ScreenLockedBehaviorDoNotHandle ScreenLockedBehavior = "DoNotHandle"
 )
 
-// The Platform SSO authentication method the extension uses. Requires that the SSO Extension also supports the method. Available in macOS 13 and later, and deprecated in macOS 14.
+// The Platform SSO authentication method the extension uses. Requires that the SSO Extension also supports the method.
+// Don't use this. Use the `AuthenticationMethod` key in the `PlatformSSO` dictionary instead.
 type ExtensibleSingleSignOnAuthenticationMethod string
 
 const (
 	ExtensibleSingleSignOnAuthenticationMethodPassword             ExtensibleSingleSignOnAuthenticationMethod = "Password"
 	ExtensibleSingleSignOnAuthenticationMethodUserSecureEnclaveKey ExtensibleSingleSignOnAuthenticationMethod = "UserSecureEnclaveKey"
+	ExtensibleSingleSignOnAuthenticationMethodSmartCard            ExtensibleSingleSignOnAuthenticationMethod = "SmartCard"
+	ExtensibleSingleSignOnAuthenticationMethodOpenID               ExtensibleSingleSignOnAuthenticationMethod = "OpenID"
 )
 
-// The dictionary to configure Platform SSO. Requires `Type` to be set to `Redirect`.
+// The dictionary to configure Platform SSO. Requires setting `Type` to `Redirect`.
 type PlatformSSO struct {
-	// The Platform SSO authentication method to use with the extension. Requires that the SSO Extension also support the method.
+	// The Platform SSO authentication method to use with the extension. Requires that the SSO Extension also support the method. `OpenID` is available in macOS 27 and later.
 	AuthenticationMethod *PlatformSSOAuthenticationMethod `json:"AuthenticationMethod,omitempty" plist:"AuthenticationMethod,omitempty"`
 	// If `true`, the system uses the same signing and encryption keys for all users. Only supported on the device channel.
 	UseSharedDeviceKeys *bool `json:"UseSharedDeviceKeys,omitempty" plist:"UseSharedDeviceKeys,omitempty"`
@@ -3275,15 +3316,15 @@ type PlatformSSO struct {
 	// The set of authentication methods to use for newly created accounts at login or during `Setup Assistant`. The system uses `Password` and `SmartCard` if this key isn't present.
 	NewUserAuthenticationMethods *[]NewUserAuthenticationMethods `json:"NewUserAuthenticationMethods,omitempty" plist:"NewUserAuthenticationMethods,omitempty"`
 	// The permission to apply to newly created accounts at login. Allowed values:
-	// - `Standard`: The account is a standard user.
-	// - `Admin`: The system adds the account to the local administrators group.
-	// - `Groups`: The system assigns groups to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
-	// - `Temporary`: The system uses a temporary session configuration for newly created accounts at login.
+	// * `Standard`: The account is a standard user.
+	// * `Admin`: The system adds the account to the local administrators group.
+	// * `Groups`: The system assigns groups to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
+	// * `Temporary`: The system uses a temporary session configuration for newly created accounts at login.
 	NewUserAuthorizationMode *NewUserAuthorizationMode `json:"NewUserAuthorizationMode,omitempty" plist:"NewUserAuthorizationMode,omitempty"`
 	// The permission to apply to an account each time the user authenticates. Allowed values:
-	// - `Standard`: The account is a standard user.
-	// - `Admin`: The system adds the account to the local administrators group.
-	// - `Groups`: The system assigns group to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
+	// * `Standard`: The account is a standard user.
+	// * `Admin`: The system adds the account to the local administrators group.
+	// * `Groups`: The system assigns group to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
 	UserAuthorizationMode *UserAuthorizationMode `json:"UserAuthorizationMode,omitempty" plist:"UserAuthorizationMode,omitempty"`
 	// The list of groups to use for administrator access. The system requests membership during authentication.
 	AdministratorGroups *[]string `json:"AdministratorGroups,omitempty" plist:"AdministratorGroups,omitempty"`
@@ -3302,17 +3343,42 @@ type PlatformSSO struct {
 	AccessKeyReaderIssuerCertificateUUID *string `json:"AccessKeyReaderIssuerCertificateUUID,omitempty" plist:"AccessKeyReaderIssuerCertificateUUID,omitempty"`
 	// If `true`, the system uses the access key in express mode, and doesn't require authentication before use.
 	AllowAccessKeyExpressMode *bool `json:"AllowAccessKeyExpressMode,omitempty" plist:"AllowAccessKeyExpressMode,omitempty"`
-	// The policy to apply when using Platform SSO at FileVault unlock on a Mac with Apple silicon. Applies when `AuthenticationMethod` is `Password`. Available in macOS 15 and later.
+	// The policy to apply when using Platform SSO at FileVault unlock on a Mac with Apple silicon.
+	// * `AttemptAuthentication`: The device attempts Platform SSO authentication before proceeding. If offline, unlock continues if the local account password matches. If online and the credential is incorrect, then the device requires a successful Platform SSO authentication is required, even if taken offline. Only use when `AuthenticationMethod` is `Password`.
+	// * `RequireAuthentication`: The device requires Platform SSO authentication before proceeding. If the device is offline and `AllowOfflineGracePeriod` is enabled, then the device uses the offline `OfflineGracePeriod` to determine if the user can proceed or not. If online and the credential is incorrect, then the device requires a valid Platform SSO authentication to proceed, regardless of the `OfflineGracePeriod`. If the account isn't registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the device uses `AuthenticationGracePeriod` to determine if the user can proceed or not. Only use when `AuthenticationMethod` is `Password`.
+	// * `AllowOfflineGracePeriod`: The device allows the use of the `OfflineGracePeriod`. If `AllowOfflineGracePeriod` isn't set, then the device denies offline access. Only use when `AuthenticationMethod` is `Password` and `RequireAuthentication` is enabled, or `AuthenticationMethod` is `OpenID`.
+	// * `AllowAuthenticationGracePeriod`: The device allows the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication` is enabled. The `AuthenticationGracePeriod` starts when any of the policies are updated. If `AllowAuthenticationGracePeriod` isn't set, then the device denies unregistered account access. Only use when `AuthenticationMethod` is `Password`.
+	// * `RequireTouchID`: The device requires the use of Touch ID (and not Apple Watch) for FileVault unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+	// * `RequireTouchIDOrWatch`: The device requires the use of Touch ID or Apple Watch for FileVault unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+	// * `AllowOpenIDForTouchIDFallback`: The device allows web login as a fallback if Touch ID fails or isn't available. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
 	FileVaultPolicy *[]FileVaultPolicy `json:"FileVaultPolicy,omitempty" plist:"FileVaultPolicy,omitempty"`
-	// The policy to apply when using Platform SSO at the Login Window. Applies when `AuthenticationMethod` is `Password`. Available in macOS 15 and later.
+	// The policy to apply when using Platform SSO at the Login Window.
+	// * `AttemptAuthentication`: The device attempts Platform SSO authentication before proceeding. If offline, login continues if the local account password matches. If online and the credential is incorrect, then the device requires a successful Platform SSO authentication to proceed, even if taken offline. Only use when `AuthenticationMethod` is `Password`.
+	// * `RequireAuthentication`: The device requires Platform SSO authentication before proceeding. If the device is offline and `AllowOfflineGracePeriod` is enabled, then the device uses the offline `OfflineGracePeriod` to determine if the user can proceed or not. If online and the credential is incorrect, then the device requires a valid Platform SSO authentication to proceed, regardless of the `OfflineGracePeriod`. If the account isn't registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the device uses the `AuthenticationGracePeriod` to determine if the user can proceed or not. Only use when `AuthenticationMethod` is `Password`.
+	// * `AllowOfflineGracePeriod`: The device allows the use of the `OfflineGracePeriod`. If `AllowOfflineGracePeriod` isn't set, then the device denies offline access. Only use when `AuthenticationMethod` is `Password` and `RequireAuthentication` is enabled, or `AuthenticationMethod` is `OpenID`.
+	// * `AllowAuthenticationGracePeriod`: The device allows the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication` is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If `AllowAuthenticationGracePeriod` isn't set, then the device denies unregistered account access. Only use when `AuthenticationMethod` is `Password`.
+	// * `RequireTouchID`: The device requires the use of Touch ID (and not Apple Watch) for login. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+	// * `RequireTouchIDOrWatch`: The device requires the use of Touch ID or Apple Watch for login. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+	// * `AllowOpenIDForTouchIDFallback`: The device allows web login as fallback if Touch ID fails or isn't available. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
 	LoginPolicy *[]LoginPolicy `json:"LoginPolicy,omitempty" plist:"LoginPolicy,omitempty"`
-	// The policy to apply when using Platform SSO at screensaver unlock. Applies when `AuthenticationMethod` is `Password`. Available in macOS 15 and later.
+	// The policy to apply when using Platform SSO at screensaver unlock.
+	// * `AttemptAuthentication`: The device attempts Platform SSO authentication before proceeding. If offline, unlock will continue if the local account password matches. If online and the credential is incorrect, then the device requires a successful Platform SSO authentication to proceed, even if taken offline. Only use when `AuthenticationMethod` is `Password`.
+	// * `RequireAuthentication`: The device requires Platform SSO authentication before proceeding. If the device is offline and `AllowOfflineGracePeriod` is enabled, then the offline `OfflineGracePeriod` is used to determine if the user can proceed or not. If online and the credential is incorrect, then the device requires a valid Platform SSO authentication to proceed regardless of the `OfflineGracePeriod`. If the account isn't registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the device uses `AuthenticationGracePeriod` to determine if the user can proceed or not. Only use when `AuthenticationMethod` is `Password`.
+	// * `AllowOfflineGracePeriod`: The device allows the use of the `OfflineGracePeriod`. If `AllowOfflineGracePeriod` isn't set, then the device denies offline access. Only use when `AuthenticationMethod` is `Password` and `RequireAuthentication` is enabled, or `AuthenticationMethod` is `OpenID`.
+	// * `AllowAuthenticationGracePeriod`: The device allows the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication` is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If `AllowAuthenticationGracePeriod` isn't set, then the device denies the unregistered account access. Only use when `AuthenticationMethod` is `Password`.
+	// * `AllowTouchIDOrWatchForUnlock`: The device allows Touch ID or Apple Watch to unlock the screensaver instead of Platform SSO authentication when `RequireAuthentication` is enabled. Only use when `AuthenticationMethod` is `Password`.
+	// * `RequireTouchID`: The device requires the use of Touch ID (and not Apple Watch) for unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+	// * `RequireTouchIDOrWatch`: The device requires the use of Touch ID or Apple Watch for unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+	// * `AllowOpenIDForTouchIDFallback`: The device allows web login as fallback if Touch ID fails or isn't available. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
 	UnlockPolicy *[]UnlockPolicy `json:"UnlockPolicy,omitempty" plist:"UnlockPolicy,omitempty"`
-	// The amount of time after the last successful Platform SSO login for using a local account password offline. Required when setting `AllowOfflineGracePeriod`. Available in macOS 15 and later.
+	// If `true`, the system uses the Platform SSO login UI at the Login Window, screensaver unlock, and FileVault unlock for every configuration that supports it.
+	// If `false`, the system uses the Platform SSO login UI only when `AuthenticationMethod` is set to `OpenID`, or when `LoginPolicy`, `UnlockPolicy` or `FileVaultPolicy` are set to `RequireTouchID` or `RequireTouchIDOrWatch`.
+	AlwaysUseLoginUI *bool `json:"AlwaysUseLoginUI,omitempty" plist:"AlwaysUseLoginUI,omitempty"`
+	// The amount of time (in seconds) after the last successful Platform SSO login for using a local account password offline. Required when setting `AllowOfflineGracePeriod`.
 	OfflineGracePeriod *int64 `json:"OfflineGracePeriod,omitempty" plist:"OfflineGracePeriod,omitempty"`
-	// The amount of time after receiving or updating a `FileVaultPolicy`, `LoginPolicy`, or `UnlockPolicy` that the system can use unregistered local accounts. Required when `AllowAuthenticationGracePeriod` is set. Available in macOS 15 and later.
+	// The amount of time (in seconds) after receiving or updating a `FileVaultPolicy`, `LoginPolicy`, or `UnlockPolicy` that the system can use unregistered local accounts. Required when `AllowAuthenticationGracePeriod` is set.
 	AuthenticationGracePeriod *int64 `json:"AuthenticationGracePeriod,omitempty" plist:"AuthenticationGracePeriod,omitempty"`
-	// The list of local accounts that aren't subject to the `FileVaultPolicy`, `LoginPolicy`, or `UnlockPolicy`. The accounts don't receive a prompt to register for Platform SSO. Available in macOS 15 and later.
+	// The list of local accounts that aren't subject to the `FileVaultPolicy`, `LoginPolicy`, or `UnlockPolicy`. The accounts don't receive a prompt to register for Platform SSO.
 	NonPlatformSSOAccounts *[]string `json:"NonPlatformSSOAccounts,omitempty" plist:"NonPlatformSSOAccounts,omitempty"`
 	// If `true`, the system includes the device UDID and serial number in Platform SSO attestations.
 	AllowDeviceIdentifiersInAttestation *bool `json:"AllowDeviceIdentifiersInAttestation,omitempty" plist:"AllowDeviceIdentifiersInAttestation,omitempty"`
@@ -3322,15 +3388,22 @@ type PlatformSSO struct {
 	TemporarySessionQuickLogin *bool `json:"TemporarySessionQuickLogin,omitempty" plist:"TemporarySessionQuickLogin,omitempty"`
 	// If `true`, the system enables the PlatformSSO registration process during Setup Assistant on devices running macOS 26 and later. Set this key to `true` when configuring PlatformSSO before enrollment using the `com.apple.psso.required` error response.
 	EnableRegistrationDuringSetup *bool `json:"EnableRegistrationDuringSetup,omitempty" plist:"EnableRegistrationDuringSetup,omitempty"`
+	// The set of allowed hosts that the system can load in the PSSO web view. Required if `AuthenticationMethod` is `OpenID`, or `NewUserAuthenticationMethods` contains `OpenID`.
+	WebLoginURLAllowList *[]string `json:"WebLoginURLAllowList,omitempty" plist:"WebLoginURLAllowList,omitempty"`
+	// If `true`, the system detects the password during web login and synchronizes it to the local account password for the user.
+	AllowWebLoginPasswordSync *bool `json:"AllowWebLoginPasswordSync,omitempty" plist:"AllowWebLoginPasswordSync,omitempty"`
+	// A dictionary with keys and values that are strings. The keys are HTTP header names, and the values are HTTP header values. The device adds these headers to nonce, pre-authentication, login, key and key exchange requests for Platform SSO. The device limits the number of headers to 20, the length of the header name to 128 characters, and the length of the header value to 2048 characters.
+	AdditionalHTTPHeaders *map[string]string `json:"AdditionalHTTPHeaders,omitempty" plist:"AdditionalHTTPHeaders,omitempty"`
 }
 
-// The Platform SSO authentication method to use with the extension. Requires that the SSO Extension also support the method.
+// The Platform SSO authentication method to use with the extension. Requires that the SSO Extension also support the method. `OpenID` is available in macOS 27 and later.
 type PlatformSSOAuthenticationMethod string
 
 const (
 	PlatformSSOAuthenticationMethodPassword             PlatformSSOAuthenticationMethod = "Password"
 	PlatformSSOAuthenticationMethodUserSecureEnclaveKey PlatformSSOAuthenticationMethod = "UserSecureEnclaveKey"
 	PlatformSSOAuthenticationMethodSmartCard            PlatformSSOAuthenticationMethod = "SmartCard"
+	PlatformSSOAuthenticationMethodOpenID               PlatformSSOAuthenticationMethod = "OpenID"
 )
 
 // The attribute mapping to use when creating users, or for authorization.
@@ -3343,22 +3416,24 @@ type TokenToUserMapping struct {
 
 // The set of authentication methods to use for newly created accounts at login or during `Setup Assistant`. The system uses `Password` and `SmartCard` if this key isn't present.
 // An authentication method to use for newly created accounts at login or during `Setup Assistant`. Allowed values:
-// - `Password`: The account uses a password for authentication.
-// - `SmartCard`: The account uses a smart card for authentication.
-// - `AccessKey`: The account uses an access key for authentication.
+// * `Password`: The account uses a password for authentication.
+// * `SmartCard`: The account uses a smart card for authentication.
+// * `AccessKey`: The account uses an access key for authentication.
+// * `OpenID`: The account uses OpenID for authentication. Available in macOS 27 and later.
 type NewUserAuthenticationMethods string
 
 const (
 	NewUserAuthenticationMethodsPassword  NewUserAuthenticationMethods = "Password"
 	NewUserAuthenticationMethodsSmartCard NewUserAuthenticationMethods = "SmartCard"
 	NewUserAuthenticationMethodsAccessKey NewUserAuthenticationMethods = "AccessKey"
+	NewUserAuthenticationMethodsOpenID    NewUserAuthenticationMethods = "OpenID"
 )
 
 // The permission to apply to newly created accounts at login. Allowed values:
-// - `Standard`: The account is a standard user.
-// - `Admin`: The system adds the account to the local administrators group.
-// - `Groups`: The system assigns groups to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
-// - `Temporary`: The system uses a temporary session configuration for newly created accounts at login.
+// * `Standard`: The account is a standard user.
+// * `Admin`: The system adds the account to the local administrators group.
+// * `Groups`: The system assigns groups to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
+// * `Temporary`: The system uses a temporary session configuration for newly created accounts at login.
 type NewUserAuthorizationMode string
 
 const (
@@ -3369,9 +3444,9 @@ const (
 )
 
 // The permission to apply to an account each time the user authenticates. Allowed values:
-// - `Standard`: The account is a standard user.
-// - `Admin`: The system adds the account to the local administrators group.
-// - `Groups`: The system assigns group to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
+// * `Standard`: The account is a standard user.
+// * `Admin`: The system adds the account to the local administrators group.
+// * `Groups`: The system assigns group to the account using `AdministratorGroups`, `AdditionalGroups`, or `AuthorizationGroups`.
 type UserAuthorizationMode string
 
 const (
@@ -3380,25 +3455,15 @@ const (
 	UserAuthorizationModeGroups   UserAuthorizationMode = "Groups"
 )
 
-// The policy to apply when using Platform SSO at FileVault unlock on a Mac with Apple silicon. Applies when `AuthenticationMethod` is `Password`. Available in macOS 15 and later.
-// * AttemptAuthentication
-// Platform SSO authentication is attempted before proceeding. If offline, unlock will continue
-// if the local account password matches. If online and the credential is incorrect, then a
-// successful Platform SSO authentication is required to proceed, even if taken offline.
-// * RequireAuthentication
-// Platform SSO authentication is required before proceeding.  If the device is offline and
-// `AllowOfflineGracePeriod` is enabled, then the offline `OfflineGracePeriod` is used to determine
-// if the user can proceed or not. If online and the credential is incorrect, then a valid Platform
-// SSO authentication is required to proceed regardless of the `OfflineGracePeriod`. If the account
-// is not registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the
-// `AuthenticationGracePeriod` is used to determine if the user can proceed or not.
-// * AllowOfflineGracePeriod
-// Allow the use of the `OfflineGracePeriod` when `RequireAuthentication` is enabled.  If
-// `AllowOfflineGracePeriod` is not set, then offline access is denied.
-// * AllowAuthenticationGracePeriod
-// Allow the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication`
-// is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If
-// `AllowAuthenticationGracePeriod` is not set, then unregistered account access is denied.
+// The policy to apply when using Platform SSO at FileVault unlock on a Mac with Apple silicon.
+// * `AttemptAuthentication`: The device attempts Platform SSO authentication before proceeding. If offline, unlock continues if the local account password matches. If online and the credential is incorrect, then the device requires a successful Platform SSO authentication is required, even if taken offline. Only use when `AuthenticationMethod` is `Password`.
+// * `RequireAuthentication`: The device requires Platform SSO authentication before proceeding. If the device is offline and `AllowOfflineGracePeriod` is enabled, then the device uses the offline `OfflineGracePeriod` to determine if the user can proceed or not. If online and the credential is incorrect, then the device requires a valid Platform SSO authentication to proceed, regardless of the `OfflineGracePeriod`. If the account isn't registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the device uses `AuthenticationGracePeriod` to determine if the user can proceed or not. Only use when `AuthenticationMethod` is `Password`.
+// * `AllowOfflineGracePeriod`: The device allows the use of the `OfflineGracePeriod`. If `AllowOfflineGracePeriod` isn't set, then the device denies offline access. Only use when `AuthenticationMethod` is `Password` and `RequireAuthentication` is enabled, or `AuthenticationMethod` is `OpenID`.
+// * `AllowAuthenticationGracePeriod`: The device allows the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication` is enabled. The `AuthenticationGracePeriod` starts when any of the policies are updated. If `AllowAuthenticationGracePeriod` isn't set, then the device denies unregistered account access. Only use when `AuthenticationMethod` is `Password`.
+// * `RequireTouchID`: The device requires the use of Touch ID (and not Apple Watch) for FileVault unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// * `RequireTouchIDOrWatch`: The device requires the use of Touch ID or Apple Watch for FileVault unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// * `AllowOpenIDForTouchIDFallback`: The device allows web login as a fallback if Touch ID fails or isn't available. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// The policy to apply.
 type FileVaultPolicy string
 
 const (
@@ -3406,27 +3471,20 @@ const (
 	FileVaultPolicyRequireAuthentication          FileVaultPolicy = "RequireAuthentication"
 	FileVaultPolicyAllowOfflineGracePeriod        FileVaultPolicy = "AllowOfflineGracePeriod"
 	FileVaultPolicyAllowAuthenticationGracePeriod FileVaultPolicy = "AllowAuthenticationGracePeriod"
+	FileVaultPolicyRequireTouchID                 FileVaultPolicy = "RequireTouchID"
+	FileVaultPolicyRequireTouchIDOrWatch          FileVaultPolicy = "RequireTouchIDOrWatch"
+	FileVaultPolicyAllowOpenIDForTouchIDFallback  FileVaultPolicy = "AllowOpenIDForTouchIDFallback"
 )
 
-// The policy to apply when using Platform SSO at the Login Window. Applies when `AuthenticationMethod` is `Password`. Available in macOS 15 and later.
-// * AttemptAuthentication
-// Platform SSO authentication is attempted before proceeding. If offline, unlock will continue
-// if the local account password matches. If online and the credential is incorrect, then a
-// successful Platform SSO authentication is required to proceed, even if taken offline.
-// * RequireAuthentication
-// Platform SSO authentication is required before proceeding.  If the device is offline and
-// `AllowOfflineGracePeriod` is enabled, then the offline `OfflineGracePeriod` is used to determine
-// if the user can proceed or not. If online and the credential is incorrect, then a valid Platform
-// SSO authentication is required to proceed regardless of the `OfflineGracePeriod`. If the account
-// is not registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the
-// `AuthenticationGracePeriod` is used to determine if the user can proceed or not.
-// * AllowOfflineGracePeriod
-// Allow the use of the `OfflineGracePeriod` when `RequireAuthentication` is enabled.  If
-// `AllowOfflineGracePeriod` is not set, then offline access is denied.
-// * AllowAuthenticationGracePeriod
-// Allow the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication`
-// is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If
-// `AllowAuthenticationGracePeriod` is not set, then unregistered account access is denied.
+// The policy to apply when using Platform SSO at the Login Window.
+// * `AttemptAuthentication`: The device attempts Platform SSO authentication before proceeding. If offline, login continues if the local account password matches. If online and the credential is incorrect, then the device requires a successful Platform SSO authentication to proceed, even if taken offline. Only use when `AuthenticationMethod` is `Password`.
+// * `RequireAuthentication`: The device requires Platform SSO authentication before proceeding. If the device is offline and `AllowOfflineGracePeriod` is enabled, then the device uses the offline `OfflineGracePeriod` to determine if the user can proceed or not. If online and the credential is incorrect, then the device requires a valid Platform SSO authentication to proceed, regardless of the `OfflineGracePeriod`. If the account isn't registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the device uses the `AuthenticationGracePeriod` to determine if the user can proceed or not. Only use when `AuthenticationMethod` is `Password`.
+// * `AllowOfflineGracePeriod`: The device allows the use of the `OfflineGracePeriod`. If `AllowOfflineGracePeriod` isn't set, then the device denies offline access. Only use when `AuthenticationMethod` is `Password` and `RequireAuthentication` is enabled, or `AuthenticationMethod` is `OpenID`.
+// * `AllowAuthenticationGracePeriod`: The device allows the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication` is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If `AllowAuthenticationGracePeriod` isn't set, then the device denies unregistered account access. Only use when `AuthenticationMethod` is `Password`.
+// * `RequireTouchID`: The device requires the use of Touch ID (and not Apple Watch) for login. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// * `RequireTouchIDOrWatch`: The device requires the use of Touch ID or Apple Watch for login. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// * `AllowOpenIDForTouchIDFallback`: The device allows web login as fallback if Touch ID fails or isn't available. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// The policy to apply.
 type LoginPolicy string
 
 const (
@@ -3434,30 +3492,21 @@ const (
 	LoginPolicyRequireAuthentication          LoginPolicy = "RequireAuthentication"
 	LoginPolicyAllowOfflineGracePeriod        LoginPolicy = "AllowOfflineGracePeriod"
 	LoginPolicyAllowAuthenticationGracePeriod LoginPolicy = "AllowAuthenticationGracePeriod"
+	LoginPolicyRequireTouchID                 LoginPolicy = "RequireTouchID"
+	LoginPolicyRequireTouchIDOrWatch          LoginPolicy = "RequireTouchIDOrWatch"
+	LoginPolicyAllowOpenIDForTouchIDFallback  LoginPolicy = "AllowOpenIDForTouchIDFallback"
 )
 
-// The policy to apply when using Platform SSO at screensaver unlock. Applies when `AuthenticationMethod` is `Password`. Available in macOS 15 and later.
-// * AttemptAuthentication
-// Platform SSO authentication is attempted before proceeding. If offline, unlock will continue
-// if the local account password matches. If online and the credential is incorrect, then a
-// successful Platform SSO authentication is required to proceed, even if taken offline.
-// * RequireAuthentication
-// Platform SSO authentication is required before proceeding.  If the device is offline and
-// `AllowOfflineGracePeriod` is enabled, then the offline `OfflineGracePeriod` is used to determine
-// if the user can proceed or not. If online and the credential is incorrect, then a valid Platform
-// SSO authentication is required to proceed regardless of the `OfflineGracePeriod`. If the account
-// is not registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the
-// `AuthenticationGracePeriod` is used to determine if the user can proceed or not.
-// * AllowOfflineGracePeriod
-// Allow the use of the `OfflineGracePeriod` when `RequireAuthentication` is enabled.  If
-// `AllowOfflineGracePeriod` is not set, then offline access is denied.
-// * AllowAuthenticationGracePeriod
-// Allow the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication`
-// is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If
-// `AllowAuthenticationGracePeriod` is not set, then unregistered account access is denied.
-// * AllowTouchIDOrWatchForUnlock
-// Allow TouchID or Watch to unlock the screensaver instead of Platform SSO authentication when
-// `RequireAuthentication` is enabled.
+// The policy to apply when using Platform SSO at screensaver unlock.
+// * `AttemptAuthentication`: The device attempts Platform SSO authentication before proceeding. If offline, unlock will continue if the local account password matches. If online and the credential is incorrect, then the device requires a successful Platform SSO authentication to proceed, even if taken offline. Only use when `AuthenticationMethod` is `Password`.
+// * `RequireAuthentication`: The device requires Platform SSO authentication before proceeding. If the device is offline and `AllowOfflineGracePeriod` is enabled, then the offline `OfflineGracePeriod` is used to determine if the user can proceed or not. If online and the credential is incorrect, then the device requires a valid Platform SSO authentication to proceed regardless of the `OfflineGracePeriod`. If the account isn't registered for Platform SSO and `AllowAuthenticationGracePeriod` is enabled, then the device uses `AuthenticationGracePeriod` to determine if the user can proceed or not. Only use when `AuthenticationMethod` is `Password`.
+// * `AllowOfflineGracePeriod`: The device allows the use of the `OfflineGracePeriod`. If `AllowOfflineGracePeriod` isn't set, then the device denies offline access. Only use when `AuthenticationMethod` is `Password` and `RequireAuthentication` is enabled, or `AuthenticationMethod` is `OpenID`.
+// * `AllowAuthenticationGracePeriod`: The device allows the use of the `AuthenticationGracePeriod` for other local accounts when `RequireAuthentication` is enabled. The `AuthenticationGracePeriod` starts when any of the policies have been updated. If `AllowAuthenticationGracePeriod` isn't set, then the device denies the unregistered account access. Only use when `AuthenticationMethod` is `Password`.
+// * `AllowTouchIDOrWatchForUnlock`: The device allows Touch ID or Apple Watch to unlock the screensaver instead of Platform SSO authentication when `RequireAuthentication` is enabled. Only use when `AuthenticationMethod` is `Password`.
+// * `RequireTouchID`: The device requires the use of Touch ID (and not Apple Watch) for unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// * `RequireTouchIDOrWatch`: The device requires the use of Touch ID or Apple Watch for unlock. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// * `AllowOpenIDForTouchIDFallback`: The device allows web login as fallback if Touch ID fails or isn't available. Only use when `AuthenticationMethod` is `Password` or `UserSecureEnclaveKey`.
+// The policy to apply.
 type UnlockPolicy string
 
 const (
@@ -3466,6 +3515,9 @@ const (
 	UnlockPolicyAllowOfflineGracePeriod        UnlockPolicy = "AllowOfflineGracePeriod"
 	UnlockPolicyAllowAuthenticationGracePeriod UnlockPolicy = "AllowAuthenticationGracePeriod"
 	UnlockPolicyAllowTouchIDOrWatchForUnlock   UnlockPolicy = "AllowTouchIDOrWatchForUnlock"
+	UnlockPolicyRequireTouchID                 UnlockPolicy = "RequireTouchID"
+	UnlockPolicyRequireTouchIDOrWatch          UnlockPolicy = "RequireTouchIDOrWatch"
+	UnlockPolicyAllowOpenIDForTouchIDFallback  UnlockPolicy = "AllowOpenIDForTouchIDFallback"
 )
 
 // The payload that configures the parental control web content filters.
@@ -3477,21 +3529,21 @@ type ParentalControlsContentFilter struct {
 	// If `true`, filters content automatically.
 	UseContentFilter *bool `json:"useContentFilter,omitempty" plist:"useContentFilter,omitempty"`
 	// If `true`, enables web content filters.
-	AllowlistEnabled *bool `json:"allowlistEnabled,omitempty" plist:"allowlistEnabled,omitempty"`
-	// Use `allowlistEnabled` instead.
+	AllowListEnabled *bool `json:"allowListEnabled,omitempty" plist:"allowListEnabled,omitempty"`
+	// Use `allowListEnabled` instead.
 	WhitelistEnabled *bool `json:"whitelistEnabled,omitempty" plist:"whitelistEnabled,omitempty"`
 	// An array of sites that defines an allow list. If specified, this defines additional allowed sites besides those in the automated allow list and deny list, including disallowed adult sites.
-	// This key is required if `allowlistEnabled` is `true`.
-	SiteAllowlist *[]*SiteAllowlistItem `json:"siteAllowlist,omitempty" plist:"siteAllowlist,omitempty"`
-	// Use `siteAllowlist` instead.
+	// The device requires this key if `allowListEnabled` is `true`.
+	SiteAllowList *[]*SiteAllowListItem `json:"siteAllowList,omitempty" plist:"siteAllowList,omitempty"`
+	// Use `siteAllowList` instead.
 	SiteWhitelist *[]*SiteWhitelistItem `json:"siteWhitelist,omitempty" plist:"siteWhitelist,omitempty"`
 	// The array of URLs that defines an allow list. When `restrictWeb` and `useContentFilter` are enabled, only URLs in the allow list are available to the user.
-	FilterAllowlist *[]string `json:"filterAllowlist,omitempty" plist:"filterAllowlist,omitempty"`
-	// Use `filterAllowlist` instead.
+	FilterAllowList *[]string `json:"filterAllowList,omitempty" plist:"filterAllowList,omitempty"`
+	// Use `filterAllowList` instead.
 	FilterWhitelist *[]string `json:"filterWhitelist,omitempty" plist:"filterWhitelist,omitempty"`
 	// The array of URLs that defines a deny list. When `restrictWeb` and `useContentFilter` are enabled, no URLs in the deny list are available to the user.
-	FilterDenylist *[]string `json:"filterDenylist,omitempty" plist:"filterDenylist,omitempty"`
-	// Use `filterDenylist` instead.
+	FilterDenyList *[]string `json:"filterDenyList,omitempty" plist:"filterDenyList,omitempty"`
+	// Use `filterDenyList` instead.
 	FilterBlacklist *[]string `json:"filterBlacklist,omitempty" plist:"filterBlacklist,omitempty"`
 }
 
@@ -3500,7 +3552,7 @@ func (p *ParentalControlsContentFilter) PayloadType() string {
 }
 
 // A dictionary defining a site for the allow list.
-type SiteAllowlistItem struct {
+type SiteAllowListItem struct {
 	// The site prefix, including the `http(s)` scheme.
 	Address string `json:"address" plist:"address" required:"true"`
 	// The site page title.
@@ -3618,12 +3670,22 @@ type WeekendCurfew struct {
 // The payload that configures file provider settings.
 type FileProvider struct {
 	*CommonPayloadKeys
+	// If `false`, the device prevents the File Provider extension from using synchronization in any app. Also, none of the other options will be evaluated. Synchronization will be totally disabled for any application.
+	ManagementAllowsRemoteSyncing *bool `json:"ManagementAllowsRemoteSyncing,omitempty" plist:"ManagementAllowsRemoteSyncing,omitempty"`
+	// An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension synchronization. If present, and `ManagementAllowsRemoteSyncing` is set to `true`, the device allows only the apps in this list to use synchronization. This key is ignored if `ManagementAllowsRemoteSyncing` is set to `false`. If present, the other options will only be evaluated for the apps in this list. The format of the app identifiers is "Bundle-ID (Team-ID)", for example `com.example.app (ABCD1234)`.
+	ManagementRemoteSyncingAllowList *[]string `json:"ManagementRemoteSyncingAllowList,omitempty" plist:"ManagementRemoteSyncingAllowList,omitempty"`
 	// If `true`, enables file providers access to the path of the requesting process.
 	AllowManagedFileProvidersToRequestAttribution *bool `json:"AllowManagedFileProvidersToRequestAttribution,omitempty" plist:"AllowManagedFileProvidersToRequestAttribution,omitempty"`
-	// If `false`, the device prevents the File Provider extension from using desktop and documents synchronization in any app. This does not impact the ability for apps to utilize the File Provider extension for file and folder syncing with remote storage.
+	// If `false`, the device prevents the File Provider extension from using desktop and documents synchronization in any app. This doesn't impact the ability for apps to utilize the File Provider extension for file and folder syncing with remote storage.
 	ManagementAllowsKnownFolderSyncing *bool `json:"ManagementAllowsKnownFolderSyncing,omitempty" plist:"ManagementAllowsKnownFolderSyncing,omitempty"`
-	// An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension desktop and documents synchronization. If present, and `ManagementAllowsKnownFolderSyncing` is set to `true`, the device allows only the apps in this list to use desktop and documents synchronization. This key is ignored if `ManagementAllowsKnownFolderSyncing` is set to `false`. This setting does not impact the ability for apps to use File Provider extension volume access. The format of the app identifiers is "Bundle-ID (Team-ID)", for example `com.example.app (ABCD1234)`.
+	// An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension desktop and documents synchronization. If present, and `ManagementAllowsKnownFolderSyncing` is set to `true`, the device allows only the apps in this list to use desktop and documents synchronization. This key is ignored if `ManagementAllowsKnownFolderSyncing` is set to `false`. This setting doesn't impact the ability for apps to use File Provider extension volume access. The format of the app identifiers is "Bundle-ID (Team-ID)", for example `com.example.app (ABCD1234)`.
 	ManagementKnownFolderSyncingAllowList *[]string `json:"ManagementKnownFolderSyncingAllowList,omitempty" plist:"ManagementKnownFolderSyncingAllowList,omitempty"`
+	// If `false`, the device only allows File Provider extension volume synchronization for the system "home" volume and any data separated volume, and prevents synchronization with any other volumes. If `true``, the device allows File Provider extension volume synchronization for the system "home" volume, any data separated volume, and any encrypted APFS volumes (on either internal or external media).
+	ManagementAllowsExternalVolumeSyncing *bool `json:"ManagementAllowsExternalVolumeSyncing,omitempty" plist:"ManagementAllowsExternalVolumeSyncing,omitempty"`
+	// An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension volume synchronization. If present, and `ManagementAllowsExternalVolumeSyncing` is set to `true`, the device allows only the apps in this list to use volume synchronization. This key is ignored if `ManagementAllowsExternalVolumeSyncing` is set to `false`. The format of the app identifiers is "Bundle-ID (Team-ID)", for example `com.example.app (ABCD1234)`.
+	ManagementExternalVolumeSyncingAllowList *[]string `json:"ManagementExternalVolumeSyncingAllowList,omitempty" plist:"ManagementExternalVolumeSyncingAllowList,omitempty"`
+	// An array of strings representing the composed identifiers of apps. The device automatically enables the File Provider domains for the corresponding apps. The device doesn't enable existing domains if enrollment happens after they are created. The device doesn't prevent the user from disabling these File Provider domains. Users need to manually enable File Provider domains in the Finder if their corresponding apps aren't listed here. The format of the app identifiers is "Bundle-ID (Team-ID)", for example `com.example.app (ABCD1234)`.
+	ManagementDomainAutoEnablementList *[]string `json:"ManagementDomainAutoEnablementList,omitempty" plist:"ManagementDomainAutoEnablementList,omitempty"`
 }
 
 func (p *FileProvider) PayloadType() string {
@@ -3635,8 +3697,6 @@ type Finder struct {
 	*CommonPayloadKeys
 	// If `true`, the system disables the Finder's burn support.
 	ProhibitBurn *bool `json:"ProhibitBurn,omitempty" plist:"ProhibitBurn,omitempty"`
-	// Specifies whether Finder should operate in Simple or Full mode.
-	InterfaceLevel *InterfaceLevel `json:"InterfaceLevel,omitempty" plist:"InterfaceLevel,omitempty"`
 	// If `true`, the system disables Connect to Server.
 	ProhibitConnectTo *bool `json:"ProhibitConnectTo,omitempty" plist:"ProhibitConnectTo,omitempty"`
 	// If `true`, the system disables Eject.
@@ -3658,14 +3718,6 @@ type Finder struct {
 func (p *Finder) PayloadType() string {
 	return "com.apple.finder"
 }
-
-// Specifies whether Finder should operate in Simple or Full mode.
-type InterfaceLevel string
-
-const (
-	InterfaceLevelSimple InterfaceLevel = "Simple"
-	InterfaceLevelFull   InterfaceLevel = "Full"
-)
 
 // The payload that configures the first wired, active Ethernet interface.
 type Net8021XFirstActiveEthernet struct {
@@ -3693,8 +3745,8 @@ func (p *Net8021XFirstEthernet) PayloadType() string {
 // Supported on the Shared iPad user channel as of iPadOS 18.0. Earlier versions of iPadOS erroneously accepted the Font payload on the device channel but installed it for the currently logged in user.
 type Font struct {
 	*CommonPayloadKeys
-	// The user-visible name for the font. This field is replaced by the actual name of the font after installation. Each payload must contain exactly one font file in trueType (.ttf) or OpenType (.otf) format. Collection formats (.ttc or .otc) are not supported.
-	// Fonts are identified by their embedded PostScript names. Two fonts with the same PostScript name are considered to be the same font even if their contents differ. Installing two different fonts with the same PostScript name isn't supported, and the resulting behavior is undefined.
+	// The user-visible name for the font. The device replaces this field with the actual name of the font after installation. Each payload must contain exactly one font file in trueType (.ttf) or OpenType (.otf) format. The device doesn't support collection formats (.ttc or .otc).
+	// The device identifies fonts by their embedded PostScript names. The device considers two fonts with the same PostScript name to be the same font, even if their contents differ. The device doesn't support installing two different fonts with the same PostScript name, and the resulting behavior is undefined.
 	Name *string `default:"" json:"Name,omitempty" plist:"Name,omitempty"`
 	// The contents of the font file.
 	Font []byte `json:"Font" plist:"Font" required:"true"`
@@ -3733,7 +3785,7 @@ func (p *Net8021XGlobalEthernet) PayloadType() string {
 }
 
 // The payload that configures a Google account.
-// A Google account payload sets up a Google email address as well as any other Google services the user enables after authentication. Google accounts must be installed via MDM or by Apple Configurator 2 (if the device is supervised). The payload never contains credentials and the user will be prompted to enter their credentials shortly after the payload successfully installs. On Shared iPads, this payload can only be installed on the MDM user channel.
+// A Google account payload sets up a Google email address as well as any other Google services the user enables after authentication. Google accounts must be installed via MDM or by Apple Configurator 2 (if the device is supervised). The payload never contains credentials and the user will be prompted to enter their credentials shortly after the payload successfully installs. On Shared iPad, this payload can only be installed on the MDM user channel.
 type GoogleAccount struct {
 	*CommonPayloadKeys
 	// A user-visible description of the Google account, shown in the Mail and Settings apps.
@@ -3744,7 +3796,7 @@ type GoogleAccount struct {
 	EmailAddress string `json:"EmailAddress" plist:"EmailAddress" required:"true"`
 	// The communication service handler rules for this account.
 	CommunicationServiceRules *GoogleAccountCommunicationServiceRules `json:"CommunicationServiceRules,omitempty" plist:"CommunicationServiceRules,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -3784,11 +3836,11 @@ type IconItem struct {
 	Type IconItemType `json:"Type" plist:"Type" required:"true"`
 	// The human-readable string shown to the user. This setting is valid only if the type is `Folder`.
 	DisplayName *string `json:"DisplayName,omitempty" plist:"DisplayName,omitempty"`
-	// The bundle identifier of the app. This setting is required if the type is `Application`.
+	// The bundle identifier of the app. The device requires this setting if the type is `Application`.
 	BundleID *string `json:"BundleID,omitempty" plist:"BundleID,omitempty"`
 	// An array of arrays of dictionaries, each conforming to the icon dictionary format. This setting is valid only if the type is `Folder`.
 	Pages *[][]*IconItem `json:"Pages,omitempty" plist:"Pages,omitempty"`
-	// The URL of the existing web clip for this item. This setting is required if `type` is `WebClip`. If more than one web clip exists with the same URL, the behavior is undefined.
+	// The URL of the existing web clip for this item. The device requires this setting if `type` is `WebClip`. If more than one web clip exists with the same URL, the behavior is undefined.
 	// Specifying a web clip in this payload doesn't create the web clip. Use the `WebClip` payload to create a web clip.
 	URL *string `json:"URL,omitempty" plist:"URL,omitempty"`
 }
@@ -3861,7 +3913,7 @@ type LDAP struct {
 	LDAPAccountUseSSL *bool `json:"LDAPAccountUseSSL,omitempty" plist:"LDAPAccountUseSSL,omitempty"`
 	// An array of search settings dictionaries.
 	LDAPSearchSettings *[]*LDAPSearchSettingsItem `json:"LDAPSearchSettings,omitempty" plist:"LDAPSearchSettings,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -3929,6 +3981,8 @@ type LoginWindow struct {
 	SHOWOTHERUSERSMANAGED *bool `json:"SHOWOTHERUSERS_MANAGED,omitempty" plist:"SHOWOTHERUSERS_MANAGED,omitempty"`
 	// The admin host info. If present in the payload, the system displays its value in the Login Window as additional computer information. Before macOS 10.10, this string could only contain host name, system version, or IP address. After macOS 10.10, setting this key to any value allows the user to click the time area of the menu bar to toggle through various computer information values.
 	AdminHostInfo *AdminHostInfo `json:"AdminHostInfo,omitempty" plist:"AdminHostInfo,omitempty"`
+	// If `true`, a local administrator user can bypass or disable managed preferences (MCX settings) for their login session. The device presents the user with this option at login only when the user is a local administrator, and other users are not logged in.
+	AdminMayDisableMCX *bool `json:"AdminMayDisableMCX,omitempty" plist:"AdminMayDisableMCX,omitempty"`
 	// The list of user GUIDs or group GUIDs of users that the system allows to log in. An asterisk (`*`) string specifies all users or groups. This only applies to network accounts and mobile accounts.
 	AllowList *[]string `json:"AllowList,omitempty" plist:"AllowList,omitempty"`
 	// The list of user GUIDs or group GUIDs of users that the system disallows to log in. This list takes priority over the list in the `AllowList` key. This only applies to network accounts and mobile accounts.
@@ -3939,6 +3993,8 @@ type LoginWindow struct {
 	ShutDownDisabled *bool `json:"ShutDownDisabled,omitempty" plist:"ShutDownDisabled,omitempty"`
 	// If `true`, the system disables the Restart item.
 	RestartDisabled *bool `json:"RestartDisabled,omitempty" plist:"RestartDisabled,omitempty"`
+	// If specified, allows a certain number of retries until the device shows a password hint. The device shows no hints if set to a value of 0.
+	RetriesUntilHint *int64 `default:"0" json:"RetriesUntilHint,omitempty" plist:"RetriesUntilHint,omitempty"`
 	// If `true`, the system disables the Sleep button.
 	SleepDisabled *bool `json:"SleepDisabled,omitempty" plist:"SleepDisabled,omitempty"`
 	// If `true`, the system disregards the `>console` special user name, which provides a command line UI.
@@ -3951,9 +4007,9 @@ type LoginWindow struct {
 	RestartDisabledWhileLoggedIn *bool `json:"RestartDisabledWhileLoggedIn,omitempty" plist:"RestartDisabledWhileLoggedIn,omitempty"`
 	// If `true`, the system disables the Power Off menu item when the user is logged in.
 	PowerOffDisabledWhileLoggedIn *bool `json:"PowerOffDisabledWhileLoggedIn,omitempty" plist:"PowerOffDisabledWhileLoggedIn,omitempty"`
-	// If `true`, the system disables the Log Out menu item when the user is logged in. Available in macOS 10.13 and later.
+	// If `true`, the system disables the Log Out menu item when the user is logged in.
 	LogOutDisabledWhileLoggedIn *bool `json:"LogOutDisabledWhileLoggedIn,omitempty" plist:"LogOutDisabledWhileLoggedIn,omitempty"`
-	// If `true`, the system disables the immediate Screen Lock functions. Available in macOS 10.13 and later.
+	// If `true`, the system disables the immediate Screen Lock functions.
 	DisableScreenLockImmediate *bool `json:"DisableScreenLockImmediate,omitempty" plist:"DisableScreenLockImmediate,omitempty"`
 	// If `true`, the system shows the Input Menu in the Login Window.
 	ShowInputMenu *bool `json:"showInputMenu,omitempty" plist:"showInputMenu,omitempty"`
@@ -3963,6 +4019,10 @@ type LoginWindow struct {
 	AutologinUsername *string `json:"AutologinUsername,omitempty" plist:"AutologinUsername,omitempty"`
 	// An optional user password to set up auto login. This must match the `AutologinUsername` user's current password.
 	AutologinPassword *string `json:"AutologinPassword,omitempty" plist:"AutologinPassword,omitempty"`
+	// If `true`, the system allows the user to select WiFi networks at login or unlock.
+	ForceWiFiConfigurationOnLockScreen *bool `json:"ForceWifiConfigurationOnLockScreen,omitempty" plist:"ForceWifiConfigurationOnLockScreen,omitempty"`
+	// If `true`, the system allows use of the captive WiFi portal at login or unlock.
+	ForceCaptivePortalConnectionFromLockScreen *bool `json:"ForceCaptivePortalConnectionFromLockScreen,omitempty" plist:"ForceCaptivePortalConnectionFromLockScreen,omitempty"`
 }
 
 func (p *LoginWindow) PayloadType() string {
@@ -4024,7 +4084,7 @@ type Mail struct {
 	// The password for the outgoing mail server. Only use this in encrypted profiles.
 	OutgoingPassword *string `json:"OutgoingPassword,omitempty" plist:"OutgoingPassword,omitempty"`
 	// If `true`, the system prompts the user only once for the password, which it uses for both outgoing and incoming mail.
-	// This setting is only supported by interactive profile installations. Not supported by non-interactive installations, such as MDM on iOS.
+	// This setting supports only interactive profile installations. Non-interactive installations, such as MDM on iOS, don't support this setting.
 	OutgoingPasswordSameAsIncomingPassword *bool `json:"OutgoingPasswordSameAsIncomingPassword,omitempty" plist:"OutgoingPasswordSameAsIncomingPassword,omitempty"`
 	// The authentication scheme for outgoing mail.
 	OutgoingMailServerAuthentication OutgoingMailServerAuthentication `json:"OutgoingMailServerAuthentication" plist:"OutgoingMailServerAuthentication" required:"true"`
@@ -4070,7 +4130,7 @@ type Mail struct {
 	SMIMEEncryptionCertificateUUIDUserOverrideable *bool `json:"SMIMEEncryptionCertificateUUIDUserOverrideable,omitempty" plist:"SMIMEEncryptionCertificateUUIDUserOverrideable,omitempty"`
 	// If `true`, the system displays the per-message encryption switch in the Mail Compose UI.
 	SMIMEEnableEncryptionPerMessageSwitch *bool `json:"SMIMEEnableEncryptionPerMessageSwitch,omitempty" plist:"SMIMEEnableEncryptionPerMessageSwitch,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -4268,16 +4328,16 @@ type MDM struct {
 	IdentityCertificateUUID string `json:"IdentityCertificateUUID" plist:"IdentityCertificateUUID" required:"true"`
 	// The topic that MDM listens to for push notifications. The certificate that the server uses to send push notifications must have the same topic in its subject. The topic must begin with the 'com.apple.mgmt.' prefix.
 	// > Note:
-	// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+	// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 	Topic string `json:"Topic" plist:"Topic" required:"true"`
 	// The URL that the device contacts to retrieve device management instructions. The URL must begin with the `https://` URL scheme, and may contain a port number
 	// (`:1234`, for example).
 	// > Note:
-	// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+	// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 	ServerURL string `json:"ServerURL" plist:"ServerURL" required:"true"`
 	// The URL that the device should use to check in during installation. The URL must begin with the `https://` URL scheme and may contain a port number (`:1234`, for example). If not set, the system uses `ServerURL`.
 	// > Note:
-	// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+	// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 	CheckInURL *string `json:"CheckInURL,omitempty" plist:"CheckInURL,omitempty"`
 	// If 'true', each message coming from the device carries the additional 'Mdm-Signature' HTTP header.
 	SignMessage *bool `json:"SignMessage,omitempty" plist:"SignMessage,omitempty"`
@@ -4305,13 +4365,13 @@ type MDM struct {
 	// The Managed Apple Account of the user. Previously required for profile-driven user enrollment.
 	// Removed as of iOS 18 and macOS 15.
 	ManagedAppleID *string `json:"ManagedAppleID,omitempty" plist:"ManagedAppleID,omitempty"`
-	// The Managed Apple Account pre-assigned to the authenticated user. Required for account-driven enrollments. Available in iOS 15 and later, and macOS 14 and later.
+	// The Managed Apple Account pre-assigned to the authenticated user. Required for account-driven enrollments.
 	// > Note:
-	// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+	// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 	AssignedManagedAppleID *string `json:"AssignedManagedAppleID,omitempty" plist:"AssignedManagedAppleID,omitempty"`
-	// The enrollment mode the server indicates to use when enrolling. Required for account-driven enrollment. Available in iOS 15 and macOS 14, and later.
+	// The enrollment mode the server indicates to use when enrolling. Required for account-driven enrollment.
 	// > Note:
-	// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+	// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 	EnrollmentMode *EnrollmentMode `json:"EnrollmentMode,omitempty" plist:"EnrollmentMode,omitempty"`
 	// An array of strings, each containing the UUID of a certificate to use when evaluating trust to the '.../connect/' URLs of MDM servers.
 	ServerURLPinningCertificateUUIDs *[]string `json:"ServerURLPinningCertificateUUIDs,omitempty" plist:"ServerURLPinningCertificateUUIDs,omitempty"`
@@ -4331,15 +4391,13 @@ type MDM struct {
 	CheckOutWhenRemoved *bool `json:"CheckOutWhenRemoved,omitempty" plist:"CheckOutWhenRemoved,omitempty"`
 	// This property specifies an iTunes Store ID for an app the system can install with the InstallApplicationCommand, without any approval from the user. The MDM vendor or managing organization generally provides this app, which enhances the management experience for the user. The device shows the user details about this app in the account-driven enrollment process prior to installing the MDM profile. Use this property with account-driven MDM enrollments that normally require user approval for app installs through MDM.
 	// Only account-driven enrollments support this property and other enrollment types ignore it.
-	// Available in iOS 15.1 and later.
 	// > Note:
-	// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+	// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 	RequiredAppIDForMDM *int64 `json:"RequiredAppIDForMDM,omitempty" plist:"RequiredAppIDForMDM,omitempty"`
 	// If 'true', the system warns the user that they need to reboot into RecoveryOS and allow the MDM to use the bootstrap token for authentication for certain sensitive operations such as enabling kernel extensions or installing some types of software updates. If the MDM doesn't need to perform these operations, it can leave this key set to 'false', and the user isn't notified.
 	// The SettingsCommand.Command.Settings.MDMOptions.MDMOptions command overrides this default value.
 	// This setting only applies to devices that have 'BootstrapTokenRequiredForSoftwareUpdate' or 'BootstrapTokenRequiredForKernelExtensionApproval' set to 'true' in their SecurityInfoResponse.SecurityInfo.
-	// DEP-enrolled devices are automatically allowed to use the bootstrap token for authentication.
-	// Available in macOS 11 and later.
+	// ADE-enrolled devices are automatically allowed to use the bootstrap token for authentication.
 	PromptUserToAllowBootstrapTokenForAuthentication *bool `json:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty" plist:"PromptUserToAllowBootstrapTokenForAuthentication,omitempty"`
 }
 
@@ -4347,9 +4405,9 @@ func (p *MDM) PayloadType() string {
 	return "com.apple.mdm"
 }
 
-// The enrollment mode the server indicates to use when enrolling. Required for account-driven enrollment. Available in iOS 15 and macOS 14, and later.
+// The enrollment mode the server indicates to use when enrolling. Required for account-driven enrollment.
 // > Note:
-// > When updating the payload, the value of this key must not change. Any change is an error, and the update is rejected.
+// > When updating the payload, the value of this key must not change. Any change is an error, and the system rejects the update.
 type EnrollmentMode string
 
 const (
@@ -4398,12 +4456,11 @@ type Passcode struct {
 	PINHistory *int64 `json:"pinHistory,omitempty" plist:"pinHistory,omitempty"`
 	// The maximum grace period, in minutes, to unlock the phone without entering a passcode. The default is `0`, which is no grace period and requires a passcode immediately. On macOS, the system translates this grace period value to screen-saver settings.
 	MaxGracePeriod *int64 `default:"0" json:"maxGracePeriod,omitempty" plist:"maxGracePeriod,omitempty"`
-	// The number of minutes before the system resets the login after the maximum number of unsuccessful login attempts is reached. This key requires setting `maxFailedAttempts`. Available in macOS 10.10 and later.
+	// The number of minutes before the system resets the login after the maximum number of unsuccessful login attempts is reached. This key requires setting `maxFailedAttempts`.
 	MinutesUntilFailedLoginReset *int64 `json:"minutesUntilFailedLoginReset,omitempty" plist:"minutesUntilFailedLoginReset,omitempty"`
-	// If `true`, the system causes a password reset to occur the next time the user tries to authenticate. If this key is set in a device profile, the setting takes effect for all users, and admin authentications may fail until the admin user password is also reset. Available in macOS 10.13 and later.
+	// If `true`, the system causes a password reset to occur the next time the user tries to authenticate. If this key is set in a device profile, the setting takes effect for all users, and admin authentications may fail until the admin user password is also reset.
 	ChangeAtNextAuth *bool `json:"changeAtNextAuth,omitempty" plist:"changeAtNextAuth,omitempty"`
 	// Specifies a regular expression, and its description, used to enforce password compliance. Use the simpler passcode restrictions whenever possible, and rely on regular expression matching only when necessary. Mistakes in regular expressions can lead to frustrating user experiences, such as unsatisfiable passcode policies, or policy descriptions that don't match the enforced policy.
-	// Available in macOS 14 and later.
 	CustomRegex *CustomRegex `json:"customRegex,omitempty" plist:"customRegex,omitempty"`
 }
 
@@ -4412,7 +4469,6 @@ func (p *Passcode) PayloadType() string {
 }
 
 // Specifies a regular expression, and its description, used to enforce password compliance. Use the simpler passcode restrictions whenever possible, and rely on regular expression matching only when necessary. Mistakes in regular expressions can lead to frustrating user experiences, such as unsatisfiable passcode policies, or policy descriptions that don't match the enforced policy.
-// Available in macOS 14 and later.
 type CustomRegex struct {
 	// A regular expression string that the system matches against the password to determine whether it complies with a policy. The regular expression uses the ICU syntax ([https://unicode-org.github.io/icu/userguide/strings/regexp.html](https://unicode-org.github.io/icu/userguide/strings/regexp.html)). The string must not exceed 2048 characters in length.
 	PasswordContentRegex string `json:"passwordContentRegex" plist:"passwordContentRegex" required:"true"`
@@ -4437,7 +4493,7 @@ func (p *NetworkUsageRules) PayloadType() string {
 // The application rules dictionary.
 type ApplicationRulesItem struct {
 	// A list of managed app identifiers, as strings, that must follow the associated rules. If this key is missing, the rules apply to all managed apps on the device.
-	// Each string in the `AppIdentifierMatches` array may either be an exact app identifier match (for example, `com.mycompany.myapp`) or it may specify a prefix match for the bundle ID by using the \* wildcard character. If used, this character must appear after a period (.) and may only appear once, at the end of the string; for example, `com.mycompany.*`.
+	// Each string in the `AppIdentifierMatches` array may either be an exact app identifier match (for example, `com.mycompany.myapp`) or it may specify a prefix match for the bundle ID by using the \* wildcard character. If used, this character must appear after a period (.) and may only appear once, at the end of the string; for example, `com.mycompany.\*`.
 	AppIdentifierMatches *[]string `json:"AppIdentifierMatches,omitempty" plist:"AppIdentifierMatches,omitempty"`
 	// If `false`, disables cellular data while roaming for all matching managed apps.
 	AllowRoamingCellularData *bool `json:"AllowRoamingCellularData,omitempty" plist:"AllowRoamingCellularData,omitempty"`
@@ -4481,45 +4537,35 @@ func (p *Notifications) PayloadType() string {
 
 type NotificationSettingsItem struct {
 	// The bundle identifier of the app to which to apply these notification settings.
-	// Available in iOS 9.3 and later and macOS 10.15 and later.
 	BundleIdentifier string `json:"BundleIdentifier" plist:"BundleIdentifier" required:"true"`
 	// If `true`, enables notifications for this app.
-	// Available in iOS 9.3 and later and macOS 10.15 and later.
 	NotificationsEnabled *bool `json:"NotificationsEnabled,omitempty" plist:"NotificationsEnabled,omitempty"`
-	// If `true`, enables notifications in the notification center for this app.
-	// Available in iOS 9.3 and later and macOS 10.15 and later.
+	// If `true`, enables notifications in the Notification Center for this app.
 	ShowInNotificationCenter *bool `json:"ShowInNotificationCenter,omitempty" plist:"ShowInNotificationCenter,omitempty"`
 	// If `true`, enables notifications on the Lock Screen for this app.
-	// Available in iOS 9.3 and later and macOS 10.15 and later.
 	ShowInLockScreen *bool `json:"ShowInLockScreen,omitempty" plist:"ShowInLockScreen,omitempty"`
 	// The type of alert for notifications for this app:
 	// - `0`: None
 	// - `1`: Temporary Banner
 	// - `2`: Persistent Banner
-	// Available in iOS 9.3 and later and macOS 10.15 and later.
 	AlertType *AlertType `default:"1" json:"AlertType,omitempty" plist:"AlertType,omitempty"`
 	// If `true`, enables badges for this app.
-	// Available in iOS 9.3 and later and macOS 10.15 and later.
 	BadgesEnabled *bool `json:"BadgesEnabled,omitempty" plist:"BadgesEnabled,omitempty"`
 	// If `true`, enables sounds for this app.
 	SoundsEnabled *bool `json:"SoundsEnabled,omitempty" plist:"SoundsEnabled,omitempty"`
 	// If `true`, enables notifications in CarPlay for this app.
-	// Available in iOS 12 and later.
 	ShowInCarPlay *bool `json:"ShowInCarPlay,omitempty" plist:"ShowInCarPlay,omitempty"`
 	// If `true`, enables critical alerts that can ignore Do Not Disturb and ringer settings for this app.
-	// Available in iOS 12 and later and macOS 10.15 and later.
 	CriticalAlertEnabled *bool `json:"CriticalAlertEnabled,omitempty" plist:"CriticalAlertEnabled,omitempty"`
 	// The type of grouping for notifications for this app:
 	// - `0`: Automatic: Group notifications into app-specified groups.
 	// - `1`: By app: Group notifications into one group.
 	// - `2`: Off: Don't group notifications.
-	// Available in iOS 12 and later.
 	GroupingType *GroupingType `default:"0" json:"GroupingType,omitempty" plist:"GroupingType,omitempty"`
 	// The type previews for notifications. This key overrides the value at Settings>Notifications>Show Previews.
-	// - `0` - Always: Previews will be shown when the device is locked and unlocked
-	// - `1` - When Unlocked: Previews will only be shown when the device is unlocked
-	// - `2` - Never: Previews will never be shown
-	// Available in iOS 14 and later.
+	// - `0` - Always: The device shows previews when locked and unlocked
+	// - `1` - When Unlocked: The device shows previews only when unlocked
+	// - `2` - Never: The device never shows previews
 	PreviewType *PreviewType `json:"PreviewType,omitempty" plist:"PreviewType,omitempty"`
 }
 
@@ -4527,7 +4573,6 @@ type NotificationSettingsItem struct {
 // - `0`: None
 // - `1`: Temporary Banner
 // - `2`: Persistent Banner
-// Available in iOS 9.3 and later and macOS 10.15 and later.
 type AlertType int64
 
 const (
@@ -4540,7 +4585,6 @@ const (
 // - `0`: Automatic: Group notifications into app-specified groups.
 // - `1`: By app: Group notifications into one group.
 // - `2`: Off: Don't group notifications.
-// Available in iOS 12 and later.
 type GroupingType int64
 
 const (
@@ -4550,10 +4594,9 @@ const (
 )
 
 // The type previews for notifications. This key overrides the value at Settings>Notifications>Show Previews.
-// - `0` - Always: Previews will be shown when the device is locked and unlocked
-// - `1` - When Unlocked: Previews will only be shown when the device is unlocked
-// - `2` - Never: Previews will never be shown
-// Available in iOS 14 and later.
+// - `0` - Always: The device shows previews when locked and unlocked
+// - `1` - When Unlocked: The device shows previews only when unlocked
+// - `2` - Never: The device never shows previews
 type PreviewType int64
 
 const (
@@ -4677,9 +4720,9 @@ type Relay struct {
 	MatchDomains *[]string `json:"MatchDomains,omitempty" plist:"MatchDomains,omitempty"`
 	// A list of domain strings to exclude from routing through the servers in `Relays`. Any connection that matches a domain in the list exactly or is a subdomain of the listed domain won't use the relay server.
 	ExcludedDomains *[]string `json:"ExcludedDomains,omitempty" plist:"ExcludedDomains,omitempty"`
-	// A list of Fully Qualified Domain Names (FQDNs) to be routed through the servers contained in `Relays`. Any connection that matches an FQDN in the list exactly uses the relay servers. If this list and `MatchDomains` are empty, the system routes traffic to all domains to the relay servers, except those that match an excluded domain or excluded FQDN.
+	// A list of Fully Qualified Domain Names (FQDNs) to route through the servers contained in `Relays`. Any connection that matches an FQDN in the list exactly uses the relay servers. If this list and `MatchDomains` are empty, the system routes traffic to all domains to the relay servers, except those that match an excluded domain or excluded FQDN.
 	MatchFQDNs *[]string `json:"MatchFQDNs,omitempty" plist:"MatchFQDNs,omitempty"`
-	// A list of Fully Qualified Domain Names (FQDNs) to exclude from routing through the servers contained in `Relays`. Any connection that matches an FQDN in the list exactly won't use the relay server. When `MatchDomains` is also present, any FQDN listed in the list should be a subdomain of at least one `MatchDomain` value, otherwise it will not have any effect.
+	// A list of Fully Qualified Domain Names (FQDNs) to exclude from routing through the servers contained in `Relays`. Any connection that matches an FQDN in the list exactly won't use the relay server. When `MatchDomains` is also present, any FQDN listed in the list should be a subdomain of at least one `MatchDomain` value, otherwise it won't have any effect.
 	ExcludedFQDNs *[]string `json:"ExcludedFQDNs,omitempty" plist:"ExcludedFQDNs,omitempty"`
 	// A globally unique identifier for this relay configuration. The system uses this UUID to route managed apps through the servers in `Relays`. This key is required for user enrollment.
 	RelayUUID *string `json:"RelayUUID,omitempty" plist:"RelayUUID,omitempty"`
@@ -4710,7 +4753,7 @@ type RelaysRelay struct {
 }
 
 // The payload that configures a user's screen saver settings.
-// Specifies *user* screen saver settings. (Settings for Login Window screen saver use a different payload)
+// Specifies user screen saver settings. (Settings for Login Window screen saver use a different payload)
 type ScreensaverUser struct {
 	*CommonPayloadKeys
 	// The name of the screen saver module.
@@ -4729,9 +4772,9 @@ func (p *ScreensaverUser) PayloadType() string {
 // Specifies grace period for screensaver locking
 type Screensaver struct {
 	*CommonPayloadKeys
-	// If `true`, the user is prompted for a password when the screen saver is unlocked or stopped. When you use this prompt, you must also provide `askForPasswordDelay`. Available in macOS 10.13 and later.
+	// If `true`, the device prompts the user for a password when the screen saver is unlocked or stopped. When you use this prompt, you must also provide `askForPasswordDelay`.
 	AskForPassword *bool `json:"askForPassword,omitempty" plist:"askForPassword,omitempty"`
-	// The number of seconds to delay before the password will be required to unlock or stop the screen saver (the grace period). A value of `2147483647` (for example, `0x7FFFFFFF`) disables this requirement. To use this option, you must set `askForPassword` to `true`. Available in macOS 10.13 and later.
+	// The number of seconds to delay before the device requires a password to unlock or stop the screen saver (the grace period). A value of `2147483647` (hexadecimal equivalent of `0x7FFFFFFF`) disables this requirement, and a value of `0` immediately requires the password. To use this option, you must set `askForPassword` to `true`.
 	AskForPasswordDelay *int64 `json:"askForPasswordDelay,omitempty" plist:"askForPasswordDelay,omitempty"`
 	// The number of seconds of inactivity before the screen saver activates (0 = Never activate).
 	IdleTime *int64 `json:"idleTime,omitempty" plist:"idleTime,omitempty"`
@@ -4791,7 +4834,7 @@ func (p *FDERecoveryKeyEscrow) PayloadType() string {
 }
 
 // The payload that configures FileVault recovery key redirection.
-// *** This payload will be ignored on macOS 10.13 and later. See "com.apple.security.FDERecoveryKeyEscrow" payload. ***
+// This payload will be ignored on macOS 10.13 and later. See "com.apple.security.FDERecoveryKeyEscrow" payload.
 // Old notes:
 // Once installed, this payload will cause any FDE (Full Disk Encryption) recovery keys to be redirected to the specified URL instead of being sent to Apple. This will require sites to implement their own HTTPS server that will receive the recovery keys via a POST request. Details of the data sent to the server will be provided in a different document.
 // Notes:
@@ -4799,9 +4842,9 @@ func (p *FDERecoveryKeyEscrow) PayloadType() string {
 // * It will be an error to install more than one payload of this type per machine.
 type FDERecoveryKeyRedirection struct {
 	*CommonPayloadKeys
-	// The URL to which FDE recovery keys should be sent instead of to Apple. The URL must begin with https://.
+	// The URL to which the device sends FDE recovery keys instead of to Apple. The URL must begin with https://.
 	RedirectURL string `json:"RedirectURL" plist:"RedirectURL" required:"true"`
-	// The UUID of a payload within the same profile that contains a certificate used to encrypt the recovery key when it's sent to the redirected URL. The referenced payload must be of type \`com.apple.security.pkcs1\`.
+	// The UUID of a payload within the same profile that contains a certificate used to encrypt the recovery key when the device sends it to the redirected URL. The referenced payload must be of type `com.apple.security.pkcs1`.
 	EncryptCertPayloadUUID string `json:"EncryptCertPayloadUUID" plist:"EncryptCertPayloadUUID" required:"true"`
 }
 
@@ -4827,7 +4870,7 @@ type ACMECertificate struct {
 	// If `false`, the private key isn't bound to the device.
 	// If `true`, the private key is bound to the device. The Secure Enclave generates the key pair, and the private key is cryptographically entangled with a system key. This prevents the system from exporting the private key.
 	// If `true`, `KeyType` must be `ECSECPrimeRandom` and `KeySize` must be 256 or 384.
-	// Setting this key to `true` is supported as of macOS 14 on Apple Silicon and Intel devices that have a T2 chip. Older macOS versions or other Mac devices require this key but it must have a value of `false`.
+	// macOS 14 on Apple silicon and Intel devices that have a T2 chip support setting this key to `true`. Older macOS versions or other Mac devices require this key but it must have a value of `false`.
 	HardwareBound bool `json:"HardwareBound" plist:"HardwareBound" required:"true"`
 	// The device requests this subject for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 	// The representation of a X.500 name represented as an array of OID and value. For example, `/C=US/O=Apple Inc./CN=foo/1.2.5.3=bar` corresponds to:
@@ -4846,9 +4889,9 @@ type ACMECertificate struct {
 	ExtendedKeyUsage *[]string `json:"ExtendedKeyUsage,omitempty" plist:"ExtendedKeyUsage,omitempty"`
 	// If `true`, the device provides attestations that describe the device and the generated key to the ACME server. The server can use the attestations as strong evidence that the key is bound to the device, and that the device has properties listed in the attestation. The server can use that as part of a trust score to decide whether to issue the requested certificate.
 	// When `Attest` is `true`, `HardwareBound` also needs to be `true`.
-	// Setting this key to `true` is supported as of macOS 14. Older macOS versions require this key but it must have a value of `false`. See below for hardware requirements.
+	// macOS 14 supports setting this key to `true`. Older macOS versions require this key but it must have a value of `false`. See below for hardware requirements.
 	Attest *bool `json:"Attest,omitempty" plist:"Attest,omitempty"`
-	// If `true`, the private key of the identity obtained through Automated Certificate Management Environment (ACME) needs to be tagged as "non-extractable" in the keychain.
+	// If `false`, the device tags the private key of the identity obtained through Automated Certificate Management Environment (ACME) as "non-extractable" in the keychain.
 	KeyIsExtractable *bool `json:"KeyIsExtractable,omitempty" plist:"KeyIsExtractable,omitempty"`
 	// If `true`, all apps have access to the private key.
 	AllowAllAppsAccess *bool `json:"AllowAllAppsAccess,omitempty" plist:"AllowAllAppsAccess,omitempty"`
@@ -4932,7 +4975,7 @@ type CertificateTransparency struct {
 	*CommonPayloadKeys
 	// An array of certificates for which certificate transparency is disabled. One of the following conditions needs to be met to disable certificate transparency enforcement when this policy is set:
 	// - The hash is of the server certificate's `subjectPublicKeyInfo`.
-	// - The hash is of a `subjectPublicKeyInfo` that appears in a CA certificate in the certificate chain; the CA certificate is constrained through the X.509v3 `nameConstraints` extension. One or more `directoryName` `nameConstraints` are present in the `permittedSubtrees`, and the `directoryName` contains an `organizationName` attribute.
+	// - The hash is of a `subjectPublicKeyInfo` that appears in a CA certificate in the certificate chain; the X.509v3 `nameConstraints` extension constrains the CA certificate. One or more `directoryName` `nameConstraints` are present in the `permittedSubtrees`, and the `directoryName` contains an `organizationName` attribute.
 	// - The hash is of a `subjectPublicKeyInfo` that appears in a CA certificate in the certificate chain. The CA certificate has one or more `organizationName` attributes in the certificate `Subject`, and the server's certificate contains the same number of `organizationName` attributes, in the same order, and with byte-for-byte identical values.
 	DisabledForCerts *[]*DisabledForCertsSubjectPublicKeyInfoHashDict `json:"DisabledForCerts,omitempty" plist:"DisabledForCerts,omitempty"`
 	// An array of strings that represent the domains to exclude from certificate transparency enforcement. The system supports using a leading period (`.`) to signify subdomains. However, the system doesn't support wildcards. If you include a leading period, the domain can't be a top-level domain, such as `.com` and `.co.uk`.
@@ -4974,15 +5017,11 @@ type Firewall struct {
 	EnableStealthMode *bool `json:"EnableStealthMode,omitempty" plist:"EnableStealthMode,omitempty"`
 	// The list of apps with connections that the firewall controls.
 	Applications *[]*ApplicationsItem `json:"Applications,omitempty" plist:"Applications,omitempty"`
-	// If `true`, the system enables logging. Available in macOS 12 through macOS 14.6.
-	EnableLogging *bool `json:"EnableLogging,omitempty" plist:"EnableLogging,omitempty"`
-	// The type of logging. Available in macOS 12 and through macOS 14.6.
-	LoggingOption *LoggingOption `json:"LoggingOption,omitempty" plist:"LoggingOption,omitempty"`
-	// If `true`, the system allows built-in software to receive incoming connections. Available in macOS 12.3 and later.
+	// If `true`, the system allows built-in software to receive incoming connections.
 	// > Note:
 	// > The system ensures that `AllowSigned` always has a value. If missing from the payload, the system sets it to `true`.
 	AllowSigned *bool `json:"AllowSigned,omitempty" plist:"AllowSigned,omitempty"`
-	// If `true`, the system allows downloaded signed software to receive incoming connections. Available in macOS 12.3 and later.
+	// If `true`, the system allows downloaded signed software to receive incoming connections.
 	// > Note:
 	// > The system ensures that `AllowSignedApp` always has a value. If missing from the payload, the system sets it to `true`.
 	AllowSignedApp *bool `json:"AllowSignedApp,omitempty" plist:"AllowSignedApp,omitempty"`
@@ -4998,15 +5037,6 @@ type ApplicationsItem struct {
 	// If `true`, the system allows connections for the app.
 	Allowed bool `json:"Allowed" plist:"Allowed" required:"true"`
 }
-
-// The type of logging. Available in macOS 12 and through macOS 14.6.
-type LoggingOption string
-
-const (
-	LoggingOptionThrottled LoggingOption = "throttled"
-	LoggingOptionBrief     LoggingOption = "brief"
-	LoggingOptionDetail    LoggingOption = "detail"
-)
 
 // The payload that configures the user's identity on the device.
 // Defines an Identity Preference item in the user's keychain that references a identity payload included in the same profile. Can only appear in a user profile (not a device profile). See also "com.apple.security.certificatepreference" for setting up certificate preferences.
@@ -5060,7 +5090,7 @@ type CertificatePKCS12 struct {
 	PayloadContent []byte `json:"PayloadContent" plist:"PayloadContent" required:"true"`
 	// The password to the identity.
 	Password *string `json:"Password,omitempty" plist:"Password,omitempty"`
-	// If `true`, the system allows apps access to the private key. Available in macOS 10.10 and later.
+	// If `true`, the system allows apps access to the private key.
 	AllowAllAppsAccess *bool `json:"AllowAllAppsAccess,omitempty" plist:"AllowAllAppsAccess,omitempty"`
 	// If `false`, the system doesn't tag the private key data as extractable in the keychain.
 	KeyIsExtractable *bool `json:"KeyIsExtractable,omitempty" plist:"KeyIsExtractable,omitempty"`
@@ -5099,11 +5129,11 @@ func (p *SCEP) PayloadType() string {
 type PayloadContent struct {
 	// The SCEP URL. See Over-the-Air Profile Delivery and Configuration for more information about SCEP.
 	URL string `json:"URL" plist:"URL" required:"true"`
-	// A string that's understood by the SCEP server; for example, a domain name like example.org. If a certificate authority has multiple CA certificates, this field can be used to distinguish which is required.
+	// A string that's understood by the SCEP server; for example, a domain name like example.org. If a certificate authority has multiple CA certificates, use this field to distinguish which is required.
 	Name *string `json:"Name,omitempty" plist:"Name,omitempty"`
 	// The representation of an X.500 name as an array of OID and value.
 	// For example, `/C=US/O=Apple Inc./CN=foo/1.2.5.3=bar` translates to `[ [ ["C", "US"] ], [ ["O", "Apple Inc."] ], …, [ [ "1.2.5.3", "bar" ] ] ]`.
-	// OIDs can be represented as dotted numbers, with shortcuts for country (C), locality (L), state (ST), organization (O), organizational unit (OU), and common name (CN).
+	// You can represent OIDs as dotted numbers, with shortcuts for country (C), locality (L), state (ST), organization (O), organizational unit (OU), and common name (CN).
 	Subject *[][][]string `json:"Subject,omitempty" plist:"Subject,omitempty"`
 	// A preshared secret.
 	Challenge *string `json:"Challenge,omitempty" plist:"Challenge,omitempty"`
@@ -5120,7 +5150,7 @@ type PayloadContent struct {
 	CAFingerprint *[]byte `json:"CAFingerprint,omitempty" plist:"CAFingerprint,omitempty"`
 	// The number of times the device should retry if the server sends a PENDING response.
 	Retries *int64 `default:"3" json:"Retries,omitempty" plist:"Retries,omitempty"`
-	// The number of seconds to wait between subsequent retries. The first retry is attempted without this delay.
+	// The number of seconds to wait between subsequent retries. The device attempts the first retry without this delay.
 	RetryDelay *int64 `default:"10" json:"RetryDelay,omitempty" plist:"RetryDelay,omitempty"`
 	// The SCEP payload can specify an optional `SubjectAltName` dictionary that provides values required by the CA for issuing a certificate. You can specify a single string or an array of strings for each key. The values you specify depend on the CA you're using, but might include DNS name, URL, or email values. For an example, see Sample Configuration Profile or Over-the-Air Profile Delivery and Configuration.
 	SubjectAltName *PayloadContentSubjectAltName `json:"SubjectAltName,omitempty" plist:"SubjectAltName,omitempty"`
@@ -5157,19 +5187,19 @@ type SmartCard struct {
 	*CommonPayloadKeys
 	// If `false`, users don't get the pairing dialog, although existing pairings still work.
 	UserPairing *bool `json:"UserPairing,omitempty" plist:"UserPairing,omitempty"`
-	// If `false`, the system disables smart cards for logins, authorizations, and screen saver unlocking. It is still allowed for other functions, such as signing emails and accessing the web. A restart is required for a setting change to take effect.
+	// If `false`, the system disables smart cards for logins, authorizations, and screen saver unlocking. It's still allowed for other functions, such as signing emails and accessing the web. The device requires a restart for a setting change to take effect.
 	AllowSmartCard *bool `json:"allowSmartCard,omitempty" plist:"allowSmartCard,omitempty"`
 	// Configures the certificate trust check and has one of the following possible values:
 	// - `0`: Turns off certificate trust check.
-	// - `1`: Turns on certificate trust check. A standard validity check is performed but doesn't include additional revocation checks.
-	// - `2`: Turns on certificate trust check. A soft revocation check is also performed. Until the certificate is explicitly rejected by CRL/OCSP, it's considered valid. This setting means that unavailable or unreachable CRL/OCSP allow this check to succeed.
-	// - `3`: Turns on certificate trust check. A hard revocation check is also performed. Unless CRL/OCSP explicitly says "This certificate is OK," it's considered invalid. This option is the most secure.
+	// - `1`: Turns on certificate trust check. The device performs a standard validity check but doesn't include additional revocation checks.
+	// - `2`: Turns on certificate trust check. The device also performs a soft revocation check. Until CRL/OCSP explicitly rejects the certificate, the device considers it valid. This setting means that unavailable or unreachable CRL/OCSP allow this check to succeed.
+	// - `3`: Turns on certificate trust check. The device also performs a hard revocation check. Unless CRL/OCSP explicitly says "This certificate is OK," the device considers it invalid. This option is the most secure.
 	CheckCertificateTrust *CheckCertificateTrust `default:"0" json:"checkCertificateTrust,omitempty" plist:"checkCertificateTrust,omitempty"`
 	// If `true`, a user can pair with only one smart card, although existing pairings are allowed if already set up.
 	OneCardPerUser *bool `json:"oneCardPerUser,omitempty" plist:"oneCardPerUser,omitempty"`
-	// If `1`, the system enables the screen saver when the smart card is removed. Available in macOS 10.13.4 and later.
+	// If `1`, the device enables the screen saver when the user removes the smart card.
 	TokenRemovalAction *TokenRemovalAction `default:"0" json:"tokenRemovalAction,omitempty" plist:"tokenRemovalAction,omitempty"`
-	// If `true`, a user can only log in or authenticate with a smart card. Available in macOS 10.13.2 and later.
+	// If `true`, a user can only log in or authenticate with a smart card.
 	EnforceSmartCard *bool `json:"enforceSmartCard,omitempty" plist:"enforceSmartCard,omitempty"`
 }
 
@@ -5179,9 +5209,9 @@ func (p *SmartCard) PayloadType() string {
 
 // Configures the certificate trust check and has one of the following possible values:
 // - `0`: Turns off certificate trust check.
-// - `1`: Turns on certificate trust check. A standard validity check is performed but doesn't include additional revocation checks.
-// - `2`: Turns on certificate trust check. A soft revocation check is also performed. Until the certificate is explicitly rejected by CRL/OCSP, it's considered valid. This setting means that unavailable or unreachable CRL/OCSP allow this check to succeed.
-// - `3`: Turns on certificate trust check. A hard revocation check is also performed. Unless CRL/OCSP explicitly says "This certificate is OK," it's considered invalid. This option is the most secure.
+// - `1`: Turns on certificate trust check. The device performs a standard validity check but doesn't include additional revocation checks.
+// - `2`: Turns on certificate trust check. The device also performs a soft revocation check. Until CRL/OCSP explicitly rejects the certificate, the device considers it valid. This setting means that unavailable or unreachable CRL/OCSP allow this check to succeed.
+// - `3`: Turns on certificate trust check. The device also performs a hard revocation check. Unless CRL/OCSP explicitly says "This certificate is OK," the device considers it invalid. This option is the most secure.
 type CheckCertificateTrust int64
 
 const (
@@ -5191,7 +5221,7 @@ const (
 	CheckCertificateTrust3 CheckCertificateTrust = 3
 )
 
-// If `1`, the system enables the screen saver when the smart card is removed. Available in macOS 10.13.4 and later.
+// If `1`, the device enables the screen saver when the user removes the smart card.
 type TokenRemovalAction int64
 
 const (
@@ -5275,7 +5305,7 @@ type Kerberos struct {
 	// Begin the URL matching patterns with either `http://` or `https://`. The system performs a simple string match, so the URL prefix `http://www.apple.com/` doesn't match `http://www.apple.com:80/`. However, if a matching pattern doesn't end in `/`, the system automatically append a `/` to it.
 	URLPrefixMatches *[]string `json:"URLPrefixMatches,omitempty" plist:"URLPrefixMatches,omitempty"`
 	// The list of app identifiers that the system allows to use this login. If this field missing, the system matches all app identifiers with this login.
-	// Don't set an empty array. The array needs to contain strings that match App Bundle IDs. These strings can be exact matches such as `com.mycompany.myapp`, or they may specify a prefix match on the Bundle ID by using the `*` wildcard character. The wildcard character needs to appear after a period (`.`), and may only appear once, at the end of the string, for example, `com.mycompany.*`. When you provide a wildcard, the system grants access to the account to any app with a Bundle ID that begins with the prefix.
+	// Don't set an empty array. The array needs to contain strings that match App Bundle IDs. These strings can be exact matches such as `com.mycompany.myapp`, or they may specify a prefix match on the Bundle ID by using the `\*` wildcard character. The wildcard character needs to appear after a period (`.`), and may only appear once, at the end of the string, for example, `com.mycompany.\*`. When you provide a wildcard, the system grants access to the account to any app with a Bundle ID that begins with the prefix.
 	AppIdentifierMatches *[]string `json:"AppIdentifierMatches,omitempty" plist:"AppIdentifierMatches,omitempty"`
 }
 
@@ -5292,7 +5322,7 @@ type SubscribedCalendars struct {
 	SubCalAccountPassword *string `json:"SubCalAccountPassword,omitempty" plist:"SubCalAccountPassword,omitempty"`
 	// If `true`, the system enables SSL.
 	SubCalAccountUseSSL *bool `json:"SubCalAccountUseSSL,omitempty" plist:"SubCalAccountUseSSL,omitempty"`
-	// The VPNUUID of the per-app VPN the account uses for network communication. Available in iOS 14 and later.
+	// The VPNUUID of the per-app VPN the account uses for network communication.
 	VPNUUID *string `json:"VPNUUID,omitempty" plist:"VPNUUID,omitempty"`
 }
 
@@ -5305,7 +5335,6 @@ func (p *SubscribedCalendars) PayloadType() string {
 type SystemPolicyKernelExtensions struct {
 	*CommonPayloadKeys
 	// If `true`, nonadministrative users can approve additional kernel extensions in the Security & Privacy preferences.
-	// Available in macOS 11 and later.
 	AllowNonAdminUserApprovals *bool `json:"AllowNonAdminUserApprovals,omitempty" plist:"AllowNonAdminUserApprovals,omitempty"`
 	// If `true`, users can approve additional kernel extensions that configuration profiles don't explicitly allow.
 	AllowUserOverrides *bool `json:"AllowUserOverrides,omitempty" plist:"AllowUserOverrides,omitempty"`
@@ -5337,11 +5366,10 @@ type SystemExtensions struct {
 	// It's an error for the same team identifier to appear in both the `AllowedTeamIdentifiers` array and as a key in this dictionary.
 	AllowedSystemExtensions *map[string][]string `json:"AllowedSystemExtensions,omitempty" plist:"AllowedSystemExtensions,omitempty"`
 	// A dictionary of system extensions that are allowed to remove themselves from the machine. The dictionary maps team identifiers (keys) to arrays of bundle identifiers, where the bundle identifier defines the system extension. An application using the `OSSystemExtensionDeactivationRequest` API can deactivate the specified system extensions without requiring an administrator to authorize the operation.
-	// Available in macOS 12 and later.
 	RemovableSystemExtensions *map[string][]string `json:"RemovableSystemExtensions,omitempty" plist:"RemovableSystemExtensions,omitempty"`
 	// A dictionary of system extensions on the computer. The dictionary maps the team identifiers (keys) to arrays of bundle identifiers, where the bundle identifier defines the system extension which can't be disabled or uninstalled when SIP is enabled. It's an error for the same mapping to appear in the dictionary values corresponding to `RemovableSystemExtensions` and `NonRemovableSystemExtensions` keys.
 	NonRemovableSystemExtensions *map[string][]string `json:"NonRemovableSystemExtensions,omitempty" plist:"NonRemovableSystemExtensions,omitempty"`
-	// A dictionary of system extensions on the computer. The dictionary maps the team identifiers (keys) to arrays of bundle identifiers, where the bundle identifier defines the system extension which can't be disabled or uninstalled from System Settings or Finder. The set of system extensions between `RemovableSystemExtensions` and `NonRemovableFromUISystemExtensions` can to overlap.
+	// A dictionary of system extensions on the computer. The dictionary maps the team identifiers (keys) to arrays of bundle identifiers, where the bundle identifier defines the system extension which can't be disabled or uninstalled from System Settings or Finder. The set of system extensions between `RemovableSystemExtensions` and `NonRemovableFromUISystemExtensions` can't overlap.
 	NonRemovableFromUISystemExtensions *map[string][]string `json:"NonRemovableFromUISystemExtensions,omitempty" plist:"NonRemovableFromUISystemExtensions,omitempty"`
 }
 
@@ -5352,8 +5380,6 @@ func (p *SystemExtensions) PayloadType() string {
 // The payload that configures system logging.
 type SystemLogging struct {
 	*CommonPayloadKeys
-	// Not to be used.
-	Processes *map[string]any `json:"Processes,omitempty" plist:"Processes,omitempty"`
 	// A dictionary enabling the logging level for subsystems. See `Customizing Logging Behavior While Debugging` for more details about the format of the dictionary.
 	Subsystems *map[string]any `json:"Subsystems,omitempty" plist:"Subsystems,omitempty"`
 	// This dictionary has one key, `Enable-Private-Data`. Setting that value to `true` enables private data logging for the entire system.
@@ -5432,7 +5458,7 @@ type SystemPolicyRule struct {
 	*CommonPayloadKeys
 	// The policy requirement. This key must follow the syntax described in [Code Signing Requirement Language](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/RequirementLang/RequirementLang.html#//apple_ref/doc/uid/TP40005929-CH5).
 	Requirement *string `json:"Requirement,omitempty" plist:"Requirement,omitempty"`
-	// This string appears in the System Policy UI. If it's missing, `PayloadDisplayName` or `PayloadDescription` is entered into this field before the rule is added to the System Policy database.
+	// This string appears in the System Policy UI. If it's missing, the device enters `PayloadDisplayName` or `PayloadDescription` into this field before adding the rule to the System Policy database.
 	Comment *string `json:"Comment,omitempty" plist:"Comment,omitempty"`
 	// The rule's priority.
 	Priority *float64 `json:"Priority,omitempty" plist:"Priority,omitempty"`
@@ -5440,7 +5466,7 @@ type SystemPolicyRule struct {
 	Expiration *time.Time `json:"Expiration,omitempty" plist:"Expiration,omitempty"`
 	// The type of operation.
 	OperationType *OperationType `default:"operation:execute" json:"OperationType,omitempty" plist:"OperationType,omitempty"`
-	// The single leaf certificate for the app that is in the allow list.
+	// The single leaf certificate for the app that's in the allow list.
 	LeafCertificate *[]byte `json:"LeafCertificate,omitempty" plist:"LeafCertificate,omitempty"`
 }
 
@@ -5473,7 +5499,7 @@ type SystemPreferences struct {
 	EnabledPreferencePanes *[]EnabledPreferencePanes `json:"EnabledPreferencePanes,omitempty" plist:"EnabledPreferencePanes,omitempty"`
 	// The list of disabled System Preferences panes.
 	DisabledPreferencePanes *[]DisabledPreferencePanes `json:"DisabledPreferencePanes,omitempty" plist:"DisabledPreferencePanes,omitempty"`
-	// The list of disabled System Settings extensions. All other items will be enabled. When `DisabledSystemSettings` is specified, the device ignores `DisabledPreferencePanes` and `EnabledPreferencePanes`.
+	// The list of disabled System Settings extensions. The device enables all other items. When you specify `DisabledSystemSettings`, the device ignores `DisabledPreferencePanes` and `EnabledPreferencePanes`.
 	// > Note:
 	// > A given System Settings extension can supply more than one section in System Settings; disabling such an extension disables all sections it supplies.
 	DisabledSystemSettings *[]DisabledSystemSettings `json:"DisabledSystemSettings,omitempty" plist:"DisabledSystemSettings,omitempty"`
@@ -5579,7 +5605,7 @@ const (
 	DisabledPreferencePanesComAppleXsan                             DisabledPreferencePanes = "com.apple.Xsan"
 )
 
-// The list of disabled System Settings extensions. All other items will be enabled. When `DisabledSystemSettings` is specified, the device ignores `DisabledPreferencePanes` and `EnabledPreferencePanes`.
+// The list of disabled System Settings extensions. The device enables all other items. When you specify `DisabledSystemSettings`, the device ignores `DisabledPreferencePanes` and `EnabledPreferencePanes`.
 // > Note:
 // > A given System Settings extension can supply more than one section in System Settings; disabling such an extension disables all sections it supplies.
 type DisabledSystemSettings string
@@ -5669,7 +5695,7 @@ type LogoutEject struct {
 	DiskImage *[]DiskImage `json:"disk-image,omitempty" plist:"disk-image,omitempty"`
 	// A media action string or an array of media action strings.
 	HarddiskInternal *[]HarddiskInternal `json:"harddisk-internal,omitempty" plist:"harddisk-internal,omitempty"`
-	// A string or an array of media action strings. Internally installed SD cards and USB flash drives are included in the hard disk-external category.
+	// A string or an array of media action strings. The hard disk-external category includes internally installed SD cards and USB flash drives.
 	// This key is the default for media types that don't fall into other categories.
 	HarddiskExternal *[]HarddiskExternal `json:"harddisk-external,omitempty" plist:"harddisk-external,omitempty"`
 	// A media action string or an array of media action strings.
@@ -5811,7 +5837,7 @@ const (
 	HarddiskInternalEject        HarddiskInternal = "eject"
 )
 
-// A string or an array of media action strings. Internally installed SD cards and USB flash drives are included in the hard disk-external category.
+// A string or an array of media action strings. The hard disk-external category includes internally installed SD cards and USB flash drives.
 // This key is the default for media types that don't fall into other categories.
 // One of the following values:
 // * authenticate - User will be authenticated before media is mounted
@@ -5864,7 +5890,7 @@ type MountControls struct {
 	DiskImage *[]DiskImage `json:"disk-image,omitempty" plist:"disk-image,omitempty"`
 	// A media action string or an array of media action strings.
 	HarddiskInternal *[]HarddiskInternal `json:"harddisk-internal,omitempty" plist:"harddisk-internal,omitempty"`
-	// A string or an array of media action strings. Internally installed SD cards and USB flash drives are included in the hard disk-external category.
+	// A string or an array of media action strings. The hard disk-external category includes internally installed SD cards and USB flash drives.
 	// This key is the default for media types that don't fall into other categories.
 	HarddiskExternal *[]HarddiskExternal `json:"harddisk-external,omitempty" plist:"harddisk-external,omitempty"`
 	// A media action string or an array of media action strings.
@@ -5893,7 +5919,7 @@ type UnmountControls struct {
 	DiskImage *[]DiskImage `json:"disk-image,omitempty" plist:"disk-image,omitempty"`
 	// A media action string or an array of media action strings.
 	HarddiskInternal *[]HarddiskInternal `json:"harddisk-internal,omitempty" plist:"harddisk-internal,omitempty"`
-	// A string or an array of media action strings. Internally installed SD cards and USB flash drives are included in the hard disk-external category.
+	// A string or an array of media action strings. The hard disk-external category includes internally installed SD cards and USB flash drives.
 	// This key is the default for media types that don't fall into other categories.
 	HarddiskExternal *[]HarddiskExternal `json:"harddisk-external,omitempty" plist:"harddisk-external,omitempty"`
 	// A media action string or an array of media action strings.
@@ -6023,15 +6049,12 @@ type AppLayerVPN struct {
 	// This property is deprecated in iOS 13.4 and later; use the `VPNUUID` property of the `CardDAV` payload instead.
 	ContactsDomains *[]string `json:"ContactsDomains,omitempty" plist:"ContactsDomains,omitempty"`
 	// An array with entries that must each specify a domain that triggers this VPN. The domains must also be part of the `apple-app-site-association` file, as described in `Supporting associated domains`.
-	// Available in iOS 14 and later, and macOS 11 and later.
 	AssociatedDomains *[]string `json:"AssociatedDomains,omitempty" plist:"AssociatedDomains,omitempty"`
 	// An array with entries that each specify a domain that doesn't trigger this VPN for connections to the domain.
-	// Available in iOS 14 and later, and macOS 11 and later.
 	ExcludedDomains *[]string `json:"ExcludedDomains,omitempty" plist:"ExcludedDomains,omitempty"`
 	// If `true`, automatically connects the VPN when associated apps for this per-app VPN service initiate network communication. Otherwise, the user must initiate the connection manually before those apps can initiate network communication. If this key isn't present, the value of the `OnDemandEnabled` key determines the status of per-app VPN On Demand.
 	OnDemandMatchAppEnabled *bool `json:"OnDemandMatchAppEnabled,omitempty" plist:"OnDemandMatchAppEnabled,omitempty"`
 	// An array of SMB domains that's accessible through this VPN connection.
-	// Available in iOS 13 and later.
 	SMBDomains *[]string `json:"SMBDomains,omitempty" plist:"SMBDomains,omitempty"`
 }
 
@@ -6084,7 +6107,7 @@ type VPN struct {
 	*CommonPayloadKeys
 	// The type of the VPN, which defines which settings are appropriate for this VPN payload.
 	// If the type is `VPN` or `TransparentProxy`, then the system requires a value for `VPNSubType`.
-	// `TransparentProxy` is only available in macOS. `L2TP` and `IPSec` aren't available in tvOS. `AlwaysOn` is only available on iOS and Apple Watch pairing isn't supported with `AlwaysOn`. For a previously paired Apple Watch, all phone-watch communications cease when `AlwaysOn` is enabled. Not available in watchOS.
+	// `TransparentProxy` is only available in macOS. `L2TP` and `IPSec` aren't available in tvOS. `AlwaysOn` is only available on iOS and `AlwaysOn` doesn't support Apple Watch pairing. For a previously paired Apple Watch, all phone-watch communications cease when `AlwaysOn` is enabled. Not available in watchOS.
 	VPNType VPNType `json:"VPNType" plist:"VPNType" required:"true"`
 	// An identifier for a vendor-specified configuration dictionary when the value for `VPNType` is `VPN`.
 	// If `VPNType` is `VPN`, the system requires this field. If the configuration targets a VPN solution that uses a VPN plugin, then this field contains the bundle identifier of the plugin. Here are some examples:
@@ -6117,7 +6140,7 @@ type VPN struct {
 	Proxies *VPNProxies `json:"Proxies,omitempty" plist:"Proxies,omitempty"`
 	// The dictionary to use when `VPNType` is `AlwaysOn`. Not available in tvOS or watchOS.
 	AlwaysOn *AlwaysOn `json:"AlwaysOn,omitempty" plist:"AlwaysOn,omitempty"`
-	// The dictionary to use when `VPNType` is `TransparentProxy`. Available in macOS 14 and later.
+	// The dictionary to use when `VPNType` is `TransparentProxy`.
 	TransparentProxy *TransparentProxy `json:"TransparentProxy,omitempty" plist:"TransparentProxy,omitempty"`
 }
 
@@ -6127,7 +6150,7 @@ func (p *VPN) PayloadType() string {
 
 // The type of the VPN, which defines which settings are appropriate for this VPN payload.
 // If the type is `VPN` or `TransparentProxy`, then the system requires a value for `VPNSubType`.
-// `TransparentProxy` is only available in macOS. `L2TP` and `IPSec` aren't available in tvOS. `AlwaysOn` is only available on iOS and Apple Watch pairing isn't supported with `AlwaysOn`. For a previously paired Apple Watch, all phone-watch communications cease when `AlwaysOn` is enabled. Not available in watchOS.
+// `TransparentProxy` is only available in macOS. `L2TP` and `IPSec` aren't available in tvOS. `AlwaysOn` is only available on iOS and `AlwaysOn` doesn't support Apple Watch pairing. For a previously paired Apple Watch, all phone-watch communications cease when `AlwaysOn` is enabled. Not available in watchOS.
 type VPNType string
 
 const (
@@ -6165,7 +6188,7 @@ type VPNVPN struct {
 	PayloadCertificateUUID *string `json:"PayloadCertificateUUID,omitempty" plist:"PayloadCertificateUUID,omitempty"`
 	// The bundle identifier for the VPN provider. Not available in watchOS.
 	ProviderBundleIdentifier *string `json:"ProviderBundleIdentifier,omitempty" plist:"ProviderBundleIdentifier,omitempty"`
-	// If the VPN provider is implemented as a system extension, this field is required. Not available in watchOS.
+	// If the VPN provider uses a system extension, this field is required. Not available in watchOS.
 	ProviderDesignatedRequirement *string `json:"ProviderDesignatedRequirement,omitempty" plist:"ProviderDesignatedRequirement,omitempty"`
 	// If `1`, disconnects after an on-demand connection idles.
 	DisconnectOnIdle *VPNDisconnectOnIdle `default:"0" json:"DisconnectOnIdle,omitempty" plist:"DisconnectOnIdle,omitempty"`
@@ -6173,16 +6196,16 @@ type VPNVPN struct {
 	DisconnectOnIdleTimer *int64 `json:"DisconnectOnIdleTimer,omitempty" plist:"DisconnectOnIdleTimer,omitempty"`
 	// The type of VPN service. If the value is `app-proxy`, the service tunnels traffic at the app level. If the value is `packet-tunnel`, the service tunnels traffic at the IP layer. Not available in watchOS.
 	ProviderType *VPNProviderType `default:"packet-tunnel" json:"ProviderType,omitempty" plist:"ProviderType,omitempty"`
-	// If `1``, routes all traffic through the VPN, with some exclusions. Several of the exclusions can be controlled with the `ExcludeLocalNetworks`, `ExcludeCellularServices`, `ExcludeAPNs` and `ExcludeDeviceCommunication` properties. The following traffic is always excluded from the tunnel:
+	// If `1``, routes all traffic through the VPN, with some exclusions. Several of the exclusions can be controlled with the `ExcludeLocalNetworks`, `ExcludeCellularServices`, `ExcludeAPNs` and `ExcludeDeviceCommunication` properties. The system always excludes the following traffic from the tunnel:
 	// - Traffic necessary for connecting and maintaining the device's network connection, such as DHCP.
 	// - Traffic necessary for connecting to captive networks.
-	// - Certain cellular services traffic that is not routable over the internet and is instead directly routed to the cellular network. See the ExcludeCellularServices property for more details.
+	// - Certain cellular services traffic that's not routable over the internet and is instead directly routed to the cellular network. See the ExcludeCellularServices property for more details.
 	// - Network communication with a companion device such as a watchOS device.
 	// Not available in watchOS.
 	IncludeAllNetworks *VPNIncludeAllNetworks `default:"0" json:"IncludeAllNetworks,omitempty" plist:"IncludeAllNetworks,omitempty"`
 	// If `1`, all the VPN's non-default routes take precedence over any locally defined routes.
 	// If `IncludeAllNetworks` is `1`, the system ignores the value of `EnforceRoutes`.
-	// Available in iOS 14.2 and later, and macOS 11 and later. Not available in watchOS.
+	// Not available in watchOS.
 	EnforceRoutes *VPNEnforceRoutes `default:"0" json:"EnforceRoutes,omitempty" plist:"EnforceRoutes,omitempty"`
 	// If `1` and `IncludeAllNetworks` is `1`, routes all local network traffic outside the VPN. Not available in watchOS.
 	ExcludeLocalNetworks *VPNExcludeLocalNetworks `json:"ExcludeLocalNetworks,omitempty" plist:"ExcludeLocalNetworks,omitempty"`
@@ -6194,7 +6217,7 @@ type VPNVPN struct {
 	ExcludeDeviceCommunication *VPNExcludeDeviceCommunication `default:"1" json:"ExcludeDeviceCommunication,omitempty" plist:"ExcludeDeviceCommunication,omitempty"`
 	// If `1`, enables VPN On Demand.
 	OnDemandEnabled *VPNOnDemandEnabled `default:"0" json:"OnDemandEnabled,omitempty" plist:"OnDemandEnabled,omitempty"`
-	// If `1`, the Connect On Demand toggle in Settings is disabled for this configuration. Available in iOS 14 and later. Not available in watchOS.
+	// If `1`, the device disables the Connect On Demand toggle in Settings for this configuration. Not available in watchOS.
 	OnDemandUserOverrideDisabled *VPNOnDemandUserOverrideDisabled `default:"0" json:"OnDemandUserOverrideDisabled,omitempty" plist:"OnDemandUserOverrideDisabled,omitempty"`
 	// A list of domain names. The system treats associated domain names as though they're associated with the `OnDemandMatchDomainsOnRetry` key. This behavior can be overridden by `OnDemandRules`.
 	// In iOS 7 and later, this key is deprecated (but still supported) in favor of `EvaluateConnection` actions in the `OnDemandRules` dictionaries.
@@ -6237,10 +6260,10 @@ const (
 	VPNProviderTypeAppProxy     VPNProviderType = "app-proxy"
 )
 
-// If `1“, routes all traffic through the VPN, with some exclusions. Several of the exclusions can be controlled with the `ExcludeLocalNetworks`, `ExcludeCellularServices`, `ExcludeAPNs` and `ExcludeDeviceCommunication` properties. The following traffic is always excluded from the tunnel:
+// If `1“, routes all traffic through the VPN, with some exclusions. Several of the exclusions can be controlled with the `ExcludeLocalNetworks`, `ExcludeCellularServices`, `ExcludeAPNs` and `ExcludeDeviceCommunication` properties. The system always excludes the following traffic from the tunnel:
 // - Traffic necessary for connecting and maintaining the device's network connection, such as DHCP.
 // - Traffic necessary for connecting to captive networks.
-// - Certain cellular services traffic that is not routable over the internet and is instead directly routed to the cellular network. See the ExcludeCellularServices property for more details.
+// - Certain cellular services traffic that's not routable over the internet and is instead directly routed to the cellular network. See the ExcludeCellularServices property for more details.
 // - Network communication with a companion device such as a watchOS device.
 // Not available in watchOS.
 type VPNIncludeAllNetworks int64
@@ -6252,7 +6275,7 @@ const (
 
 // If `1`, all the VPN's non-default routes take precedence over any locally defined routes.
 // If `IncludeAllNetworks` is `1`, the system ignores the value of `EnforceRoutes`.
-// Available in iOS 14.2 and later, and macOS 11 and later. Not available in watchOS.
+// Not available in watchOS.
 type VPNEnforceRoutes int64
 
 const (
@@ -6300,7 +6323,7 @@ const (
 	VPNOnDemandEnabled1 VPNOnDemandEnabled = 1
 )
 
-// If `1`, the Connect On Demand toggle in Settings is disabled for this configuration. Available in iOS 14 and later. Not available in watchOS.
+// If `1`, the device disables the Connect On Demand toggle in Settings for this configuration. Not available in watchOS.
 type VPNOnDemandUserOverrideDisabled int64
 
 const (
@@ -6320,10 +6343,10 @@ type VPNOnDemandRulesOnDemandRulesElement struct {
 	// An array of dictionaries that provides rules similar to the `OnDemandRules` dictionary, but evaluated on each connection instead of when the network changes. This value is only for use with dictionaries in which the `Action` value is `EvaluateConnection`. The system evaluates these dictionaries in order and the first dictionary that matches determines the behavior. Not available in watchOS.
 	ActionParameters *[]*VPNOnDemandRulesOnDemandRulesElementActionParametersActionParameter `json:"ActionParameters,omitempty" plist:"ActionParameters,omitempty"`
 	// An array of domain names. This rule matches if any of the domain names in the specified list matches any domain in the device's search domains list.
-	// The system supports a wildcard (`*`) prefix. For example, `*.example.com` matches against either `mydomain.example.com` or `yourdomain.example.com`.
+	// The system supports a wildcard (`\*`) prefix. For example, `\*.example.com` matches against either `mydomain.example.com` or `yourdomain.example.com`.
 	DNSDomainMatch *[]string `json:"DNSDomainMatch,omitempty" plist:"DNSDomainMatch,omitempty"`
 	// An array of IP addresses. This rule matches if any of the network's specified DNS servers match any entry in the array.
-	// The system supports matching with a single wildcard. For example, `17.*` matches any DNS server in the `17.0.0.0/8` subnet.
+	// The system supports matching with a single wildcard. For example, `17.\*` matches any DNS server in the `17.0.0.0/8` subnet.
 	DNSServerAddressMatch *[]string `json:"DNSServerAddressMatch,omitempty" plist:"DNSServerAddressMatch,omitempty"`
 	// An interface type. If specified, this rule matches only if the primary network interface hardware matches the specified type.
 	InterfaceTypeMatch *VPNOnDemandRulesOnDemandRulesElementInterfaceTypeMatch `json:"InterfaceTypeMatch,omitempty" plist:"InterfaceTypeMatch,omitempty"`
@@ -6363,7 +6386,7 @@ type VPNOnDemandRulesOnDemandRulesElementActionParametersActionParameter struct 
 	// An array of IP addresses of DNS servers to use for resolving the specified domains. These servers don't need to be part of the device's current network configuration. If these DNS servers aren't reachable, the system establishes a VPN connection. These DNS servers need to be either internal DNS servers or trusted external DNS servers.
 	// This key is valid only if the value of 'DomainAction' is 'ConnectIfNeeded'.
 	RequiredDNSServers *[]string `json:"RequiredDNSServers,omitempty" plist:"RequiredDNSServers,omitempty"`
-	// An HTTP or HTTPS (preferred) URL to probe, using a GET request. If the URL's hostname can't be resolved, if the server is unreachable, or if the server doesn't respond with a 200 HTTP status code, a VPN connection is established in response.
+	// An HTTP or HTTPS (preferred) URL to probe, using a GET request. If the URL's hostname can't be resolved, if the server is unreachable, or if the server doesn't respond with a 200 HTTP status code, the device establishes a VPN connection in response.
 	// This key is valid only if the value of 'DomainAction' is 'ConnectIfNeeded'.
 	RequiredURLStringProbe *string `json:"RequiredURLStringProbe,omitempty" plist:"RequiredURLStringProbe,omitempty"`
 }
@@ -6589,11 +6612,11 @@ type IKEv2 struct {
 	PayloadCertificateUUID *string `json:"PayloadCertificateUUID,omitempty" plist:"PayloadCertificateUUID,omitempty"`
 	// The password to use for the account credentials. Only used if `AuthenticationMethod` is `Password`.
 	Password *string `json:"Password,omitempty" plist:"Password,omitempty"`
-	// If the VPNSubType field contains the bundle identifier of an app that contains multiple VPN providers of the same type (app-proxy or packet-tunnel), then the system uses this field to choose which provider to use for this configuration. If the VPN provider is implemented as a System Extension, then this field is required.
+	// If the VPNSubType field contains the bundle identifier of an app that contains multiple VPN providers of the same type (app-proxy or packet-tunnel), then the system uses this field to choose which provider to use for this configuration. If the VPN provider uses a system extension, then this field is required.
 	ProviderBundleIdentifier *string `json:"ProviderBundleIdentifier,omitempty" plist:"ProviderBundleIdentifier,omitempty"`
-	// If the VPN provider is implemented as a System Extension, then this field is required. Available in macOS 10.15 and later, tvOS 17 and later, and watchOS 10 and later.
+	// If the VPN provider uses a system extension, then this field is required.
 	ProviderDesignatedRequirement *string `json:"ProviderDesignatedRequirement,omitempty" plist:"ProviderDesignatedRequirement,omitempty"`
-	// If `AuthenticationMethod` is `SharedSecret`, this value is used for IKE authentication.
+	// If `AuthenticationMethod` is `SharedSecret`, the device uses this value for IKE authentication.
 	SharedSecret *string `json:"SharedSecret,omitempty" plist:"SharedSecret,omitempty"`
 	// If `1`, enables EAP-only authentication.
 	ExtendedAuthEnabled *ExtendedAuthEnabled `default:"0" json:"ExtendedAuthEnabled,omitempty" plist:"ExtendedAuthEnabled,omitempty"`
@@ -6643,9 +6666,9 @@ type IKEv2 struct {
 	EnableCertificateRevocationCheck *EnableCertificateRevocationCheck `default:"0" json:"EnableCertificateRevocationCheck,omitempty" plist:"EnableCertificateRevocationCheck,omitempty"`
 	// If `1`, the system enables a tunnel over cellular data to carry traffic that's eligible for Wi-Fi Assist and also requires VPN.
 	// Enabling fallback requires that the server support multiple tunnels for a single user.
-	// This field is available in iOS 13 and later, and tvOS 17 and later. Not available in watchOS.
+	// Not available in watchOS.
 	EnableFallback *EnableFallback `default:"0" json:"EnableFallback,omitempty" plist:"EnableFallback,omitempty"`
-	// The Maximum Transmission Unit (MTU) specifies the maximum size in bytes of each packet that the system sends over the IKEv2 VPN interface. Available in iOS 14 and later, and macOS 11 and later.
+	// The Maximum Transmission Unit (MTU) specifies the maximum size in bytes of each packet that the system sends over the IKEv2 VPN interface.
 	MTU *int64 `default:"1280" json:"MTU,omitempty" plist:"MTU,omitempty"`
 	// If the value of this key is `app-proxy`, the VPN service tunnels traffic at the application layer. If the value of this key is `packet-tunnel`, the VPN service tunnels traffic at the IP layer.
 	ProviderType *IKEv2ProviderType `default:"packet-tunnel" json:"ProviderType,omitempty" plist:"ProviderType,omitempty"`
@@ -6669,11 +6692,11 @@ type IKEv2 struct {
 	PPK *[]byte `json:"PPK,omitempty" plist:"PPK,omitempty"`
 	// The identifier for the Post-quantum Pre-shared key (PPK) the device uses for this VPN. This key is is used with VPN servers that support RFC 8784. If this key is present `PPK` must also be present.
 	PPKIdentifier *string `json:"PPKIdentifier,omitempty" plist:"PPKIdentifier,omitempty"`
-	// If set to `1`, the VPN doesn't establish a connection if the server doesn't support RFC 8784 or doesn't accept the PPK identifier specified in `PPKIdentifier`. The device ignores this key if `PPK` and `PPKIdentifier` are not present.
+	// If set to `1`, the VPN doesn't establish a connection if the server doesn't support RFC 8784 or doesn't accept the PPK identifier specified in `PPKIdentifier`. The device ignores this key if `PPK` and `PPKIdentifier` aren't present.
 	PPKMandatory *PPKMandatory `default:"1" json:"PPKMandatory,omitempty" plist:"PPKMandatory,omitempty"`
-	// If set to `0`, the VPN doesn't establish a connection if the server does not support or doesn't allow post-quantum key exchanges. Thd device ignores this key if `PostQuantumKeyExchangeMethods` is not present in `IKESecurityAssociationParameters` or `ChildSecurityAssociationParameters`.
+	// If set to `0`, the VPN doesn't establish a connection if the server does not support or doesn't allow post-quantum key exchanges. Thd device ignores this key if `PostQuantumKeyExchangeMethods` isn't present in `IKESecurityAssociationParameters` or `ChildSecurityAssociationParameters`.
 	AllowPostQuantumKeyExchangeFallback *AllowPostQuantumKeyExchangeFallback `default:"0" json:"AllowPostQuantumKeyExchangeFallback,omitempty" plist:"AllowPostQuantumKeyExchangeFallback,omitempty"`
-	// If set to `1`, the device doesn't allow DES, 3DES, and Diffie-Hellman groups less than 14. Also the device requires the encryption algorithm specified for the IKE SA to be at least as cryptographically strong as the algorithm specified for the child SA. The device rejects this profile payload if these requirements are not met.
+	// If set to `1`, the device doesn't allow DES, 3DES, and Diffie-Hellman groups less than 14. Also the device requires the encryption algorithm specified for the IKE SA to be at least as cryptographically strong as the algorithm specified for the child SA. The device rejects this profile payload if these requirements aren't met.
 	EnforceStrictAlgorithmSelection *EnforceStrictAlgorithmSelection `default:"0" json:"EnforceStrictAlgorithmSelection,omitempty" plist:"EnforceStrictAlgorithmSelection,omitempty"`
 	// These parameters apply to Child Security Association unless `ChildSecurityAssociationParameters` is specified.
 	IKESecurityAssociationParameters *IKESecurityAssociationParameters `json:"IKESecurityAssociationParameters,omitempty" plist:"IKESecurityAssociationParameters,omitempty"`
@@ -6748,6 +6771,7 @@ const (
 	IKEv2TLSMinimumVersion10 IKEv2TLSMinimumVersion = "1.0"
 	IKEv2TLSMinimumVersion11 IKEv2TLSMinimumVersion = "1.1"
 	IKEv2TLSMinimumVersion12 IKEv2TLSMinimumVersion = "1.2"
+	IKEv2TLSMinimumVersion13 IKEv2TLSMinimumVersion = "1.3"
 )
 
 // The maximum TLS version to use with EAP-TLS authentication.
@@ -6757,6 +6781,7 @@ const (
 	IKEv2TLSMaximumVersion10 IKEv2TLSMaximumVersion = "1.0"
 	IKEv2TLSMaximumVersion11 IKEv2TLSMaximumVersion = "1.1"
 	IKEv2TLSMaximumVersion12 IKEv2TLSMaximumVersion = "1.2"
+	IKEv2TLSMaximumVersion13 IKEv2TLSMaximumVersion = "1.3"
 )
 
 // If `1`, negotiations should use IKEv2 Configuration Attribute `INTERNAL_IP4_SUBNET` and `INTERNAL_IP6_SUBNET`.
@@ -6818,7 +6843,7 @@ const (
 
 // If `1`, the system enables a tunnel over cellular data to carry traffic that's eligible for Wi-Fi Assist and also requires VPN.
 // Enabling fallback requires that the server support multiple tunnels for a single user.
-// This field is available in iOS 13 and later, and tvOS 17 and later. Not available in watchOS.
+// Not available in watchOS.
 type EnableFallback int64
 
 const (
@@ -6886,7 +6911,7 @@ const (
 	IKEv2ExcludeDeviceCommunication1 IKEv2ExcludeDeviceCommunication = 1
 )
 
-// If set to `1`, the VPN doesn't establish a connection if the server doesn't support RFC 8784 or doesn't accept the PPK identifier specified in `PPKIdentifier`. The device ignores this key if `PPK` and `PPKIdentifier` are not present.
+// If set to `1`, the VPN doesn't establish a connection if the server doesn't support RFC 8784 or doesn't accept the PPK identifier specified in `PPKIdentifier`. The device ignores this key if `PPK` and `PPKIdentifier` aren't present.
 type PPKMandatory int64
 
 const (
@@ -6894,7 +6919,7 @@ const (
 	PPKMandatory1 PPKMandatory = 1
 )
 
-// If set to `0`, the VPN doesn't establish a connection if the server does not support or doesn't allow post-quantum key exchanges. Thd device ignores this key if `PostQuantumKeyExchangeMethods` is not present in `IKESecurityAssociationParameters` or `ChildSecurityAssociationParameters`.
+// If set to `0`, the VPN doesn't establish a connection if the server does not support or doesn't allow post-quantum key exchanges. Thd device ignores this key if `PostQuantumKeyExchangeMethods` isn't present in `IKESecurityAssociationParameters` or `ChildSecurityAssociationParameters`.
 type AllowPostQuantumKeyExchangeFallback int64
 
 const (
@@ -6902,7 +6927,7 @@ const (
 	AllowPostQuantumKeyExchangeFallback1 AllowPostQuantumKeyExchangeFallback = 1
 )
 
-// If set to `1`, the device doesn't allow DES, 3DES, and Diffie-Hellman groups less than 14. Also the device requires the encryption algorithm specified for the IKE SA to be at least as cryptographically strong as the algorithm specified for the child SA. The device rejects this profile payload if these requirements are not met.
+// If set to `1`, the device doesn't allow DES, 3DES, and Diffie-Hellman groups less than 14. Also the device requires the encryption algorithm specified for the IKE SA to be at least as cryptographically strong as the algorithm specified for the child SA. The device rejects this profile payload if these requirements aren't met.
 type EnforceStrictAlgorithmSelection int64
 
 const (
@@ -6923,7 +6948,7 @@ type IKESecurityAssociationParameters struct {
 	// For `AlwaysOn` VPN in iOS 14.2 and later, the minimum allowed value is `14`.
 	// `1`, `2`, and `5` are available only in iOS, macOS, and visionOS prior to iOS 26, macOS 26, and visionOS 26.
 	DiffieHellmanGroup *DiffieHellmanGroup `default:"14" json:"DiffieHellmanGroup,omitempty" plist:"DiffieHellmanGroup,omitempty"`
-	// An array of strings representing postquantum key exchange methods the device uses during SA establishment and rekey. You can specify up to seven items, which correspond to ADDKE1 - ADDKE7 from RFC 9370.
+	// An array of integers representing postquantum key exchange methods the device uses during SA establishment and rekey. You can specify up to seven items, which correspond to ADDKE1 - ADDKE7 from RFC 9370.
 	PostQuantumKeyExchangeMethods *[]PostQuantumKeyExchangeMethods `json:"PostQuantumKeyExchangeMethods,omitempty" plist:"PostQuantumKeyExchangeMethods,omitempty"`
 	// The SA lifetime (rekey interval) in minutes.
 	LifeTimeInMinutes *int64 `default:"1440" json:"LifeTimeInMinutes,omitempty" plist:"LifeTimeInMinutes,omitempty"`
@@ -6977,7 +7002,7 @@ const (
 	DiffieHellmanGroup32 DiffieHellmanGroup = 32
 )
 
-// An array of strings representing postquantum key exchange methods the device uses during SA establishment and rekey. You can specify up to seven items, which correspond to ADDKE1 - ADDKE7 from RFC 9370.
+// An array of integers representing postquantum key exchange methods the device uses during SA establishment and rekey. You can specify up to seven items, which correspond to ADDKE1 - ADDKE7 from RFC 9370.
 type PostQuantumKeyExchangeMethods int64
 
 const (
@@ -6999,7 +7024,7 @@ type ChildSecurityAssociationParameters struct {
 	// For `AlwaysOn` VPN in iOS 14.2 and later, the minimum allowed value is `14`.
 	// `1`, `2`, and `5` are available only in iOS, macOS, and visionOS prior to iOS 26, macOS 26, and visionOS 26.
 	DiffieHellmanGroup *DiffieHellmanGroup `default:"14" json:"DiffieHellmanGroup,omitempty" plist:"DiffieHellmanGroup,omitempty"`
-	// An array of strings representing postquantum key exchange methods the device uses during SA establishment and rekey. You can specify up to seven items, which correspond to ADDKE1 - ADDKE7 from RFC 9370.
+	// An array of integers representing postquantum key exchange methods the device uses during SA establishment and rekey. You can specify up to seven items, which correspond to ADDKE1 - ADDKE7 from RFC 9370.
 	PostQuantumKeyExchangeMethods *[]PostQuantumKeyExchangeMethods `json:"PostQuantumKeyExchangeMethods,omitempty" plist:"PostQuantumKeyExchangeMethods,omitempty"`
 	// The SA lifetime (rekey interval) in minutes.
 	LifeTimeInMinutes *int64 `default:"1440" json:"LifeTimeInMinutes,omitempty" plist:"LifeTimeInMinutes,omitempty"`
@@ -7156,7 +7181,7 @@ const (
 
 type ServiceExceptionElement struct {
 	// The name of a service that's exempt from Always On VPN.
-	// `CellularServices` is available in iOS 11.3 and later; it exempts `VoLTE`, `IMS` and `MMS`. WiFiCalling is exempted in iOS 13.4 and later.
+	// `CellularServices` is available in iOS 11.3 and later; it exempts `VoLTE`, `IMS` and `MMS`. Always On VPN exempts WiFiCalling in iOS 13.4 and later.
 	// `DeviceCommunication` is available in iOS 17.4 and later; it exempts network traffic used for communicating with devices connected via USB or Wi-Fi.
 	ServiceName ServiceName `json:"ServiceName" plist:"ServiceName" required:"true"`
 	// The action to take with network connections from the named service.
@@ -7164,7 +7189,7 @@ type ServiceExceptionElement struct {
 }
 
 // The name of a service that's exempt from Always On VPN.
-// `CellularServices` is available in iOS 11.3 and later; it exempts `VoLTE`, `IMS` and `MMS`. WiFiCalling is exempted in iOS 13.4 and later.
+// `CellularServices` is available in iOS 11.3 and later; it exempts `VoLTE`, `IMS` and `MMS`. Always On VPN exempts WiFiCalling in iOS 13.4 and later.
 // `DeviceCommunication` is available in iOS 17.4 and later; it exempts network traffic used for communicating with devices connected via USB or Wi-Fi.
 type ServiceName string
 
@@ -7218,48 +7243,35 @@ type AllowedCaptiveNetworkPluginElement struct {
 	BundleIdentifier string `json:"BundleIdentifier" plist:"BundleIdentifier" required:"true"`
 }
 
-// The dictionary to use when `VPNType` is `TransparentProxy`. Available in macOS 14 and later.
+// The dictionary to use when `VPNType` is `TransparentProxy`.
 type TransparentProxy struct {
 	// The type of authentication method to use: `Password`, `Certificate`, or `Password+Certificate`.
-	// Available in macOS 14 and later.
 	AuthenticationMethod *TransparentProxyAuthenticationMethod `default:"Password" json:"AuthenticationMethod,omitempty" plist:"AuthenticationMethod,omitempty"`
 	// If `1`, the VPN disconnects automatically disconnect after a period defined by `DisconnectOnIdleTimer`.
-	// Available in macOS 14 and later.
 	DisconnectOnIdle *TransparentProxyDisconnectOnIdle `default:"0" json:"DisconnectOnIdle,omitempty" plist:"DisconnectOnIdle,omitempty"`
 	// The number of seconds before the VPN disconnects. This value is only used if `DisconnectOnIdle` is `1`.
-	// Available in macOS 14 and later.
 	DisconnectOnIdleTimer *int64 `json:"DisconnectOnIdleTimer,omitempty" plist:"DisconnectOnIdleTimer,omitempty"`
 	// If `1`, then all the VPN's non-default routes take precedence over any locally-defined routes. If `IncludeAllNetworks` is `1`, the system ignores the value of `EnforceRoutes`.
-	// Available in macOS 14 and later.
 	EnforceRoutes *TransparentProxyEnforceRoutes `default:"0" json:"EnforceRoutes,omitempty" plist:"EnforceRoutes,omitempty"`
 	// If `1`, the system brings up the VPN on demand.
-	// Available in macOS 14 and later.
 	OnDemandEnabled *TransparentProxyOnDemandEnabled `default:"0" json:"OnDemandEnabled,omitempty" plist:"OnDemandEnabled,omitempty"`
 	// Determines when and how the system uses an OnDemand VPN.
-	// Available in macOS 14 and later.
 	OnDemandRules *[]*VPNOnDemandRulesOnDemandRulesElement `json:"OnDemandRules,omitempty" plist:"OnDemandRules,omitempty"`
-	// The UUID of the identity certificate as the account credential. If `AuthenticationMethod` is `Certificate`, and extended authentication (EAP) isn't used, this certificate is sent out for IKE client authentication. If extended authentication is used, this certificate can be used for EAP-TLS.
-	// Available in macOS 14 and later.
+	// The UUID of the identity certificate as the account credential. If `AuthenticationMethod` is `Certificate`, and extended authentication (EAP) isn't used, the device sends this certificate for IKE client authentication. If extended authentication is used, this certificate can be used for EAP-TLS.
 	PayloadCertificateUUID *string `json:"PayloadCertificateUUID,omitempty" plist:"PayloadCertificateUUID,omitempty"`
 	// The password to use for the account credentials. Only used if `AuthenticationMethod` is `Password`.
-	// Available in macOS 14 and later.
 	Password *string `json:"Password,omitempty" plist:"Password,omitempty"`
-	// If the VPNSubType field contains the bundle identifier of an app that contains multiple VPN providers of the same type (app-proxy or packet-tunnel), then the system uses this field to choose which provider to use for this configuration. If the VPN provider is implemented as a System Extension, then this field is required.
-	// Available in macOS 14 and later.
+	// If the VPNSubType field contains the bundle identifier of an app that contains multiple VPN providers of the same type (app-proxy or packet-tunnel), then the system uses this field to choose which provider to use for this configuration. If the VPN provider uses a system extension, then this field is required.
 	ProviderBundleIdentifier *string `json:"ProviderBundleIdentifier,omitempty" plist:"ProviderBundleIdentifier,omitempty"`
-	// If the VPN provider is implemented as a System Extension, then this field is required.
-	// Available in macOS 14 and later.
+	// If the VPN provider uses a system extension, then this field is required.
 	ProviderDesignatedRequirement *string `json:"ProviderDesignatedRequirement,omitempty" plist:"ProviderDesignatedRequirement,omitempty"`
 	// If the value of this key is `app-proxy`, the VPN service tunnels traffic at the application layer. If the value of this key is `packet-tunnel`, the VPN service tunnels traffic at the IP layer.
-	// Available in macOS 14 and later.
 	ProviderType *TransparentProxyProviderType `default:"packet-tunnel" json:"ProviderType,omitempty" plist:"ProviderType,omitempty"`
 	// A positive integer.
-	// Available in macOS 14 and later.
 	Order *int64 `json:"Order,omitempty" plist:"Order,omitempty"`
 }
 
 // The type of authentication method to use: `Password`, `Certificate`, or `Password+Certificate`.
-// Available in macOS 14 and later.
 type TransparentProxyAuthenticationMethod string
 
 const (
@@ -7269,7 +7281,6 @@ const (
 )
 
 // If `1`, the VPN disconnects automatically disconnect after a period defined by `DisconnectOnIdleTimer`.
-// Available in macOS 14 and later.
 type TransparentProxyDisconnectOnIdle int64
 
 const (
@@ -7278,7 +7289,6 @@ const (
 )
 
 // If `1`, then all the VPN's non-default routes take precedence over any locally-defined routes. If `IncludeAllNetworks` is `1`, the system ignores the value of `EnforceRoutes`.
-// Available in macOS 14 and later.
 type TransparentProxyEnforceRoutes int64
 
 const (
@@ -7287,7 +7297,6 @@ const (
 )
 
 // If `1`, the system brings up the VPN on demand.
-// Available in macOS 14 and later.
 type TransparentProxyOnDemandEnabled int64
 
 const (
@@ -7296,7 +7305,6 @@ const (
 )
 
 // If the value of this key is `app-proxy`, the VPN service tunnels traffic at the application layer. If the value of this key is `packet-tunnel`, the VPN service tunnels traffic at the IP layer.
-// Available in macOS 14 and later.
 type TransparentProxyProviderType string
 
 const (
@@ -7319,9 +7327,9 @@ type WebClip struct {
 	IsRemovable *bool `json:"IsRemovable,omitempty" plist:"IsRemovable,omitempty"`
 	// The name of the web clip that the system displays on the Home Screen.
 	Label string `json:"Label" plist:"Label" required:"true"`
-	// If `true`, a full screen web clip can navigate to an external web site without showing Safari UI. Otherwise, Safari UI appears when navigating away from the web clip's URL. This key has no effect when `FullScreen` is `false`. Available in iOS 14 and later.
+	// If `true`, a full screen web clip can navigate to an external web site without showing Safari UI. Otherwise, Safari UI appears when navigating away from the web clip's URL. This key has no effect when `FullScreen` is `false`.
 	IgnoreManifestScope *bool `json:"IgnoreManifestScope,omitempty" plist:"IgnoreManifestScope,omitempty"`
-	// The application bundle identifier of the application that opens the URL. To use this property, install the profile through MDM. Available in iOS 14 and later.
+	// The application bundle identifier of the application that opens the URL. To use this property, install the profile through MDM.
 	TargetApplicationBundleIdentifier *string `json:"TargetApplicationBundleIdentifier,omitempty" plist:"TargetApplicationBundleIdentifier,omitempty"`
 }
 
@@ -7391,9 +7399,9 @@ type WebContentFilter struct {
 	FilterGrade *FilterGrade `default:"firewall" json:"FilterGrade,omitempty" plist:"FilterGrade,omitempty"`
 	// A globally unique identifier for this content filter configuration. The content filter processes network traffic for managed apps with the same `ContentFilterUUID` in their app attributes. Use when `FilterType` is `Plugin`.This key must be present for unsupervised devices and user enrollment.
 	ContentFilterUUID *string `json:"ContentFilterUUID,omitempty" plist:"ContentFilterUUID,omitempty"`
-	// If `true`, the system filters URL requests. Use when `FilterType` is `Plugin`. Available in iOS 26 and macOS 26, and later.
+	// If `true`, the system filters URL requests. Use when `FilterType` is `Plugin`.
 	FilterURLs *bool `json:"FilterURLs,omitempty" plist:"FilterURLs,omitempty"`
-	// A dictionary containing URL filter parameters. Required when `FilterURLs` is `true`. Available in iOS 26 and macOS 26 and later.
+	// A dictionary containing URL filter parameters. Required when `FilterURLs` is `true`.
 	URLFilterParameters *URLFilterParameters `json:"URLFilterParameters,omitempty" plist:"URLFilterParameters,omitempty"`
 }
 
@@ -7430,7 +7438,7 @@ const (
 	FilterGradeInspector FilterGrade = "inspector"
 )
 
-// A dictionary containing URL filter parameters. Required when `FilterURLs` is `true`. Available in iOS 26 and macOS 26 and later.
+// A dictionary containing URL filter parameters. Required when `FilterURLs` is `true`.
 type URLFilterParameters struct {
 	// The designated requirement string in the code signature of the URL filter control provider app extension. The system uses this string to identify the URL filter control provider when the filter starts running. Required in macOS.
 	URLFilterControlProviderDesignatedRequirement *string `json:"URLFilterControlProviderDesignatedRequirement,omitempty" plist:"URLFilterControlProviderDesignatedRequirement,omitempty"`
@@ -7518,15 +7526,15 @@ type WiFi struct {
 	// If `false`, then the system enables MAC address randomization on iOS, watchOS, and visionOS.
 	// This value is only locked when MDM installs the profile. If the profile is manually installed, the system sets the value but the user can change it.
 	DisableAssociationMACRandomization *bool `json:"DisableAssociationMACRandomization,omitempty" plist:"DisableAssociationMACRandomization,omitempty"`
-	// If `true`, the device makes this network available for joining before the device is unlocked for the first time following a reboot, on a device configured for return to service. Any network credentials are placed into Class D storage within the keychain, and information about the network is stored on disk in Class D.
+	// If `true`, the device makes this network available for joining before the device is unlocked for the first time following a reboot, on a device configured for return to service. The device places any network credentials into Class D storage within the keychain and stores information about the network on disk in Class D.
 	// There are several restrictions on the use of this flag:
 	// - This property is only available in the return to service mode.
-	// - Only one network can be designated as available before first unlock.
+	// - You can designate only one network as available before first unlock.
 	// - `EAPClientConfiguration` must not be present.
 	// - If `IsHotspot` is present, it must be set to `false`.
 	// - `QoSMarkingPolicy` must not be present.
 	// - If `ProxyType` is present, it must be set to `None`.
-	// The device fails to install the profile payload if any of these conditions are not met.
+	// The device fails to install the profile payload if any of these conditions aren't met.
 	AllowJoinBeforeFirstUnlock *bool `json:"AllowJoinBeforeFirstUnlock,omitempty" plist:"AllowJoinBeforeFirstUnlock,omitempty"`
 }
 
@@ -7579,13 +7587,13 @@ type EAPClientConfiguration struct {
 	UserName *string `json:"UserName,omitempty" plist:"UserName,omitempty"`
 	// The user's password. If you don't specify a value, the system prompts the user during login.
 	UserPassword *string `json:"UserPassword,omitempty" plist:"UserPassword,omitempty"`
-	// An array of the UUID of each certificate payload in the same profile to trust for authentication. Use this key to prevent the device from asking the user whether to trust the listed certificates. Dynamic trust (the certificate dialogue) is in a disabled state if you specify this property without also enabling 'TLSAllowTrustExceptions'.
+	// An array of the UUID of each certificate payload in the same profile to trust for authentication. Use this key to prevent the device from asking the user whether to trust the listed certificates. The device disables dynamic trust (the certificate dialogue) if you specify this property without also enabling 'TLSAllowTrustExceptions'.
 	PayloadCertificateAnchorUUID *[]string `json:"PayloadCertificateAnchorUUID,omitempty" plist:"PayloadCertificateAnchorUUID,omitempty"`
 	// An array of trusted certificates. Each entry in the array must contain certificate data that represents an anchor certificate used for verifying the server certificate.
 	TLSTrustedCertificates *[]string `json:"TLSTrustedCertificates,omitempty" plist:"TLSTrustedCertificates,omitempty"`
 	// The list of accepted server certificate common names. If a server presents a certificate that isn't in this list, the system doesn't trust it.
 	// If you specify this property, the system disables dynamic trust (the certificate dialog) unless you also specify 'TLSAllowTrustExceptions' with the value 'true'.
-	// If necessary, use wildcards to specify the name, such as 'wpa.*.example.com'.
+	// If necessary, use a single "\*" character to specify a wildcard for an individual component of the name, such as 'wpa.\*.example.com'.
 	TLSTrustedServerNames *[]string `json:"TLSTrustedServerNames,omitempty" plist:"TLSTrustedServerNames,omitempty"`
 	// If 'true', allows a dynamic trust decision by the user. The dynamic trust is the certificate dialogue that appears when the system doesn't trust a certificate.
 	// If 'false', the authentication fails if the system doesn't already trust the certificate.
@@ -7741,7 +7749,7 @@ type Xsan struct {
 	// This key is required for StorNext SANs.
 	Fsnameservers *[]string `json:"fsnameservers,omitempty" plist:"fsnameservers,omitempty"`
 	// The authentication method for the SAN. This key is required for all Xsan SANs. It's optional for StorNext SANs but should be set if the StorNext SAN uses an `auth_secret` file.
-	// Only one value is accepted: `auth_secret`
+	// The SAN accepts only one value: `auth_secret`
 	SanAuthMethod *SanAuthMethod `json:"sanAuthMethod,omitempty" plist:"sanAuthMethod,omitempty"`
 	// The shared secret used for Xsan network authentication. This key is required when the `sanAuthMethod` key is present. The value should equal the content of the MDC's `/Library/Preferences/Xsan/.auth_secret` file.
 	SharedSecret string `json:"sharedSecret" plist:"sharedSecret" required:"true"`
@@ -7752,7 +7760,7 @@ func (p *Xsan) PayloadType() string {
 }
 
 // The authentication method for the SAN. This key is required for all Xsan SANs. It's optional for StorNext SANs but should be set if the StorNext SAN uses an `auth_secret` file.
-// Only one value is accepted: `auth_secret`
+// The SAN accepts only one value: `auth_secret`
 type SanAuthMethod string
 
 const (

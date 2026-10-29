@@ -1,5 +1,5 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/mdm/checkin
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/mdm/checkin
 
 package checkin
 
@@ -19,7 +19,6 @@ type Authenticate struct {
 	// The device's UDID (unique device identifier). The system requires this value if the enrollment type is a device enrollment.
 	UDID *string `json:"UDID,omitempty" plist:"UDID,omitempty"`
 	// The per-enrollment identifier for the device. The system requires this value if the enrollment type is a user enrollment.
-	// Available in iOS 13 and later, macOS 10.15 and later, and visionOS 2 and later.
 	EnrollmentID *string `json:"EnrollmentID,omitempty" plist:"EnrollmentID,omitempty"`
 	// The device's OS version.
 	OSVersion *string `json:"OSVersion,omitempty" plist:"OSVersion,omitempty"`
@@ -52,7 +51,6 @@ type CheckOut struct {
 	// The device's UDID (unique device identifier). The system requires this value if the enrollment type is a device enrollment.
 	UDID string `json:"UDID" plist:"UDID" required:"true"`
 	// The per-enrollment identifier for the device. The system requires this value if the enrollment type is a user enrollment.
-	// Available in iOS 13 and later, macOS 10.15 and later, and visionOS 2 and later.
 	EnrollmentID string `json:"EnrollmentID" plist:"EnrollmentID" required:"true"`
 }
 
@@ -165,11 +163,11 @@ const (
 
 // Parameters that the system uses to generate the token.
 type TokenParameters struct {
-	// A security token to generate the server token. Required by the `com.apple.watch.pairing` service type.
+	// A security token to generate the server token. The `com.apple.watch.pairing` service type requires this key.
 	SecurityToken *string `json:"SecurityToken,omitempty" plist:"SecurityToken,omitempty"`
-	// The identifier of the phone paired to the watch. Required by the `com.apple.watch.pairing` service type.
+	// The identifier of the phone paired to the watch. The `com.apple.watch.pairing` service type requires this key.
 	PhoneUDID *string `json:"PhoneUDID,omitempty" plist:"PhoneUDID,omitempty"`
-	// The identifier of the watch paired to the phone. Required by the `com.apple.watch.pairing` service type.
+	// The identifier of the watch paired to the phone. The `com.apple.watch.pairing` service type requires this key.
 	WatchUDID *string `json:"WatchUDID,omitempty" plist:"WatchUDID,omitempty"`
 }
 
@@ -182,6 +180,8 @@ type ReturnToService struct {
 	UDID string `json:"UDID" plist:"UDID" required:"true"`
 }
 type ReturnToServiceResponse struct {
+	// If `true`, the device preserves the data plan on an iPhone or iPad with eSIM functionality, if one exists.
+	PreserveDataPlan *bool `json:"PreserveDataPlan,omitempty" plist:"PreserveDataPlan,omitempty"`
 	// A dictionary containing the configuration for return to service.
 	ReturnToService ReturnToServiceReturnToService `json:"ReturnToService" plist:"ReturnToService" required:"true"`
 }
@@ -197,14 +197,16 @@ const (
 type ReturnToServiceReturnToService struct {
 	// If `true`, the device automatically erases itself and then performs reenrollment.
 	Enabled bool `json:"Enabled" plist:"Enabled" required:"true"`
-	// The Wi-Fi profile that installs after erasure when using return to service. This is required when the device doesn't have Ethernet access.
+	// The Wi-Fi profile that installs after erasure when using return to service. The device requires this when it doesn't have Ethernet access.
 	WiFiProfileData *[]byte `json:"WiFiProfileData,omitempty" plist:"WiFiProfileData,omitempty"`
-	// The MDM profile that installs after erasure when using return to service. If provided, the device uses this profile directly instead of fetching it from the server. This key is required if the device's Automated Device Enrollment profile contains the `configuration-web-url` key.
+	// The MDM profile that installs after erasure when using return to service. If provided, the device uses this profile directly instead of fetching it from the server. The device requires this key if its Automated Device Enrollment profile contains the `configuration-web-url` key.
 	// The device always downloads the Automated Device Enrollment profile even when this key is present, so the supervision identity, MDM removability, and other settings still apply. However, the device doesn't use the specified URL in the Automated Device Enrollment profile to fetch the MDM profile.
 	MDMProfileData *[]byte `json:"MDMProfileData,omitempty" plist:"MDMProfileData,omitempty"`
-	// The system uses the bootstrap token for return to service with app preservation. Required when Automated Device Enrollment enables return to service for the device.
+	// The system uses the bootstrap token for return to service with app preservation. The device requires this key when Automated Device Enrollment enables return to service for the device.
 	// If the bootstrap token isn't present, the device performs a full erasure and a regular return to service, and can't preserve any data for app preservation.
 	BootstrapToken *[]byte `json:"BootstrapToken,omitempty" plist:"BootstrapToken,omitempty"`
+	// If `true`, the device retries service enrollment when the initial enrollment fails after erasure.
+	ShouldRetryEnrollment *bool `json:"ShouldRetryEnrollment,omitempty" plist:"ShouldRetryEnrollment,omitempty"`
 }
 
 // Sends the bootstrap token to the server.
@@ -237,10 +239,8 @@ type TokenUpdate struct {
 	// The device's UDID (unique device identifier). The system requires this value if the enrollment type is a device enrollment.
 	UDID string `json:"UDID" plist:"UDID" required:"true"`
 	// The per-enrollment identifier for the device. The system requires this value if the enrollment type is a user enrollment.
-	// Available in iOS 13 and later, macOS 10.15 and later, and visionOS 2 and later.
 	EnrollmentID string `json:"EnrollmentID" plist:"EnrollmentID" required:"true"`
 	// The per-enrollment identifier for the user. The system requires this value if the enrollment type is a user enrollment on the user channel.
-	// Available in macOS 10.15 and later.
 	EnrollmentUserID string `json:"EnrollmentUserID" plist:"EnrollmentUserID" required:"true"`
 	// For macOS, this value is the short name of the user.
 	// For Shared iPad, this value is the Managed Apple Account identifier of the user on Shared iPad. It indicates that the token is for the user channel.

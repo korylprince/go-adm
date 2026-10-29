@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/declarations/assets/credentials
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/declarative/declarations/assets/credentials
 
 package credentials
 
-const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
+const DeviceManagementGenerateHash = "9e7fdbe23990b2551c4b29b39bc8b0de956805eb"
 
 var CredentialMap = map[string]any{
 	"com.apple.credential.acme":                ACMECredential{},
@@ -29,7 +29,7 @@ type ACMECredential struct {
 	// If `false`, the private key isn't bound to the device.
 	// If `true`, the private key is bound to the device. The Secure Enclave generates the key pair, and the private key is cryptographically entangled with a system key. This protects the private key from being exported.
 	// If `true`, `KeyType` needs to be `ECSECPrimeRandom` and `KeySize` needs to be `256` or `384`.
-	// On macOS, this is a required key. Set the value to `false`.
+	// Set this key to `false` on Mac devices that don't have Apple silicon or a T2 chip.
 	HardwareBound bool `json:"HardwareBound" required:"true"`
 	// The device requests this subject for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 	// The representation of an X.500 name is an array of OID and value. For example, `/C=US/O=Apple Inc./CN=foo/1.2.5.3=bar` corresponds to:
@@ -44,7 +44,9 @@ type ACMECredential struct {
 	// The device requests this extended key usage for the certificate that the ACME server issues. The ACME server may override or ignore this field in the certificate it issues.
 	// The value is an array of strings. Each string is an OID in dotted notation. For example, `["1.3.6.1.5.5.7.3.2", "1.3.6.1.5.5.7.3.4"]` indicates client authentication and email protection.
 	ExtendedKeyUsage *[]string `json:"ExtendedKeyUsage,omitempty"`
-	// If `true`, the device provides attestations that describe the device and the generated key to the ACME server. The server can use the attestations as strong evidence that the key is bound to the device, and that the device has properties listed in the attestation. The server can use that as part of a trust score to decide whether to issue the requested certificate. When `Attest` is `true`, set `HardwareBound` to `true`. On macOS, set this key, if present, to `false`. The hardware requirements for attestation are described below.
+	// If `true`, the device provides attestations that describe the device and the generated key to the ACME server. The server can use the attestations as strong evidence that the key is bound to the device, and that the device has properties listed in the attestation. The server can use that as part of a trust score to decide whether to issue the requested certificate.
+	// When `Attest` is `true`, set `HardwareBound` to `true`.
+	// The hardware requirements for attestation are described below.
 	Attest *bool `json:"Attest,omitempty"`
 }
 

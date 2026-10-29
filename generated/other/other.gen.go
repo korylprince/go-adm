@@ -1,5 +1,5 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/other
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/other
 
 package other
 
@@ -17,8 +17,8 @@ type EnrollmentSSODocument struct {
 	// One of `ConfigurationProfile` and `Declarations` must be present.
 	ConfigurationProfile *[]byte `json:"ConfigurationProfile,omitempty" plist:"ConfigurationProfile,omitempty"`
 	// An array of base64-encoded JSON formatted Declarative Device Management declarations that specify the managed app and its configuration, including any certificates or identities.
-	// The set of declarations must include one `com.apple.configuration.app.managed` configuration, and one activation declaration that references the configuration. Asset declarations may be present if required by the app config.
-	// The app configuration must include `AppStoreID` when developer mode is not being used, or it must include `BundleID` when developer mode is used.
+	// The set of declarations must include one `com.apple.configuration.app.managed` configuration, and one activation declaration that references the configuration. Include asset declarations if the app config requires them.
+	// The app configuration must include `AppStoreID` when developer mode isn't being used, or it must include `BundleID` when developer mode is used.
 	// One of `ConfigurationProfile` and `Declarations` must be present.
 	Declarations *[][]byte `json:"Declarations,omitempty" plist:"Declarations,omitempty"`
 }
@@ -34,13 +34,10 @@ type MachineInfo struct {
 	// The build version installed on the device, for example, `7A182`.
 	VERSION string `json:"VERSION" plist:"VERSION" required:"true"`
 	// The OS version installed on the device, for example, 17.0.
-	// Available on iOS 17 and later, macOS 14 and later, tvOS 17 and later, and watchOS 10 and later.
 	OSVERSION string `json:"OS_VERSION" plist:"OS_VERSION" required:"true"`
 	// The device's operating system supplemental build version (if available).
-	// Available on iOS 17 and later, macOS 14 and later, tvOS 17 and later, and watchOS 10 and later.
 	SUPPLEMENTALBUILDVERSION *string `json:"SUPPLEMENTAL_BUILD_VERSION,omitempty" plist:"SUPPLEMENTAL_BUILD_VERSION,omitempty"`
 	// The device's operating system supplemental OS version extra (if available).
-	// Available on iOS 17 and later, macOS 14 and later, tvOS 17 and later, and watchOS 10 and later.
 	SUPPLEMENTALOSVERSIONEXTRA *string `json:"SUPPLEMENTAL_OS_VERSION_EXTRA,omitempty" plist:"SUPPLEMENTAL_OS_VERSION_EXTRA,omitempty"`
 	// The device's IMEI (if available).
 	IMEI *string `json:"IMEI,omitempty" plist:"IMEI,omitempty"`
@@ -49,18 +46,14 @@ type MachineInfo struct {
 	// The user's currently-selected language, for example, `en`.
 	LANGUAGE *string `json:"LANGUAGE,omitempty" plist:"LANGUAGE,omitempty"`
 	// If `true`, indicates that the server can trigger the device to do a required software update.
-	// Available on iOS 17 and later, and macOS 14 and later.
 	MDMCANREQUESTSOFTWAREUPDATE *bool `json:"MDM_CAN_REQUEST_SOFTWARE_UPDATE,omitempty" plist:"MDM_CAN_REQUEST_SOFTWARE_UPDATE,omitempty"`
 	// The pairing token to validate when a watch is enrolling.
-	// Available on watchOS 10 and later.
 	PAIRINGTOKEN *[]byte `json:"PAIRING_TOKEN,omitempty" plist:"PAIRING_TOKEN,omitempty"`
-	// The device model identifier used to lookup available OS updates through https://gdmf.apple.com/v2/pmv. Available on iOS 17.4 and later, macOS 14.4 and later, and visionOS 1.1 and later.
+	// The device model identifier used to lookup available OS updates through https://gdmf.apple.com/v2/pmv.
 	SOFTWAREUPDATEDEVICEID *string `json:"SOFTWARE_UPDATE_DEVICE_ID,omitempty" plist:"SOFTWARE_UPDATE_DEVICE_ID,omitempty"`
 	// If `true`, indicates that the server can trigger the device to do a required Platform SSO authentication before enrolling.
-	// Available on macOS 26 and later.
 	MDMCANREQUESTPSSOCONFIG *bool `json:"MDM_CAN_REQUEST_PSSO_CONFIG,omitempty" plist:"MDM_CAN_REQUEST_PSSO_CONFIG,omitempty"`
 	// If `true`, indicates that the device requires a mandatory software update during Setup Assistant. The MDM server can return a 403 with a `ErrorCodeSoftwareUpdateRequired` error to force the device to update to a specific version instead of the device choosing a version.
-	// Available on macOS 26.1 and later.
 	MANDATORYSOFTWAREUPDATEREQUIRED *bool `json:"MANDATORY_SOFTWARE_UPDATE_REQUIRED,omitempty" plist:"MANDATORY_SOFTWARE_UPDATE_REQUIRED,omitempty"`
 }
 
@@ -80,20 +73,18 @@ type AssetsItem struct {
 	Kind AssetsItemKind `json:"kind" plist:"kind" required:"true"`
 	// The MD5 hash value the device uses when verifying the hash of the manifest item data. When this key is present, the device ignores the `md5-size` and `md5s` keys.
 	Md5 *string `json:"md5,omitempty" plist:"md5,omitempty"`
-	// The data *chunk* size the device uses when verifying the hash of the manifest item data. Required when the `md5s` key is present.
+	// The data chunk size the device uses when verifying the hash of the manifest item data. The device requires this key when the `md5s` key is present.
 	Md5Size *int64 `json:"md5-size,omitempty" plist:"md5-size,omitempty"`
-	// An array of strings representing a set of MD5 hash values. The device uses these values to verify the integrity of the downloaded manifest item data. Required when the `md5-size` key is present.
+	// An array of strings representing a set of MD5 hash values. The device uses these values to verify the integrity of the downloaded manifest item data. The device requires this key when the `md5-size` key is present.
 	Md5s *[]string `json:"md5s,omitempty" plist:"md5s,omitempty"`
 	// The SHA-256 hash value the device uses when verifying the hash of the manifest item data. When this key is present, the device ignores the `sha256-size` and `sha256` keys.
 	SHA256 *string `json:"sha256,omitempty" plist:"sha256,omitempty"`
-	// The data *chunk* size the device uses when verifying the hash of the manifest item data. Required when the `sha256s` key is present.
+	// The data chunk size the device uses when verifying the hash of the manifest item data. The device requires this key when the `sha256s` key is present.
 	SHA256Size *int64 `json:"sha256-size,omitempty" plist:"sha256-size,omitempty"`
-	// An array of strings representing a set of SHA-256 hash values. The device uses these values to verify the integrity of the downloaded manifest item data. Required when the `sha256-size` key is present.
+	// An array of strings representing a set of SHA-256 hash values. The device uses these values to verify the integrity of the downloaded manifest item data. The device requires this key when the `sha256-size` key is present.
 	SHA256s *[]string `json:"sha256s,omitempty" plist:"sha256s,omitempty"`
 	// The URL that hosts the manifest item data. The URL needs to start with `https://`.
 	URL string `json:"url" plist:"url" required:"true"`
-	// removed
-	NeedsShine *bool `json:"needs-shine,omitempty" plist:"needs-shine,omitempty"`
 }
 
 // The kind of manifest item to install. Use `software-package` for apps and macOS packages.
@@ -114,14 +105,10 @@ type Metadata struct {
 	BundleVersion *string `json:"bundle-version,omitempty" plist:"bundle-version,omitempty"`
 	// The type of manifest item. For an app or package, this needs to be `software`.
 	Kind MetadataKind `json:"kind" plist:"kind" required:"true"`
-	// removed
-	SizeInBytes *int64 `json:"sizeInBytes,omitempty" plist:"sizeInBytes,omitempty"`
 	// The name of the app or package developer.
 	Subtitle *string `json:"subtitle,omitempty" plist:"subtitle,omitempty"`
 	// The title of the app or package being installed.
 	Title string `json:"title" plist:"title" required:"true"`
-	// Removed
-	Items *[]*MetadataItemsItem `json:"items,omitempty" plist:"items,omitempty"`
 }
 
 // The type of manifest item. For an app or package, this needs to be `software`.
@@ -130,13 +117,6 @@ type MetadataKind string
 const (
 	MetadataKindSoftware MetadataKind = "software"
 )
-
-type MetadataItemsItem struct {
-	// removed
-	BundleIdentifier *string `json:"bundle-identifier,omitempty" plist:"bundle-identifier,omitempty"`
-	// removed
-	BundleVersion *string `json:"bundle-version,omitempty" plist:"bundle-version,omitempty"`
-}
 
 // A dictionary that contains the password hash for the account.
 type PasswordHash struct {
@@ -160,12 +140,10 @@ type SkipKeys struct {
 	// > Note:
 	// > This key doesn't skip the Accessibility pane in Setup Assistant during initial device set up. It does skip the Accessibility pane when Setup Assistant runs due to a new user log in.
 	Accessibility *string `json:"Accessibility,omitempty" plist:"Accessibility,omitempty"`
+	// The key to skip the Accessibility Appearance configuration pane. This pane isn't always skippable because it appears before the device retrieves the Cloud Configuration from the server.
+	AccessibilityAppearance *string `json:"AccessibilityAppearance,omitempty" plist:"AccessibilityAppearance,omitempty"`
 	// The key to skip the Action Button configuration pane.
 	ActionButton *string `json:"ActionButton,omitempty" plist:"ActionButton,omitempty"`
-	// The key to skip the Age Assurance pane.
-	AgeAssurance *string `json:"AgeAssurance,omitempty" plist:"AgeAssurance,omitempty"`
-	// The key to skip the Age Based Safety Settings pane.
-	AgeBasedSafetySettings *string `json:"AgeBasedSafetySettings,omitempty" plist:"AgeBasedSafetySettings,omitempty"`
 	// If the Restore pane isn't skipped, this is the key to remove the Move from Android option in the Restore pane.
 	Android *string `json:"Android,omitempty" plist:"Android,omitempty"`
 	// The key to skip the Choose Your Look screen.
@@ -178,6 +156,8 @@ type SkipKeys struct {
 	Biometric *string `json:"Biometric,omitempty" plist:"Biometric,omitempty"`
 	// The key to skip the Camera Button pane.
 	CameraButton *string `json:"CameraButton,omitempty" plist:"CameraButton,omitempty"`
+	// The key to skip the Device Features Tour pane.
+	DeviceFeaturesTour *string `json:"DeviceFeaturesTour,omitempty" plist:"DeviceFeaturesTour,omitempty"`
 	// The key to skip Device to Device Migration pane.
 	DeviceToDeviceMigration *string `json:"DeviceToDeviceMigration,omitempty" plist:"DeviceToDeviceMigration,omitempty"`
 	// The key to skip the App Analytics pane.
@@ -200,6 +180,8 @@ type SkipKeys struct {
 	Intelligence *string `json:"Intelligence,omitempty" plist:"Intelligence,omitempty"`
 	// The key to skip the Keyboard pane. This pane isn't always skippable because it appears before the device retrieves the Cloud Configuration from the server.
 	Keyboard *string `json:"Keyboard,omitempty" plist:"Keyboard,omitempty"`
+	// The key to skip the Liquid Glass pane.
+	LiquidGlass *string `json:"LiquidGlass,omitempty" plist:"LiquidGlass,omitempty"`
 	// The key to disable Location Services.
 	Location *string `json:"Location,omitempty" plist:"Location,omitempty"`
 	// The key to skip the iMessage pane.

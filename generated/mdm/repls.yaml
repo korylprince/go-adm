@@ -149,6 +149,10 @@
     - "field"
 
 # fix acronym casing (Go convention: acronyms should be all-caps)
+"^(.*)Wifi(.*)$":
+  repl: "${1}WiFi${2}"
+  types:
+    - "field"
 "^(.*)Apns(.*)$":
   repl: "${1}APNs${2}"
   types:

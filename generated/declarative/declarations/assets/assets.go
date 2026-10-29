@@ -1,9 +1,9 @@
 // DO NOT EDIT
-// generated from https://github.com/apple/device-management.git:f878dea98fb88293a3686e44bcfb891f8e78f98f/declarative/declarations/assets
+// generated from https://github.com/apple/device-management.git:9e7fdbe23990b2551c4b29b39bc8b0de956805eb/declarative/declarations/assets
 
 package assets
 
-const DeviceManagementGenerateHash = "f878dea98fb88293a3686e44bcfb891f8e78f98f"
+const DeviceManagementGenerateHash = "9e7fdbe23990b2551c4b29b39bc8b0de956805eb"
 
 var DeclarationMap = map[string]any{
 	"com.apple.asset.credential.acme":         AssetCredentialACME{},
@@ -21,7 +21,7 @@ type AssetCredentialACME struct {
 	// - Is a JSON document that represents the `com.apple.credential.acme` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 	Reference AssetCredentialACMEReference `json:"Reference" required:"true"`
-	// The server authentication details.
+	// The server authentication details. If this key is absent, the default authentication type is MDM.
 	Authentication *AssetCredentialACMEAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use, which has these allowed values:
 	// - `Default`: The most restrictive accessibility that still satisfies all uses of the asset by configurations that reference it.
@@ -47,17 +47,19 @@ type AssetCredentialACMEReference struct {
 	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
-// The server authentication details.
+// The server authentication details. If this key is absent, the default authentication type is MDM.
 type AssetCredentialACMEAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
+	// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 	Type AssetCredentialACMEAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
+// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 type AssetCredentialACMEAuthenticationType string
 
 const (
@@ -75,11 +77,11 @@ const (
 	AssetCredentialACMEAccessibleAfterFirstUnlock AssetCredentialACMEAccessible = "AfterFirstUnlock"
 )
 
-// A reference to a PKCS #1 or PEM encoded certificate.
+// A reference to one PKCS #1 or PEM encoded certificate.
 type AssetCredentialCertificate struct {
-	// The external reference. Ensure that the asset data uses a media type of `application/pkcs1` or `application/pem` to correctly identify the type of encoded certificate. If the asset data includes a `ContentType` sub-key, set it to the corresponding media type.
+	// The external reference. Ensure the asset data contains exactly one certificate. If the PEM data contains more than one certificate, the system installs the first certificate and ignores the rest. Ensure that the asset data uses a media type of `application/pkcs1` or `application/pem` to correctly identify the type of encoded certificate. If the asset data includes a `ContentType` sub-key, set it to the corresponding media type.
 	Reference AssetCredentialCertificateReference `json:"Reference" required:"true"`
-	// The server authentication details.
+	// The server authentication details. If this key is absent, the default authentication type is MDM.
 	Authentication *AssetCredentialCertificateAuthentication `json:"Authentication,omitempty"`
 }
 
@@ -87,7 +89,7 @@ func (p *AssetCredentialCertificate) DeclarationType() string {
 	return "com.apple.asset.credential.certificate"
 }
 
-// The external reference. Ensure that the asset data uses a media type of `application/pkcs1` or `application/pem` to correctly identify the type of encoded certificate. If the asset data includes a `ContentType` sub-key, set it to the corresponding media type.
+// The external reference. Ensure the asset data contains exactly one certificate. If the PEM data contains more than one certificate, the system installs the first certificate and ignores the rest. Ensure that the asset data uses a media type of `application/pkcs1` or `application/pem` to correctly identify the type of encoded certificate. If the asset data includes a `ContentType` sub-key, set it to the corresponding media type.
 type AssetCredentialCertificateReference struct {
 	// The URL to retrieve data, which needs to start with `https://`.
 	DataURL string `json:"DataURL" required:"true"`
@@ -99,17 +101,19 @@ type AssetCredentialCertificateReference struct {
 	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
-// The server authentication details.
+// The server authentication details. If this key is absent, the default authentication type is MDM.
 type AssetCredentialCertificateAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
+	// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 	Type AssetCredentialCertificateAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
+// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 type AssetCredentialCertificateAuthenticationType string
 
 const (
@@ -123,7 +127,7 @@ type AssetCredentialIdentity struct {
 	// - Is a JSON document that represents the `com.apple.credential.identity` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 	Reference AssetCredentialIdentityReference `json:"Reference" required:"true"`
-	// The server authentication details.
+	// The server authentication details. If this key is absent, the default authentication type is MDM.
 	Authentication *AssetCredentialIdentityAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use, which has these allowed values:
 	// - `Default`: The most restrictive accessibility that still satisfies all uses of the asset by configurations that reference it.
@@ -149,17 +153,19 @@ type AssetCredentialIdentityReference struct {
 	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
-// The server authentication details.
+// The server authentication details. If this key is absent, the default authentication type is MDM.
 type AssetCredentialIdentityAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
+	// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 	Type AssetCredentialIdentityAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
+// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 type AssetCredentialIdentityAuthenticationType string
 
 const (
@@ -183,7 +189,7 @@ type AssetCredentialSCEP struct {
 	// - Is a JSON document that represents the `com.apple.credential.scep` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 	Reference AssetCredentialSCEPReference `json:"Reference" required:"true"`
-	// The server authentication details.
+	// The server authentication details. If this key is absent, the default authentication type is MDM.
 	Authentication *AssetCredentialSCEPAuthentication `json:"Authentication,omitempty"`
 	// The keychain accessibility that determines when the keychain item is available for use, which has these allowed values:
 	// - `Default`: The most restrictive accessibility that still satisfies all uses of the asset by configurations that reference it.
@@ -209,17 +215,19 @@ type AssetCredentialSCEPReference struct {
 	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
-// The server authentication details.
+// The server authentication details. If this key is absent, the default authentication type is MDM.
 type AssetCredentialSCEPAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
+	// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 	Type AssetCredentialSCEPAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
+// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 type AssetCredentialSCEPAuthenticationType string
 
 const (
@@ -243,7 +251,7 @@ type AssetCredentialUserNameAndPassword struct {
 	// - Is a JSON document that represents the `com.apple.credential.usernameandpassword` credential type
 	// - Uses a media type of `application/json`, and if it includes a `ContentType` sub-key, that sub-key media type is also `application/json`
 	Reference AssetCredentialUserNameAndPasswordReference `json:"Reference" required:"true"`
-	// The server authentication details.
+	// The server authentication details. If this key is absent, the default authentication type is MDM.
 	Authentication *AssetCredentialUserNameAndPasswordAuthentication `json:"Authentication,omitempty"`
 }
 
@@ -265,17 +273,19 @@ type AssetCredentialUserNameAndPasswordReference struct {
 	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
-// The server authentication details.
+// The server authentication details. If this key is absent, the default authentication type is MDM.
 type AssetCredentialUserNameAndPasswordAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
+	// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 	Type AssetCredentialUserNameAndPasswordAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
+// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 type AssetCredentialUserNameAndPasswordAuthenticationType string
 
 const (
@@ -287,7 +297,7 @@ const (
 type AssetData struct {
 	// The external reference.
 	Reference AssetDataReference `json:"Reference" required:"true"`
-	// The server authentication details.
+	// The server authentication details. If this key is absent, the default authentication type is MDM.
 	Authentication *AssetDataAuthentication `json:"Authentication,omitempty"`
 }
 
@@ -307,17 +317,19 @@ type AssetDataReference struct {
 	HashSHA256 *string `json:"Hash-SHA-256,omitempty"`
 }
 
-// The server authentication details.
+// The server authentication details. If this key is absent, the default authentication type is MDM.
 type AssetDataAuthentication struct {
 	// The type of authentication, which has these allowed values:
 	// - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 	// - `None`: A standard GET request.
+	// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 	Type AssetDataAuthenticationType `json:"Type" required:"true"`
 }
 
 // The type of authentication, which has these allowed values:
 // - `MDM`: A request that uses MDM semantics, which includes the device-identity certificate, and any user authentication. This is equivalent to an MDM request made to the `CheckInURL` or `ServerURL`. This option is only available through declarative device management.
 // - `None`: A standard GET request.
+// If the `Authentication` dictionary is absent, the default authentication type is MDM.
 type AssetDataAuthenticationType string
 
 const (
